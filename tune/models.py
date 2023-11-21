@@ -2,7 +2,7 @@ from django.db import models
 
 class Tune(models.Model):
     """
-    The Tune is the heart of this app; it contains
+    The Tune is the heart of this app; each tune is one song that can be added to a user's repertoire and should contain all relevant musical information.
     """
     title = models.CharField(max_length=100, unique=True)
     composer = models.CharField(max_length=30, blank=True)
@@ -16,6 +16,9 @@ class Tune(models.Model):
     
     @property
     def decade(self):
+        """
+        Calculate the decade of composition based on the year of composition.
+        """
         decade = f'{self.year[2]}0s' 
         return decade
 
