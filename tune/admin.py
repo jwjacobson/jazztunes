@@ -1,3 +1,6 @@
 from django.contrib import admin
+from tune.models import Tune
 
-# Register your models here.
+@admin.register(Tune)
+class TuneAdmin(admin.ModelAdmin):
+    list_fields = ['title']
