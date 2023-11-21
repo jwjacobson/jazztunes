@@ -12,12 +12,12 @@ class Tune(models.Model):
     style = models.CharField(max_length=20, blank=True)
     meter = models.CharField(max_length=10, blank=True)
     year = models.CharField(max_length=10, blank=True)
-    # decade = models.CharField(max_length==10, blank=True)       # I would like the decade field to be automatically calculated from year;
-                                                                # it looks like
     # players = models.ForeignKey(Player, related_name='tunes', on_delete=models.CASCADE) # This field defines which players (users) have the tune in their repertoire
-
-    # def decade(self):
-    #     return year[2:] + s
+    
+    @property
+    def decade(self):
+        decade = f'{self.year[2]}0s' 
+        return decade
 
     class Meta:
         ordering = ['-id']
