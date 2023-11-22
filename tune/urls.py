@@ -1,6 +1,8 @@
 from django.urls import path, include
 from tune import views
 
+app_name = 'tune'
+
 urlpatterns = [
     path('', views.tune_list, name='tune_list'),
     path('new', views.tune_new, name='tune_new'),

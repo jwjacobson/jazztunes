@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h1>{% if post %}Edit{% else %}New{% endif %} Tune</h1>
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <td>
+        <div>
+            {{ field.errors }}
+            <p>{{ field.label_tag }}</p>
+            {{ field }}
+            {% if field.help_text %}
+              <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+      </td>
+    {% endfor %}
+
+    <input type="submit" value="{% if post %}Edit{% else %}New{% endif %}" />
+    <a href="{% url 'tune:tune_list' %}">Go Back</a>
+  </form>
+
+{% endblock %}
