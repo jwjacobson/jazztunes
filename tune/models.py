@@ -10,16 +10,29 @@ class Tune(models.Model):
         (5, '5'),
         (6, '6'),
         (7, '7'),
-        (9, '9'),
-        (10, 'irregular')
+        (0, 'irregular')
+    ]
+
+    STYLES = [
+        ('standard', 'standard'),
+        ('jazz', 'jazz')
+    ]
+
+    FORMS = [
+        ('aaba', 'AABA'),
+        ('abac', 'ABAC'),
+        ('aba', 'ABA'),
+        ('abab', 'ABAB'),
+        ('blues', 'blues'),
+        ('irregular', 'irregular'),
     ]
 
     title = models.CharField(max_length=100, unique=True)
     composer = models.CharField(max_length=30, blank=True)
     key = models.CharField(max_length=10, blank=True, help_text='The main key of the tune')
     other_keys = models.CharField(max_length=20, blank=True, help_text='Key(s) a tune modulates to in addition to the main key')
-    song_form = models.CharField(max_length=20, blank=True)
-    style = models.CharField(max_length=20, blank=True)
+    song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
+    style = models.CharField(choices=STYLES, max_length=15, blank=True)
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True)
     year = models.PositiveSmallIntegerField(blank=True)
     # players = models.ForeignKey(Player, related_name='tunes', on_delete=models.CASCADE) # This field defines which players (users) have the tune in their repertoire
