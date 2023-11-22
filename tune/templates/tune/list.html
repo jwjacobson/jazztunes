@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Tunes{% endblock %}
+
+{% block content %}
+    <h1>Tunes</h1>
+    {% for tune in tunes %}
+    <div class="tune">
+        {{ tune.id }}
+        <br>
+        {{ tune.title }}
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -1,3 +1,9 @@
 from django.shortcuts import render
+from tune.models import Tune
 
-# Create your views here.
+def tune_list(request):
+    tunes = Tune.objects.all()
+
+    return render(request,
+                 'tune/list.html',
+                 {'tunes': tunes})

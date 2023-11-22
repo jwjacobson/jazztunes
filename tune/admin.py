@@ -3,4 +3,4 @@ from tune.models import Tune
 
 @admin.register(Tune)
 class TuneAdmin(admin.ModelAdmin):
-    list_fields = ['title']
+    display_fields = ['title']
