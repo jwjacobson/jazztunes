@@ -57,7 +57,7 @@ class Tune(models.Model):
         keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
                 'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
                 'none', 'atonal'}
-        if self.key.lower() not in keys:
+        if self.key is not None and self.key.lower() not in keys:
             raise ValidationError(
                 {'key': _('Invalid key.')}
                 )
