@@ -31,8 +31,8 @@ class Tune(models.Model):
 
     title = models.CharField(max_length=100, unique=True, help_text='The only required field')
     composer = models.CharField(max_length=30, blank=True, help_text='Last names only for now')
-    key = models.CharField(max_length=10, blank=True, help_text='The main key of the tune')
-    other_keys = models.CharField(max_length=20, blank=True, help_text='Key(s) a tune modulates to in addition to the main key')
+    key = models.CharField(max_length=10, blank=True, help_text='One only, use single letter for major, add - for minor')
+    other_keys = models.CharField(max_length=20, blank=True, help_text='As many as you want, separated by a space')
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default='standard')
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
@@ -60,4 +60,9 @@ class Tune(models.Model):
         if self.key.lower() not in keys:
             raise ValidationError(
                 {'key': _('Invalid key.')}
+                )
+        for i in self.other_keys.split():
+            if i.lower() not in keys:
+                raise ValidationError(
+                {'other_keys': _(f'{i} is not a valid key.')}
                 )
