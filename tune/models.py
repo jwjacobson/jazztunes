@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext as _
 
 class Tune(models.Model):
     """
@@ -34,7 +36,7 @@ class Tune(models.Model):
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default='standard')
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
-    year = models.PositiveSmallIntegerField(blank=True)
+    year = models.PositiveSmallIntegerField(blank=True, null=True)
     # players = models.ForeignKey(Player, related_name='tunes', on_delete=models.CASCADE) # This field defines which players (users) have the tune in their repertoire
     
     @property
@@ -50,3 +52,12 @@ class Tune(models.Model):
 
     def __str__(self):
         return f'Tune {self.id} | {self.title}'
+
+    def clean(self):
+        keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
+                'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
+                'none', 'atonal'}
+        if self.key.lower() not in keys:
+            raise ValidationError(
+                {'key': _('Invalid key.')}
+                )
