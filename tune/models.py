@@ -29,6 +29,10 @@ class Tune(models.Model):
         ('irregular', 'irregular'),
     ]
 
+    KEYS = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
+    'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
+    'none', 'atonal'}
+
     title = models.CharField(max_length=100, unique=True, help_text='The only required field')
     composer = models.CharField(max_length=30, blank=True, help_text='Last names only for now')
     key = models.CharField(max_length=10, blank=True, help_text='One only, use single letter for major, add - for minor')
@@ -53,16 +57,25 @@ class Tune(models.Model):
     def __str__(self):
         return f'Tune {self.id} | {self.title}'
 
-    def clean(self):
-        keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
-                'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
-                'none', 'atonal'}
-        if self.key is not None and self.key.lower() not in keys:
-            raise ValidationError(
-                {'key': _('Invalid key.')}
-                )
-        for i in self.other_keys.split():
-            if i.lower() not in keys:
-                raise ValidationError(
-                {'other_keys': _(f'{i} is not a valid key.')}
-                )
+    # def clean_key(self):
+    #     keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
+    #             'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
+    #             'none', 'atonal'}
+    #     data = self.cleaned_data['key']
+    #     if data.lower() not in keys:
+    #         raise ValidationError(
+    #             {'key': _('Invalid key.')}
+    #             )
+    #     return data
+        
+    # def clean_other_keys(self):
+    #     keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
+    #             'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
+    #             'none', 'atonal'}
+    #     data = self.cleaned_data['other_keys']
+    #     for key in data.split():
+    #         if key.lower() not in keys:
+    #             raise ValidationError(
+    #             {'other_keys': _(f'{key} is not a valid key.')}
+    #             )
+    #     return data
