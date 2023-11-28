@@ -19,13 +19,16 @@ def tune_list(request):
 
 @login_required(login_url="/accounts/login/")
 def tune_new(request):
-    form = TuneForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Added tune')
-        return redirect('tune:tune_list')
-    return render(request, 'tune/form.html', {'form': form})
+    if request.method == "POST":
+        form = TuneForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Added tune')
+            return redirect('tune:tune_list')
+    else:
+        form = TuneForm()
 
+    return render(request, 'tune/form.html', {'form': form})
 
 @login_required(login_url="/accounts/login/")
 def tune_edit(request, pk):
