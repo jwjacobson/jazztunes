@@ -56,26 +56,3 @@ class Tune(models.Model):
 
     def __str__(self):
         return f'Tune {self.id} | {self.title}'
-
-    # def clean_key(self):
-    #     keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
-    #             'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
-    #             'none', 'atonal'}
-    #     data = self.cleaned_data['key']
-    #     if data.lower() not in keys:
-    #         raise ValidationError(
-    #             {'key': _('Invalid key.')}
-    #             )
-    #     return data
-        
-    # def clean_other_keys(self):
-    #     keys = {'c', 'f', 'bb', 'eb', 'ab', 'db', 'gb', 'b', 'e', 'a', 'd', 'g', 'a#', 'd#', 'g#', 'c#', 'f#',
-    #             'c-', 'f-', 'bb-', 'eb-', 'ab-', 'db-', 'gb-', 'b-', 'e-', 'a-', 'd-', 'g-', 'a#-', 'd#-', 'g#-', 'c#-', 'f#-',
-    #             'none', 'atonal'}
-    #     data = self.cleaned_data['other_keys']
-    #     for key in data.split():
-    #         if key.lower() not in keys:
-    #             raise ValidationError(
-    #             {'other_keys': _(f'{key} is not a valid key.')}
-    #             )
-    #     return data
