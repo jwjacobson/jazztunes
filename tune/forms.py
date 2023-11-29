@@ -14,7 +14,7 @@ class TuneForm(ModelForm):
             raise ValidationError(
                 {_('Invalid key (all normal keys accepted plus "none" and "atonal").')}
                 )
-        return data
+        return data.title()
         
     def clean_other_keys(self):
         data = self.cleaned_data['other_keys']

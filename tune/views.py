@@ -20,6 +20,7 @@ def tune_new(request):
         if form.is_valid():
             new_tune = form.save()
             messages.success(request, f'Added Tune {new_tune.id}: {new_tune.title}')
+            new_tune.players.add(request.user)
             return redirect('tune:tune_list')
     else:
         form = TuneForm()
