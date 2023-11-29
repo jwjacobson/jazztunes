@@ -31,8 +31,8 @@ def tune_edit(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     form = TuneForm(request.POST or None, instance=tune)
     if form.is_valid():
-        form.save()
-        messages.success(request, 'Updated tune')
+        updated_tune = form.save()
+        messages.success(request, f'Updated Tune {updated_tune.id}: {updated_tune.title}')
         return redirect('tune:tune_list')
 
     return render(request, 'tune/form.html', {'tune': tune,
@@ -44,10 +44,11 @@ def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
 
     if request.method == 'POST':
+        deleted_id, deleted_title = tune.id, tune.title
         tune.delete()
-        messages.success(request, 'Deleted tune')
+        messages.success(request, f'Deleted {deleted_id}: {deleted_title}')
         return redirect('tune:tune_list')
 
-    return render(request, 'tune/delete.html', {'tune': tune})
+    return render(request, 'tune/form.html', {'tune': tune})
 
 

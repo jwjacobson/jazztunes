@@ -10,7 +10,7 @@ class TuneForm(ModelForm):
 
     def clean_key(self):
         data = self.cleaned_data['key']
-        if data.lower() not in Tune.KEYS:
+        if data is not None and data.lower() not in Tune.KEYS:
             raise ValidationError(
                 {_('Invalid key (all normal keys accepted plus "none" and "atonal").')}
                 )
@@ -18,9 +18,10 @@ class TuneForm(ModelForm):
         
     def clean_other_keys(self):
         data = self.cleaned_data['other_keys']
-        for other_key in data.split():
-            if other_key.lower() not in Tune.KEYS:
-                raise ValidationError(
-                _(f'"{other_key}" is not a valid key.')
-                )
+        if data is not None:
+            for other_key in data.split():
+                if other_key.lower() not in Tune.KEYS:
+                    raise ValidationError(
+                    _(f'"{other_key}" is not a valid key.')
+                    )
         return data
