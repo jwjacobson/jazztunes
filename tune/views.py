@@ -13,17 +13,13 @@ def tune_list(request):
                  'tune/list.html',
                  {'tunes': tunes})
 
-# def blog_detail(request, pk):
-#     post = get_object_or_404(Blog, pk=pk)
-#     return render(request, 'blog/detail.html', {'post': post})
-
 @login_required(login_url="/accounts/login/")
 def tune_new(request):
     if request.method == "POST":
         form = TuneForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Added tune')
+            new_tune = form.save()
+            messages.success(request, f'Added Tune {new_tune.id}: {new_tune.title}')
             return redirect('tune:tune_list')
     else:
         form = TuneForm()

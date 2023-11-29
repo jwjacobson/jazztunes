@@ -43,7 +43,7 @@ class Tune(models.Model):
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default='standard')
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
-    players = models.ForeignKey(get_user_model(), related_name='tunes', on_delete=models.CASCADE) # This field defines which players (users) have the tune in their repertoire
+    # players = models.ForeignKey(get_user_model(), related_name='tunes', on_delete=models.CASCADE) # This field defines which players (users) have the tune in their repertoire
 
     @property
     def decade(self):
