@@ -20,22 +20,29 @@ class TuneForm(ModelForm):
 
     def clean_key(self):
         """
-        Check if the key entered is a real key and raise a ValidationError if it is not.
+        Check if the key entered is a real key and raise a ValidationError if it is not;
+        Properly format the key (title case)
         """
         data = self.cleaned_data["key"]
-        if data is not None and data.lower() not in Tune.KEYS:
+        if data and data.lower() not in Tune.KEYS:
             raise ValidationError(
                 {_('Invalid key (all normal keys accepted plus "none" and "atonal").')}
             )
-        return data.title()
+        return data.title()  # Title case formats the string like a proper key
 
     def clean_other_keys(self):
         """
-        Check if the other keys entered are real keays and raise ValidationErrors if they are not.
+        Check if the other keys entered are real keys and raise ValidationErrors if they are not;
+        Properly format the keys (title case)
         """
         data = self.cleaned_data["other_keys"]
-        if data is not None:
+        if data:
+            formatted_data = []
             for other_key in data.split():
                 if other_key.lower() not in Tune.KEYS:
                     raise ValidationError(_(f'"{other_key}" is not a valid key.'))
+                formatted_data.append(
+                    other_key.title()
+                )  # Title case formats the substring like a proper key
+            data = " ".join(formatted_data)  # Convert the list back into a string
         return data
