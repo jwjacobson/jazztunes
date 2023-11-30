@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tune', '0002_alter_tune_options_alter_tune_composer_and_more'),
+        ("tune", "0002_alter_tune_options_alter_tune_composer_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='tune',
-            name='year',
+            model_name="tune",
+            name="year",
             field=models.PositiveSmallIntegerField(blank=True, null=True),
         ),
     ]

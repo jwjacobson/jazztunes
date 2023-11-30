@@ -4,54 +4,90 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tune', '0001_initial'),
+        ("tune", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='tune',
-            options={'ordering': ['id']},
+            name="tune",
+            options={"ordering": ["id"]},
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='composer',
-            field=models.CharField(blank=True, help_text='Last names only for now', max_length=30),
+            model_name="tune",
+            name="composer",
+            field=models.CharField(
+                blank=True, help_text="Last names only for now", max_length=30
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='key',
-            field=models.CharField(blank=True, help_text='The main key of the tune', max_length=10),
+            model_name="tune",
+            name="key",
+            field=models.CharField(
+                blank=True, help_text="The main key of the tune", max_length=10
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='meter',
-            field=models.PositiveSmallIntegerField(blank=True, choices=[(3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (0, 'irregular')], default=4),
+            model_name="tune",
+            name="meter",
+            field=models.PositiveSmallIntegerField(
+                blank=True,
+                choices=[
+                    (3, "3"),
+                    (4, "4"),
+                    (5, "5"),
+                    (6, "6"),
+                    (7, "7"),
+                    (0, "irregular"),
+                ],
+                default=4,
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='other_keys',
-            field=models.CharField(blank=True, help_text='Key(s) a tune modulates to in addition to the main key', max_length=20),
+            model_name="tune",
+            name="other_keys",
+            field=models.CharField(
+                blank=True,
+                help_text="Key(s) a tune modulates to in addition to the main key",
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='song_form',
-            field=models.CharField(blank=True, choices=[('aaba', 'AABA'), ('abac', 'ABAC'), ('aba', 'ABA'), ('abab', 'ABAB'), ('blues', 'blues'), ('irregular', 'irregular')], max_length=15),
+            model_name="tune",
+            name="song_form",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("aaba", "AABA"),
+                    ("abac", "ABAC"),
+                    ("aba", "ABA"),
+                    ("abab", "ABAB"),
+                    ("blues", "blues"),
+                    ("irregular", "irregular"),
+                ],
+                max_length=15,
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='style',
-            field=models.CharField(blank=True, choices=[('standard', 'standard'), ('jazz', 'jazz')], default='standard', max_length=15),
+            model_name="tune",
+            name="style",
+            field=models.CharField(
+                blank=True,
+                choices=[("standard", "standard"), ("jazz", "jazz")],
+                default="standard",
+                max_length=15,
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='title',
-            field=models.CharField(help_text='The only required field', max_length=100, unique=True),
+            model_name="tune",
+            name="title",
+            field=models.CharField(
+                help_text="The only required field", max_length=100, unique=True
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='year',
+            model_name="tune",
+            name="year",
             field=models.PositiveSmallIntegerField(blank=True),
         ),
     ]
