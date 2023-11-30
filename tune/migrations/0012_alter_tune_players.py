@@ -5,16 +5,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('tune', '0011_remove_tune_players_tune_players'),
+        ("tune", "0011_remove_tune_players_tune_players"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='tune',
-            name='players',
-            field=models.ManyToManyField(related_name='tunes', to=settings.AUTH_USER_MODEL),
+            model_name="tune",
+            name="players",
+            field=models.ManyToManyField(
+                related_name="tunes", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]
