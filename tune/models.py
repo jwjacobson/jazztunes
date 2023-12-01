@@ -79,6 +79,7 @@ class Tune(models.Model):
     )
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     players = models.ManyToManyField(
         get_user_model(), related_name="tunes"
     )  # This field defines which players (users) have the tune in their repertoire

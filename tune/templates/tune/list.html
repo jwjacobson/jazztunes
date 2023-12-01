@@ -4,11 +4,33 @@
 
 {% block content %}
     <h1>Tunes</h1>
-    {% for tune in tunes %}
     <div class="tune">
-        {{ tune.id }}
-        <br>
-        {{ tune.title }}
+        <!-- create a table -->
+        <table class="table table-lg">
+            <tr>
+                <thead>
+                    <th>Title</th>
+                    <th>Composer</th>
+                    <th>Meter</th>
+                    <th>Key</th>
+                    <th>Type</th>
+                    <th>ABC</th>
+                </thead>
+            </tr>
+            {% for tune in tunes %}
+            <tr>
+                <td>
+                    <a href="{% url 'tune:tune_edit' pk=tune.pk %}">
+                        {{ tune.title }}
+                    </a>
+                </td>
+                <td>{{ tune.composer }}</td>
+                <td>{{ tune.meter }}</td>
+                <td>{{ tune.key }}</td>
+                <td>{{ tune.type }}</td>
+                <td>{{ tune.abc }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
-    {% endfor %}
 {% endblock %}
