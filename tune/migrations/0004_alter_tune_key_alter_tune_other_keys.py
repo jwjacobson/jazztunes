@@ -4,20 +4,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tune', '0003_alter_tune_year'),
+        ("tune", "0003_alter_tune_year"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='tune',
-            name='key',
-            field=models.CharField(blank=True, help_text='One only, use single letter for major, add - for minor', max_length=10),
+            model_name="tune",
+            name="key",
+            field=models.CharField(
+                blank=True,
+                help_text="One only, use single letter for major, add - for minor",
+                max_length=10,
+            ),
         ),
         migrations.AlterField(
-            model_name='tune',
-            name='other_keys',
-            field=models.CharField(blank=True, help_text='As many as you want, separated by a space', max_length=20),
+            model_name="tune",
+            name="other_keys",
+            field=models.CharField(
+                blank=True,
+                help_text="As many as you want, separated by a space",
+                max_length=20,
+            ),
         ),
     ]

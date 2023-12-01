@@ -6,16 +6,19 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('tune', '0008_tune_players'),
+        ("tune", "0008_tune_players"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='tune',
-            name='players',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tunes', to=settings.AUTH_USER_MODEL),
+            model_name="tune",
+            name="players",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tunes",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
