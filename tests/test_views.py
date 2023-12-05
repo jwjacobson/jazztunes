@@ -8,28 +8,28 @@ from tune.models import Tune
 
 @pytest.fixture
 def logged_in_user(client):
+    """
+    Create a user and logs them in, to be used by all tests which require a user.
+    """
     user_model = get_user_model()
     user = user_model.objects.create_user(username="testuser", password="12345")
     client.force_login(user)
     return client
 
 
-@pytest.mark.django_db
-def test_new_tune(logged_in_user):
-    response = logged_in_user.get(reverse("tune:tune_new"))
-    assert response.status_code == 200
-    assert "form" in response.context
-    assert response.context["form"].instance.pk is None
-
+@pytest.fixture
+def new_tune_form(logged_in_user):
+    """
+    Create a tune object with the specified attributes, to be used by all tests which require a tune.
+    """
     title = "test title"
     composer = "test composer"
     key = "C"
-    other_keys = ""
+    other_keys = "D Eb F#"
     song_form = "aaba"
     style = "standard"
     meter = 4
     year = 2023
-    now = timezone.now()
 
     response = logged_in_user.post(
         reverse("tune:tune_new"),
@@ -44,18 +44,29 @@ def test_new_tune(logged_in_user):
             "year": year,
         },
     )
-    assert response.status_code == 302
-    assert response.url == "/"
-    tune = Tune.objects.get(title=title)
-    assert tune.title == title
-    assert tune.composer == composer
-    assert tune.key == key
-    assert tune.other_keys == other_keys
-    assert tune.song_form == song_form
-    assert tune.style == style
-    assert tune.meter == meter
-    assert tune.year == year
-    assert tune.created_at >= now
+
+    return response
+
+
+@pytest.mark.django_db
+def test_new_tune(logged_in_user, new_tune_form):
+    response = logged_in_user.get(reverse("tune:tune_new"))
+    assert response.status_code == 200
+    assert "form" in response.context
+    assert response.context["form"].instance.pk is None
+
+    assert new_tune_form.status_code == 302
+    assert new_tune_form.url == "/"
+    tune = Tune.objects.get(title="test title")
+    assert tune.title == "test title"
+    assert tune.composer == "test composer"
+    assert tune.key == "C"
+    assert tune.other_keys == "D Eb F#"
+    assert tune.song_form == "aaba"
+    assert tune.style == "standard"
+    assert tune.meter == 4
+    assert tune.year == 2023
+    assert tune.created_at <= timezone.now()
 
 
 @pytest.mark.django_db
