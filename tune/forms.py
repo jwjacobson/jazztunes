@@ -36,13 +36,14 @@ class TuneForm(ModelForm):
         Properly format the keys (title case)
         """
         data = self.cleaned_data["other_keys"]
-        if data:
-            formatted_data = []
-            for other_key in data.split():
-                if other_key.lower() not in Tune.KEYS:
-                    raise ValidationError(_(f'"{other_key}" is not a valid key.'))
-                formatted_data.append(
-                    other_key.title()
-                )  # Title case formats the substring like a proper key
-            data = " ".join(formatted_data)  # Convert the list back into a string
+        if data is None:
+            return data
+        formatted_data = []
+        for other_key in data.split():
+            if other_key.lower() not in Tune.KEYS:
+                raise ValidationError(_(f'"{other_key}" is not a valid key.'))
+            formatted_data.append(
+                other_key.title()
+            )  # Title case formats the substring like a proper key
+        data = " ".join(formatted_data)  # Convert the list back into a string
         return data

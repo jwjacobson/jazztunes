@@ -80,9 +80,12 @@ class Tune(models.Model):
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    players = models.ManyToManyField(
-        get_user_model(), related_name="tunes"
-    )  # This field defines which players (users) have the tune in their repertoire
+    created_by = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, blank=True, null=True
+    )
+    # players = models.ManyToManyField(
+    #     get_user_model(), related_name="tunes"
+    # )  # This field defines which players (users) have the tune in their repertoire
 
     @property
     def decade(self):
@@ -97,3 +100,8 @@ class Tune(models.Model):
 
     def __str__(self):
         return f"Tune {self.id} | {self.title}"
+
+
+class RepertoireTune(models.Model):
+    rep_tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
+    player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)

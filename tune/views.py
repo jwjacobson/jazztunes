@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Tune
+from .models import Tune, RepertoireTune
 from .forms import TuneForm
 
 
@@ -19,8 +19,10 @@ def tune_new(request):
         form = TuneForm(request.POST)
         if form.is_valid():
             new_tune = form.save()
+            RepertoireTune.objects.create(rep_tune=new_tune, player=request.user)
             messages.success(request, f"Added Tune {new_tune.id}: {new_tune.title}")
-            new_tune.players.add(request.user)
+            # new_tune.players.add(request.user)
+
             return redirect("tune:tune_list")
     else:
         form = TuneForm()
