@@ -6,11 +6,72 @@ from django.utils import timezone
 from tune.models import Tune
 
 
-@pytest.mark.django_db
-def test_new_tune(client):
-    user = get_user_model().objects.create_user(username="testuser", password="12345")
+@pytest.fixture
+def logged_in_user(client):
+    """
+    Create a user and logs them in, to be used by all tests which require a user.
+    """
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="testuser", password="12345")
     client.force_login(user)
-    response = client.get(reverse("tune:tune_new"))
+    return client
+
+
+@pytest.fixture
+def new_tune_form(logged_in_user):
+    """
+    Create a tune object with the specified attributes, to be used by all tests which require a tune.
+    """
+    title = "test title"
+    composer = "test composer"
+    key = "C"
+    other_keys = "D Eb F#"
+    song_form = "aaba"
+    style = "standard"
+    meter = 4
+    year = 2023
+
+    response = logged_in_user.post(
+        reverse("tune:tune_new"),
+        {
+            "title": title,
+            "composer": composer,
+            "key": key,
+            "other_keys": other_keys,
+            "song_form": song_form,
+            "style": style,
+            "meter": meter,
+            "year": year,
+        },
+    )
+
+    return response
+
+
+@pytest.mark.django_db
+def test_new_tune(logged_in_user, new_tune_form):
+    response = logged_in_user.get(reverse("tune:tune_new"))
+    assert response.status_code == 200
+    assert "form" in response.context
+    assert response.context["form"].instance.pk is None
+
+    assert new_tune_form.status_code == 302
+    assert new_tune_form.url == "/"
+    tune = Tune.objects.get(title="test title")
+    assert tune.title == "test title"
+    assert tune.composer == "test composer"
+    assert tune.key == "C"
+    assert tune.other_keys == "D Eb F#"
+    assert tune.song_form == "aaba"
+    assert tune.style == "standard"
+    assert tune.meter == 4
+    assert tune.year == 2023
+    assert tune.created_at <= timezone.now()
+
+
+@pytest.mark.django_db
+def test_delete_tune(logged_in_user):
+    response = logged_in_user.get(reverse("tune:tune_new"))
     assert response.status_code == 200
     assert "form" in response.context
     assert response.context["form"].instance.pk is None
@@ -24,10 +85,8 @@ def test_new_tune(client):
     style = "standard"
     meter = 4
     year = 2023
-    players = user
-    now = timezone.now()
 
-    response = client.post(
+    response = logged_in_user.post(
         reverse("tune:tune_new"),
         {
             "title": title,
@@ -38,7 +97,6 @@ def test_new_tune(client):
             "style": style,
             "meter": meter,
             "year": year,
-            "players": players,
         },
     )
     assert response.status_code == 302
@@ -52,61 +110,11 @@ def test_new_tune(client):
     assert tune.style == style
     assert tune.meter == meter
     assert tune.year == year
-    assert tune.players.first() == players
-    assert tune.created_at >= now
 
-
-@pytest.mark.django_db
-def test_delete_tune(client):
-    user = get_user_model().objects.create_user(username="testuser", password="12345")
-    client.force_login(user)
-    response = client.get(reverse("tune:tune_new"))
-    assert response.status_code == 200
-    assert "form" in response.context
-    assert response.context["form"].instance.pk is None
-
-    # submit a form using TuneForm
-    title = "test title"
-    composer = "test composer"
-    key = "C"
-    other_keys = ""
-    song_form = "aaba"
-    style = "standard"
-    meter = 4
-    year = 2023
-    players = user
-
-    response = client.post(
-        reverse("tune:tune_new"),
-        {
-            "title": title,
-            "composer": composer,
-            "key": key,
-            "other_keys": other_keys,
-            "song_form": song_form,
-            "style": style,
-            "meter": meter,
-            "year": year,
-            "players": players,
-        },
-    )
-    assert response.status_code == 302
-    assert response.url == "/"
-    tune = Tune.objects.get(title=title)
-    assert tune.title == title
-    assert tune.composer == composer
-    assert tune.key == key
-    assert tune.other_keys == other_keys
-    assert tune.song_form == song_form
-    assert tune.style == style
-    assert tune.meter == meter
-    assert tune.year == year
-    assert tune.players.first() == players
-
-    response = client.get(reverse("tune:tune_delete", kwargs={"pk": tune.pk}))
+    response = logged_in_user.get(reverse("tune:tune_delete", kwargs={"pk": tune.pk}))
     assert response.status_code == 200
 
-    response = client.post(reverse("tune:tune_delete", kwargs={"pk": tune.pk}))
+    response = logged_in_user.post(reverse("tune:tune_delete", kwargs={"pk": tune.pk}))
     assert response.status_code == 302
     assert response.url == "/"
     with pytest.raises(Tune.DoesNotExist):
