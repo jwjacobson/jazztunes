@@ -105,4 +105,4 @@ class Tune(models.Model):
 class RepertoireTune(models.Model):
     rep_tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
     player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    # last_played = DateTimeField(blank=True, null=True)
+    last_played = models.DateTimeField(blank=True, null=True)

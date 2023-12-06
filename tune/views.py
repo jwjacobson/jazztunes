@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -25,7 +26,6 @@ def tune_new(request):
             new_tune = form.save()
             RepertoireTune.objects.create(rep_tune=new_tune, player=request.user)
             messages.success(request, f"Added Tune {new_tune.id}: {new_tune.title}")
-            # new_tune.players.add(request.user)
 
             return redirect("tune:tune_list")
     else:
@@ -67,6 +67,8 @@ def tune_play(request):
     rep_tunes = RepertoireTune.objects.filter(player=user)
     tunes = [rep_tune.rep_tune for rep_tune in rep_tunes]
     tune_to_play = random.choice(tunes)
-    messages.success(request, f"You should play {tune_to_play.title}")
+    # messages.success(request, f"You should play {tune_to_play.title}")
+    tune_to_play.last_played = datetime.now()
+    tune_to_play.save()
 
-    return render(request, "tune/play.html")
+    return render(request, "tune/play.html", {"tune_to_play": tune_to_play})
