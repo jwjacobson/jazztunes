@@ -1,3 +1,5 @@
+import random
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -57,3 +59,14 @@ def tune_delete(request, pk):
         return redirect("tune:tune_list")
 
     return render(request, "tune/form.html", {"tune": tune})
+
+
+@login_required(login_url="/accounts/login")
+def tune_play(request):
+    user = request.user
+    rep_tunes = RepertoireTune.objects.filter(player=user)
+    tunes = [rep_tune.rep_tune for rep_tune in rep_tunes]
+    tune_to_play = random.choice(tunes)
+    messages.success(request, f"You should play {tune_to_play.title}")
+
+    return render(request, "tune/play.html")
