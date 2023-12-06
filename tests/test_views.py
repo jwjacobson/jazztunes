@@ -81,3 +81,34 @@ def test_delete_tune(logged_in_user, new_tune_form):
     assert response.url == "/"
     with pytest.raises(Tune.DoesNotExist):
         Tune.objects.get(title="test title")
+
+
+@pytest.mark.django_db
+def test_edit_tune(logged_in_user, new_tune_form):
+    tune = Tune.objects.get(title="test title")
+
+    response = logged_in_user.get(reverse("tune:tune_edit", kwargs={"pk": tune.pk}))
+    assert response.status_code == 200
+
+    edited_title = "edited title"
+    edited_composer = "edited composer"
+    edited_key = "G"
+    edited_other_keys = "Ab A B#"
+    edited_song_form = "abac"
+    edited_style = "jazz"
+    edited_meter = 3
+    edited_year = 1939
+
+    response = logged_in_user.post(
+        reverse("tune:tune_edit", kwargs={"pk": tune.pk}),
+        {
+            "title": edited_title,
+            "composer": edited_composer,
+            "key": edited_key,
+            "other_keys": edited_other_keys,
+            "song_form": edited_song_form,
+            "style": edited_style,
+            "meter": edited_meter,
+            "year": edited_year,
+        },
+    )
