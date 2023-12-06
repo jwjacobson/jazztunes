@@ -8,7 +8,9 @@ from .forms import TuneForm
 
 @login_required(login_url="/accounts/login/")
 def tune_list(request):
-    tunes = Tune.objects.all()
+    user = request.user
+    rep_tunes = RepertoireTune.objects.filter(player=user)
+    tunes = [rep_tune.rep_tune for rep_tune in rep_tunes]
 
     return render(request, "tune/list.html", {"tunes": tunes})
 
