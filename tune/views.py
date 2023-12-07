@@ -1,5 +1,4 @@
-import random
-from datetime import datetime
+from django.utils import timezone
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -13,7 +12,7 @@ from .forms import TuneForm
 def tune_list(request):
     user = request.user
     rep_tunes = RepertoireTune.objects.filter(player=user)
-    tunes = [rep_tune.rep_tune for rep_tune in rep_tunes]
+    tunes = [tune.tune for tune in rep_tunes]
 
     return render(request, "tune/list.html", {"tunes": tunes})
 
@@ -64,11 +63,8 @@ def tune_delete(request, pk):
 @login_required(login_url="/accounts/login")
 def tune_play(request):
     user = request.user
-    rep_tunes = RepertoireTune.objects.filter(player=user)
-    tunes = [rep_tune.rep_tune for rep_tune in rep_tunes]
-    tune_to_play = random.choice(tunes)
-    # messages.success(request, f"You should play {tune_to_play.title}")
-    tune_to_play.last_played = datetime.now()
-    tune_to_play.save()
+    rep_tune_to_play = RepertoireTune.objects.filter(player=user).order_by("?").first()
+    rep_tune_to_play.last_played = timezone.now()
+    rep_tune_to_play.save()
 
-    return render(request, "tune/play.html", {"tune_to_play": tune_to_play})
+    return render(request, "tune/play.html", {"rep_tune_to_play": rep_tune_to_play})
