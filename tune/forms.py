@@ -47,3 +47,7 @@ class TuneForm(ModelForm):
             )  # Title case formats the substring like a proper key
         data = " ".join(formatted_data)  # Convert the list back into a string
         return data
+
+
+class RepertoireTuneForm(ModelForm):
+    pass
