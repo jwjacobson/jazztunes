@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Tune
+from .models import Tune, RepertoireTune
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
@@ -28,7 +28,7 @@ class TuneForm(ModelForm):
             raise ValidationError(
                 {_('Invalid key (all normal keys accepted plus "none" and "atonal").')}
             )
-        return data.title()  # Title case formats the string like a proper key
+        return data.title()
 
     def clean_other_keys(self):
         """
@@ -42,12 +42,12 @@ class TuneForm(ModelForm):
         for other_key in data.split():
             if other_key.lower() not in Tune.KEYS:
                 raise ValidationError(_(f'"{other_key}" is not a valid key.'))
-            formatted_data.append(
-                other_key.title()
-            )  # Title case formats the substring like a proper key
-        data = " ".join(formatted_data)  # Convert the list back into a string
+            formatted_data.append(other_key.title())
+        data = " ".join(formatted_data)
         return data
 
 
 class RepertoireTuneForm(ModelForm):
-    pass
+    class Meta:
+        model = RepertoireTune
+        exclude = ["tune", "player", "last_played"]

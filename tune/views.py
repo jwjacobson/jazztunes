@@ -1,11 +1,10 @@
 from django.utils import timezone
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Tune, RepertoireTune
-from .forms import TuneForm
+from .forms import TuneForm, RepertoireTuneForm
 
 
 @login_required(login_url="/accounts/login/")
@@ -20,17 +19,23 @@ def tune_list(request):
 @login_required(login_url="/accounts/login/")
 def tune_new(request):
     if request.method == "POST":
-        form = TuneForm(request.POST)
-        if form.is_valid():
-            new_tune = form.save()
-            RepertoireTune.objects.create(rep_tune=new_tune, player=request.user)
-            messages.success(request, f"Added Tune {new_tune.id}: {new_tune.title}")
-
+        tune_form = TuneForm(request.POST)
+        rep_form = RepertoireTuneForm(request.POST)
+        if tune_form.is_valid():  # and rep_form.is_valid():
+            new_tune = tune_form.save()
+            rep_tune = RepertoireTune.objects.create(
+                tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
+            )
+            messages.success(
+                request,
+                f"Added Tune {new_tune.id}: {new_tune.title} to {rep_tune.player}'s repertoire.",
+            )
             return redirect("tune:tune_list")
     else:
-        form = TuneForm()
+        tune_form = TuneForm()
+        rep_form = RepertoireTuneForm()
 
-    return render(request, "tune/form.html", {"form": form})
+    return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
 
 
 @login_required(login_url="/accounts/login/")
@@ -39,9 +44,7 @@ def tune_edit(request, pk):
     form = TuneForm(request.POST or None, instance=tune)
     if form.is_valid():
         updated_tune = form.save()
-        messages.success(
-            request, f"Updated Tune {updated_tune.id}: {updated_tune.title}"
-        )
+        messages.success(request, f"Updated Tune {updated_tune.id}: {updated_tune.title}")
         return redirect("tune:tune_list")
 
     return render(request, "tune/form.html", {"tune": tune, "form": form})

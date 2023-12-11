@@ -59,12 +59,8 @@ class Tune(models.Model):
         "atonal",
     }
 
-    title = models.CharField(
-        max_length=100, unique=True, help_text="The only required field"
-    )
-    composer = models.CharField(
-        max_length=30, blank=True, help_text="Last names only for now"
-    )
+    title = models.CharField(max_length=100, unique=True, help_text="The only required field")
+    composer = models.CharField(max_length=30, blank=True, help_text="Last names only for now")
     key = models.CharField(
         max_length=10,
         blank=True,
@@ -74,18 +70,13 @@ class Tune(models.Model):
         max_length=20, blank=True, help_text="As many as you want, separated by a space"
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
-    style = models.CharField(
-        choices=STYLES, max_length=15, blank=True, default="standard"
-    )
+    style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
-    # players = models.ManyToManyField(
-    #     get_user_model(), related_name="tunes"
-    # )  # This field defines which players (users) have the tune in their repertoire
 
     @property
     def decade(self):
@@ -103,6 +94,17 @@ class Tune(models.Model):
 
 
 class RepertoireTune(models.Model):
+    """
+    RepertoireTune is the ManyToMany table connecting tunes to users ("players").
+    It holds lots of essential data about a player's relationship to the tune,
+    such as when it was last played or how well they know it.
+    """
+
+    KNOWLEDGES = [("know", "know"), ("learning", "learning"), ("don't know", "don't know")]
+
     tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
     player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     last_played = models.DateTimeField(blank=True, null=True)
+    knowledge = models.CharField(
+        choices=KNOWLEDGES, max_length=15, default="know", blank=True, null=True
+    )
