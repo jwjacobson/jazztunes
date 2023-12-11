@@ -21,7 +21,7 @@ def tune_new(request):
     if request.method == "POST":
         tune_form = TuneForm(request.POST)
         rep_form = RepertoireTuneForm(request.POST)
-        if tune_form.is_valid():  # and rep_form.is_valid():
+        if tune_form.is_valid():
             new_tune = tune_form.save()
             rep_tune = RepertoireTune.objects.create(
                 tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
