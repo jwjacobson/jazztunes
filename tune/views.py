@@ -41,13 +41,23 @@ def tune_new(request):
 @login_required(login_url="/accounts/login/")
 def tune_edit(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
-    form = TuneForm(request.POST or None, instance=tune)
-    if form.is_valid():
-        updated_tune = form.save()
-        messages.success(request, f"Updated Tune {updated_tune.id}: {updated_tune.title}")
+    rep_tune = RepertoireTune.objects.filter(tune=tune).get()
+    tune_form = TuneForm(request.POST or None, instance=tune)
+    rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
+    if tune_form.is_valid() and rep_form.is_valid():
+        updated_tune = tune_form.save()
+        rep_form.save()
+        messages.success(
+            request,
+            f"Updated Tune {updated_tune.id}: {updated_tune.title} in {rep_tune.player}'s repertoire.",
+        )
         return redirect("tune:tune_list")
 
-    return render(request, "tune/form.html", {"tune": tune, "form": form})
+    return render(
+        request,
+        "tune/form.html",
+        {"tune": tune, "rep_tune": rep_tune, "tune_form": tune_form, "rep_form": rep_form},
+    )
 
 
 @login_required(login_url="/accounts/login/")
