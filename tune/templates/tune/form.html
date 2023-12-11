@@ -6,7 +6,7 @@
   <form method="post">
     {% csrf_token %}
 
-    {% for field in form %}
+    {% for field in tune_form %}
       <td>
         <div>
             {{ field.errors }}
@@ -18,6 +18,25 @@
         </div>
       </td>
     {% endfor %}
+    <!-- {% for field in rep_form %}
+      <td>
+        <div>
+            {{ field.errors }}
+            <p>{{ field.label_tag }}</p>
+            {{ field }}
+            {% if field.help_text %}
+              <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+      </td>
+    {% endfor %} -->
+    <td>
+      <div>
+        <p>
+          {{ rep_form }}
+        </p>
+      </div>
+    </td>
 
     <input type="submit" value="{% if post %}Edit{% else %}New{% endif %}" />
     <a href="{% url 'tune:tune_list' %}">Go Back</a>
