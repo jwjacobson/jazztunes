@@ -69,7 +69,10 @@ def tune_delete(request, pk):
         deleted_id, deleted_title = tune.id, tune.title
         tune.delete()
         rep_tune.delete()
-        messages.success(request, f"Deleted {deleted_id}: {deleted_title}")
+        messages.success(
+            request,
+            f"Deleted Tune {deleted_id}: {deleted_title} from {rep_tune.player}'s repertoire.",
+        )
         return redirect("tune:tune_list")
 
     return render(request, "tune/form.html", {"tune": tune})

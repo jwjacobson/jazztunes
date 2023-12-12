@@ -3,32 +3,42 @@
 {% block title %}Tunes{% endblock %}
 
 {% block content %}
+<div>
+    <form method="post" action="{% url 'tune:tune_new' %}">
+        {% csrf_token %}
+        <input class="btn btn-success" type="submit" value="New Tune">
+    </form>
+</div>
     <h1>Tunes</h1>
     <div class="tune">
         <!-- create a table -->
-        <table class="table table-lg">
+        <table class="table table-success table-striped">
             <tr>
                 <thead>
                     <th>Title</th>
                     <th>Composer</th>
                     <th>Meter</th>
                     <th>Key</th>
-                    <th>Type</th>
-                    <th>ABC</th>
+                    <th>Other Keys</th>
+                    <th>Knowledge</th>
+                    <th>Actions</th>
                 </thead>
             </tr>
             {% for tune in tunes %}
             <tr>
-                <td>
-                    <a href="{% url 'tune:tune_edit' pk=tune.pk %}">
-                        {{ tune.title }}
-                    </a>
-                </td>
+                <td>{{ tune.title }}</td>
                 <td>{{ tune.composer }}</td>
                 <td>{{ tune.meter }}</td>
                 <td>{{ tune.key }}</td>
-                <td>{{ tune.type }}</td>
-                <td>{{ tune.abc }}</td>
+                <td>{{ tune.other_keys }}</td>
+                <td>{{ rep_tune.knowledge }}</td>
+                <td>
+                    <form method="post" action="{% url 'tune:tune_delete' pk=tune.id %}">
+                    {% csrf_token %}
+                    <input class="btn btn-outline-danger btn-sm" type="submit" value="Delete">
+                    </form>
+                    <a class="btn btn-outline-primary btn-sm" href="{% url 'tune:tune_edit' pk=tune.pk %}" role="button">Edit</a>
+                </td>
             </tr>
             {% endfor %}
         </table>
