@@ -11,7 +11,7 @@ from .forms import TuneForm, RepertoireTuneForm
 def tune_list(request):
     user = request.user
     rep_tunes = RepertoireTune.objects.filter(player=user)
-    tunes = [tune.tune for tune in rep_tunes]
+    tunes = [tune for tune in rep_tunes]
 
     return render(request, "tune/list.html", {"tunes": tunes})
 
