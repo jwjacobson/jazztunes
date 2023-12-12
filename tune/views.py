@@ -63,10 +63,12 @@ def tune_edit(request, pk):
 @login_required(login_url="/accounts/login/")
 def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
+    rep_tune = RepertoireTune.objects.filter(tune=tune).get()
 
     if request.method == "POST":
         deleted_id, deleted_title = tune.id, tune.title
         tune.delete()
+        rep_tune.delete()
         messages.success(request, f"Deleted {deleted_id}: {deleted_title}")
         return redirect("tune:tune_list")
 
