@@ -108,3 +108,7 @@ class RepertoireTune(models.Model):
     knowledge = models.CharField(
         choices=KNOWLEDGES, max_length=15, default="know", blank=True, null=True
     )
+
+    class Meta:
+        ordering = ["tune__title"]
+        unique_together = ("tune", "player")
