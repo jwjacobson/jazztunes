@@ -62,7 +62,7 @@ def tune_edit(request, pk):
 @login_required(login_url="/accounts/login/")
 def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
-    rep_tune = RepertoireTune.objects.filter(tune=tune).get()
+    rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
     if request.method == "POST":
         deleted_id, deleted_title = tune.id, tune.title

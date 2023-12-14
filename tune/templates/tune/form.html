@@ -7,39 +7,27 @@
     {% csrf_token %}
 
     {% for field in tune_form %}
-      <td>
-        <div>
-            {{ field.errors }}
+        <div class="mb-3">
             <p>{{ field.label_tag }}</p>
             {{ field }}
+            {{ field.errors }}
             {% if field.help_text %}
               <p class="help">{{ field.help_text|safe }}</p>
             {% endif %}
         </div>
-      </td>
     {% endfor %}
-    <!-- {% for field in rep_form %}
-      <td>
-        <div>
-            {{ field.errors }}
+    {% for field in rep_form %}
+    <div class="mb-3">
+        <p>
             <p>{{ field.label_tag }}</p>
             {{ field }}
-            {% if field.help_text %}
-              <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
-        </div>
-      </td>
-    {% endfor %} -->
-    <td>
-      <div>
-        <p>
-          {{ rep_form }}
+            {{ field.errors }}
         </p>
       </div>
-    </td>
+    {% endfor %}
 
-    <input type="submit" value="{% if post %}Edit{% else %}New{% endif %}" />
-    <a href="{% url 'tune:tune_list' %}">Go Back</a>
+
+    <input type="submit" class="btn btn-success" value="{% if post %}Save{% else %}Create{% endif %}" />
   </form>
 
 {% endblock %}
