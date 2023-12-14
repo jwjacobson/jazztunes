@@ -16,6 +16,8 @@ class Tune(models.Model):
         ("abac", "ABAC"),
         ("aba", "ABA"),
         ("abab", "ABAB"),
+        ("abcd", "ABCD"),
+        ("aab", "AAB"),
         ("blues", "blues"),
         ("irregular", "irregular"),
     ]
@@ -64,10 +66,12 @@ class Tune(models.Model):
     key = models.CharField(
         max_length=10,
         blank=True,
-        help_text="One only, use single letter for major, add - for minor",
+        help_text="Letters A-G, one only, add - for minor",
     )
     other_keys = models.CharField(
-        max_length=20, blank=True, help_text="As many as you want, separated by a space"
+        max_length=20,
+        blank=True,
+        help_text="Letters A-G, as many as you want, separated by a space",
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
