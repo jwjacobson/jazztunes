@@ -10,9 +10,7 @@ from .forms import TuneForm, RepertoireTuneForm
 @login_required(login_url="/accounts/login/")
 def tune_list(request):
     user = request.user
-    rep_tunes = RepertoireTune.objects.filter(player=user)
-    tunes = [tune for tune in rep_tunes]
-
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     return render(request, "tune/list.html", {"tunes": tunes})
 
 
@@ -41,7 +39,8 @@ def tune_new(request):
 @login_required(login_url="/accounts/login/")
 def tune_edit(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
-    rep_tune = RepertoireTune.objects.filter(tune=tune).get()
+    rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
+
     tune_form = TuneForm(request.POST or None, instance=tune)
     rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
     if tune_form.is_valid() and rep_form.is_valid():
