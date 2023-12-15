@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django import forms
 from .models import Tune, RepertoireTune
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
@@ -51,3 +52,7 @@ class RepertoireTuneForm(ModelForm):
     class Meta:
         model = RepertoireTune
         exclude = ["tune", "player", "last_played"]
+
+
+class SearchForm(forms.Form):
+    search_term = forms.CharField(label="search_term", max_length=200)

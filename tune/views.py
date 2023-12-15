@@ -4,14 +4,25 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Tune, RepertoireTune
-from .forms import TuneForm, RepertoireTuneForm
+from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
 @login_required(login_url="/accounts/login/")
 def tune_list(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
-    return render(request, "tune/list.html", {"tunes": tunes})
+
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            queried_tunes = tunes.filter(tune__title__icontains=search_form.data["search_term"])
+    else:
+        search_form = SearchForm()
+    return render(
+        request,
+        "tune/list.html",
+        {"tunes": tunes, "queried_tunes": queried_tunes, "search_form": search_form},
+    )
 
 
 @login_required(login_url="/accounts/login/")
