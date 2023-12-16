@@ -114,5 +114,4 @@ class RepertoireTune(models.Model):
     )
 
     class Meta:
-        ordering = ["tune__title"]
         unique_together = ("tune", "player")
