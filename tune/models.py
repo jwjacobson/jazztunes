@@ -112,6 +112,7 @@ class RepertoireTune(models.Model):
     knowledge = models.CharField(
         choices=KNOWLEDGES, max_length=15, default="know", blank=True, null=True
     )
+    started_learning = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         unique_together = ("tune", "player")

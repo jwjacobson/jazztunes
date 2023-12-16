@@ -51,7 +51,7 @@ class TuneForm(ModelForm):
 class RepertoireTuneForm(ModelForm):
     class Meta:
         model = RepertoireTune
-        exclude = ["tune", "player", "last_played"]
+        exclude = ["tune", "player", "last_played", "started_learning"]
 
 
 class SearchForm(forms.Form):
