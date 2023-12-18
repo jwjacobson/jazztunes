@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import Q
 
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
@@ -15,11 +16,14 @@ def tune_list(request):
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
-            queried_tunes = tunes.filter(tune__title__icontains=search_form.data["search_term"])
-            return render(
-                request,
-                "tune/list.html",
-                {"tunes": tunes, "queried_tunes": queried_tunes, "search_form": search_form},
+            tunes = tunes.filter(
+                Q(tune__title__icontains=search_form.data["search_term"])
+                | Q(tune__composer__icontains=search_form.data["search_term"])
+                | Q(tune__meter__icontains=search_form.data["search_term"])
+                | Q(tune__key__icontains=search_form.data["search_term"])
+                | Q(tune__other_keys__icontains=search_form.data["search_term"])
+                | Q(tune__year__icontains=search_form.data["search_term"])
+                | Q(knowledge__icontains=search_form.data["search_term"])
             )
     else:
         search_form = SearchForm()
