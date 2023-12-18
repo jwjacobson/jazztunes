@@ -25,9 +25,12 @@
                 <thead>
                     <th>Title</th>
                     <th>Composer</th>
-                    <th>Meter</th>
                     <th>Key</th>
                     <th>Other Keys</th>
+                    <th>Form</th>
+                    <th>Style</th>
+                    <th>Meter</th>
+                    <th>Year</th>
                     <th>Knowledge</th>
                     <th>Actions</th>
                 </thead>
@@ -36,9 +39,12 @@
         <tr>
             <td>{{ tune.tune.title }}</td>
             <td>{{ tune.tune.composer }}</td>
-            <td>{{ tune.tune.meter }}</td>
             <td>{{ tune.tune.key }}</td>
             <td>{{ tune.tune.other_keys }}</td>
+            <td>{{ tune.tune.song_form }}</td>
+            <td>{{ tune.tune.style }}</td>
+            <td>{{ tune.tune.meter }}</td>
+            <td>{{ tune.tune.year }}</td>
             <td>{{ tune.knowledge }}</td>
             <td>
                 <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}">
@@ -48,7 +54,13 @@
                 <a class="btn btn-outline-primary btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
             </td>
         </tr>
-        {% endfor %}
+        {% empty %}
         </table>
-    </div>
+        </div>
+        <div>
+        <p class="bg-danger-subtle">
+            Your search returned no results.
+        </p>
+        </div>
+        {% endfor %}
 {% endblock %}
