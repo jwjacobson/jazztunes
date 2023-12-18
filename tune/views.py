@@ -15,12 +15,7 @@ def tune_list(request):
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
-            queried_tunes = tunes.filter(tune__title__icontains=search_form.data["search_term"])
-            return render(
-                request,
-                "tune/list.html",
-                {"tunes": tunes, "queried_tunes": queried_tunes, "search_form": search_form},
-            )
+            tunes = tunes.filter(tune__title__icontains=search_form.data["search_term"])
     else:
         search_form = SearchForm()
     return render(
