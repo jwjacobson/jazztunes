@@ -19,9 +19,11 @@ def tune_list(request):
             tunes = tunes.filter(
                 Q(tune__title__icontains=search_form.data["search_term"])
                 | Q(tune__composer__icontains=search_form.data["search_term"])
-                | Q(tune__meter__icontains=search_form.data["search_term"])
                 | Q(tune__key__icontains=search_form.data["search_term"])
                 | Q(tune__other_keys__icontains=search_form.data["search_term"])
+                | Q(tune__song_form__icontains=search_form.data["search_term"])
+                | Q(tune__style__icontains=search_form.data["search_term"])
+                | Q(tune__meter__icontains=search_form.data["search_term"])
                 | Q(tune__year__icontains=search_form.data["search_term"])
                 | Q(knowledge__icontains=search_form.data["search_term"])
             )

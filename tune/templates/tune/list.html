@@ -3,7 +3,7 @@
 {% block title %}Tunes{% endblock %}
 
 {% block content %}
-<div class="mb-3">
+<div class="my-4">
 <form method="post" action="{% url 'tune:tune_list' %}">
     {% csrf_token %}
     <label for="universal_search">Universal search: </label>
