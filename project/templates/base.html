@@ -14,34 +14,44 @@
     </head>
     <body class="bg-warning-subtle m-5">
         {% block body %}
-            {% if messages %}
-                <div>
-                    <strong>{% trans "Messages:" %}</strong>
-                    <ul>
-                        {% for message in messages %}<li>{{ message }}</li>{% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-            <div>
-                <strong>{% trans "Menu:" %}</strong>
-                <ul>
-                    {% if user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'account_email' %}">{% trans "Change Email" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-                        </li>
-                    {% else %}
-                        <li>
-                            <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                        </li>
-                    {% endif %}
+        <nav class="navbar navbar-expand-lg bg-success-subtle">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{% url 'tune:tune_list' %}">Tune</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if user.is_authenticated %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tune:tune_new' %}">Add</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tune:tune_play' %}">Play</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
+                  </li>
+                {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{% url 'account_signup' %}">Create an Account</a>
+                  </li>
+                {% endif %}
                 </ul>
+              </div>
             </div>
+          </nav>
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info" role="alert">
+                        {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+          
             {% block content %}
             {% endblock content %}
         {% endblock body %}
