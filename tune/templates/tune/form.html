@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <h1>{% if post %}Edit{% else %}New{% endif %} Tune</h1>
+  <h1>{% if tune %}Edit{% else %}New{% endif %} Tune</h1>
   <form method="post">
     {% csrf_token %}
 
@@ -27,7 +27,7 @@
     {% endfor %}
 
 
-    <input type="submit" class="btn btn-success" value="{% if post %}Save{% else %}Create{% endif %}" />
+    <input type="submit" class="btn btn-success" value="{% if tune %}Save{% else %}Create{% endif %}" />
   </form>
 
 {% endblock %}
