@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
+from django.db import transaction
 
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
@@ -42,14 +43,15 @@ def tune_new(request):
         tune_form = TuneForm(request.POST)
         rep_form = RepertoireTuneForm(request.POST)
         if tune_form.is_valid():
-            new_tune = tune_form.save()
-            rep_tune = RepertoireTune.objects.create(
-                tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
-            )
-            messages.success(
-                request,
-                f"Added Tune {new_tune.id}: {new_tune.title} to {rep_tune.player}'s repertoire.",
-            )
+            with transaction.atomic():
+                new_tune = tune_form.save()
+                rep_tune = RepertoireTune.objects.create(
+                    tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
+                )
+                messages.success(
+                    request,
+                    f"Added Tune {new_tune.id}: {new_tune.title} to {rep_tune.player}'s repertoire.",
+                )
             return redirect("tune:tune_list")
     else:
         tune_form = TuneForm()

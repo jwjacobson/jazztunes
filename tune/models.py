@@ -12,12 +12,12 @@ class Tune(models.Model):
     STYLES = [("standard", "standard"), ("jazz", "jazz")]
 
     FORMS = [
-        ("aaba", "AABA"),
-        ("abac", "ABAC"),
-        ("aba", "ABA"),
-        ("abab", "ABAB"),
-        ("abcd", "ABCD"),
-        ("aab", "AAB"),
+        ("AABA", "AABA"),
+        ("ABAC", "ABAC"),
+        ("ABA", "ABA"),
+        ("ABAB", "ABAB"),
+        ("ABCD", "ABCD"),
+        ("AAB", "AAB"),
         ("blues", "blues"),
         ("irregular", "irregular"),
     ]
