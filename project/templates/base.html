@@ -45,12 +45,19 @@
             </div>
           </nav>
             {% if messages %}
-            {% for message in messages %}
+              {% for message in messages %}
+                {% if message.tags == 'success' %}
                 <div class="alert alert-info" role="alert">
-                        {{ message }}
+                  {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
                 </div>
-            {% endfor %}
+                {% elif message.tags == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                  {{ message }}
+                </div>
+                {% endif %}
+              {% endfor %}
             {% endif %}
+      
           
             {% block content %}
             {% endblock content %}
