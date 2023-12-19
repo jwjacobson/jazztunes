@@ -68,12 +68,13 @@ def tune_edit(request, pk):
     tune_form = TuneForm(request.POST or None, instance=tune)
     rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
     if tune_form.is_valid() and rep_form.is_valid():
-        updated_tune = tune_form.save()
-        rep_form.save()
-        messages.success(
-            request,
-            f"Updated Tune {updated_tune.id}: {updated_tune.title} in {rep_tune.player}'s repertoire.",
-        )
+        with transaction.atomic():
+            updated_tune = tune_form.save()
+            rep_form.save()
+            messages.success(
+                request,
+                f"Updated Tune {updated_tune.id}: {updated_tune.title} in {rep_tune.player}'s repertoire.",
+            )
         return redirect("tune:tune_list")
 
     return render(
@@ -90,12 +91,13 @@ def tune_delete(request, pk):
 
     if request.method == "POST":
         deleted_id, deleted_title = tune.id, tune.title
-        tune.delete()
-        rep_tune.delete()
-        messages.success(
-            request,
-            f"Deleted Tune {deleted_id}: {deleted_title} from {rep_tune.player}'s repertoire.",
-        )
+        with transaction.atomic():
+            tune.delete()
+            rep_tune.delete()
+            messages.success(
+                request,
+                f"Deleted Tune {deleted_id}: {deleted_title} from {rep_tune.player}'s repertoire.",
+            )
         return redirect("tune:tune_list")
 
     return render(request, "tune/form.html", {"tune": tune})
