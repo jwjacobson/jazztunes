@@ -17,17 +17,35 @@ def tune_list(request):
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
-            tunes = tunes.filter(
-                Q(tune__title__icontains=search_form.data["search_term"])
-                | Q(tune__composer__icontains=search_form.data["search_term"])
-                | Q(tune__key__icontains=search_form.data["search_term"])
-                | Q(tune__other_keys__icontains=search_form.data["search_term"])
-                | Q(tune__song_form__icontains=search_form.data["search_term"])
-                | Q(tune__style__icontains=search_form.data["search_term"])
-                | Q(tune__meter__icontains=search_form.data["search_term"])
-                | Q(tune__year__icontains=search_form.data["search_term"])
-                | Q(knowledge__icontains=search_form.data["search_term"])
-            )
+            search_terms = search_form.data["search_term"].split(" ")
+            if len(search_terms) == 1:
+                tunes = tunes.filter(
+                    Q(tune__title__icontains=search_form.data["search_term"])
+                    | Q(tune__composer__icontains=search_form.data["search_term"])
+                    | Q(tune__key__icontains=search_form.data["search_term"])
+                    | Q(tune__other_keys__icontains=search_form.data["search_term"])
+                    | Q(tune__song_form__icontains=search_form.data["search_term"])
+                    | Q(tune__style__icontains=search_form.data["search_term"])
+                    | Q(tune__meter__icontains=search_form.data["search_term"])
+                    | Q(tune__year__icontains=search_form.data["search_term"])
+                    | Q(knowledge__icontains=search_form.data["search_term"])
+                )
+            else:
+                term_queries = []
+                for term in search_terms:
+                    term_query = tunes.filter(
+                        Q(tune__title__icontains=term)
+                        | Q(tune__composer__icontains=term)
+                        | Q(tune__key__icontains=term)
+                        | Q(tune__other_keys__icontains=term)
+                        | Q(tune__song_form__icontains=term)
+                        | Q(tune__style__icontains=term)
+                        | Q(tune__meter__icontains=term)
+                        | Q(tune__year__icontains=term)
+                        | Q(knowledge__icontains=term)
+                    )
+                    term_queries.append(term_query)
+                tunes = term_queries[0].intersection(*term_queries[1:])
     else:
         search_form = SearchForm()
     return render(
