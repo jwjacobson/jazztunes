@@ -75,7 +75,7 @@ class Tune(models.Model):
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
-    meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, default=4)
+    meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
