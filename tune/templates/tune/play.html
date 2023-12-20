@@ -3,9 +3,17 @@
 {% block title %}Play{% endblock %}
 
 {% block content %}
+<div class="my-4">
+    <form method="post" action="{% url 'tune:tune_play' %}">
+        {% csrf_token %}
+        <label for="basic_search">Basic search: </label>
+        <input id="search_term" type="text" name="search_term">
+        <input class="btn btn-primary" type="submit" value="Search">
+    </div>
+    </form>
 <div>
 <p>
-You should play {{ rep_tune_to_play.tune.title }}
+You should play {{ tune_to_play.tune.title }}
 </p>
 </div>
 {% endblock %}

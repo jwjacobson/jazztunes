@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -135,8 +134,64 @@ def tune_delete(request, pk):
 @login_required(login_url="/accounts/login")
 def tune_play(request):
     user = request.user
-    rep_tune_to_play = RepertoireTune.objects.filter(player=user).order_by("?").first()
-    rep_tune_to_play.last_played = timezone.now()
-    rep_tune_to_play.save()
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
 
-    return render(request, "tune/play.html", {"rep_tune_to_play": rep_tune_to_play})
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_terms = search_form.data["search_term"].split(" ")
+            if len(search_terms) > 4:
+                messages.error(
+                    request,
+                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                )
+                return render(
+                    request,
+                    "tune/list.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
+            initial_query = tunes.filter(
+                Q(tune__title__icontains=search_terms[0])
+                | Q(tune__composer__icontains=search_terms[0])
+                | Q(tune__key__icontains=search_terms[0])
+                | Q(tune__other_keys__icontains=search_terms[0])
+                | Q(tune__song_form__icontains=search_terms[0])
+                | Q(tune__style__icontains=search_terms[0])
+                | Q(tune__meter__icontains=search_terms[0])
+                | Q(tune__year__icontains=search_terms[0])
+                | Q(knowledge__icontains=search_terms[0])
+            )
+            if len(search_terms) == 1:
+                tunes = initial_query
+            else:
+                additional_queries = set()
+                for term in search_terms[1:]:
+                    term_query = tunes.filter(
+                        Q(tune__title__icontains=term)
+                        | Q(tune__composer__icontains=term)
+                        | Q(tune__key__icontains=term)
+                        | Q(tune__other_keys__icontains=term)
+                        | Q(tune__song_form__icontains=term)
+                        | Q(tune__style__icontains=term)
+                        | Q(tune__meter__icontains=term)
+                        | Q(tune__year__icontains=term)
+                        | Q(knowledge__icontains=term)
+                    )
+                    additional_queries.add(term_query)
+                tunes = initial_query.intersection(*additional_queries)
+    else:
+        search_form = SearchForm()
+
+    tune_to_play = tunes.order_by("?").first()
+
+    # rep_tune_to_play = RepertoireTune.objects.filter(player=user).order_by("?").first()
+    # rep_tune_to_play.last_played = timezone.now()
+    # rep_tune_to_play.save()
+
+    # return render(request, "tune/play.html", {"rep_tune_to_play": rep_tune_to_play})
+
+    return render(
+        request,
+        "tune/play.html",
+        {"tunes": tunes, "search_form": search_form, "tune_to_play": tune_to_play},
+    )
