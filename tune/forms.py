@@ -56,3 +56,7 @@ class RepertoireTuneForm(ModelForm):
 
 class SearchForm(forms.Form):
     search_term = forms.CharField(label="search_term", max_length=200)
+
+
+class PlayForm(forms.Form):
+    pass

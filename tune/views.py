@@ -16,7 +16,7 @@ def tune_list(request):
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
-            search_terms = search_form.data["search_term"].split(" ")
+            search_terms = search_form.cleaned_data["search_term"].split(" ")
             if len(search_terms) > 4:
                 messages.error(
                     request,
@@ -139,7 +139,7 @@ def tune_play(request):
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
-            search_terms = search_form.data["search_term"].split(" ")
+            search_terms = search_form.cleaned_data["search_term"].split(" ")
             if len(search_terms) > 4:
                 messages.error(
                     request,
@@ -147,7 +147,7 @@ def tune_play(request):
                 )
                 return render(
                     request,
-                    "tune/list.html",
+                    "tune/play.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
             initial_query = tunes.filter(
@@ -182,13 +182,9 @@ def tune_play(request):
     else:
         search_form = SearchForm()
 
+    # suggested_tune = tunes.order_by("?").first()
+
     tune_to_play = tunes.order_by("?").first()
-
-    # rep_tune_to_play = RepertoireTune.objects.filter(player=user).order_by("?").first()
-    # rep_tune_to_play.last_played = timezone.now()
-    # rep_tune_to_play.save()
-
-    # return render(request, "tune/play.html", {"rep_tune_to_play": rep_tune_to_play})
 
     return render(
         request,
