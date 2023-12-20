@@ -18,6 +18,16 @@ def tune_list(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.data["search_term"].split(" ")
+            if len(search_terms) > 4:
+                messages.error(
+                    request,
+                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                )
+                return render(
+                    request,
+                    "tune/list.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
             initial_query = tunes.filter(
                 Q(tune__title__icontains=search_terms[0])
                 | Q(tune__composer__icontains=search_terms[0])
