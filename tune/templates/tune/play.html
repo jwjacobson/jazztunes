@@ -11,10 +11,10 @@
         <input class="btn btn-primary" type="submit" value="Search">
     </div>
     </form>
-{% if request.method == "POST" %}
+{% if request.method == "POST" and "search_term" in request.POST and tunes %}
 <div>
 <p>
-You should play <strong>{{ tune_to_play.tune.title }}</strong>
+You should play <strong>{{ suggested_tune.tune.title }}</strong>
 </p>
 <p>
 Okay?

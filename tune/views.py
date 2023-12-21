@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
 from django.db import transaction
+from django.utils import timezone
 
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
@@ -136,7 +137,7 @@ def tune_play(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
 
-    if request.method == "POST":
+    if request.method == "POST" and "search_term" in request.POST:
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
@@ -150,6 +151,7 @@ def tune_play(request):
                     "tune/play.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
+
             initial_query = tunes.filter(
                 Q(tune__title__icontains=search_terms[0])
                 | Q(tune__composer__icontains=search_terms[0])
@@ -161,8 +163,10 @@ def tune_play(request):
                 | Q(tune__year__icontains=search_terms[0])
                 | Q(knowledge__icontains=search_terms[0])
             )
+
             if len(search_terms) == 1:
                 tunes = initial_query
+
             else:
                 additional_queries = set()
                 for term in search_terms[1:]:
@@ -179,15 +183,37 @@ def tune_play(request):
                     )
                     additional_queries.add(term_query)
                 tunes = initial_query.intersection(*additional_queries)
+
+            if not tunes:
+                messages.error(request, "No tunes match your search.")
+                return render(
+                    request,
+                    "tune/play.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
+
     else:
         search_form = SearchForm()
 
-    # suggested_tune = tunes.order_by("?").first()
+    if len(tunes) < 3:
+        suggested_tune = tunes.first()
+    else:
+        suggested_tune = tunes.order_by("?").first()
 
-    tune_to_play = tunes.order_by("?").first()
+    if request.method == "POST" and "yes" in request.POST:
+        tune_to_play = suggested_tune
+        tune_to_play.last_played = timezone.now()
+        tune_to_play.save()
+
+    else:
+        return render(
+            request,
+            "tune/play.html",
+            {"tunes": tunes, "search_form": search_form, "suggested_tune": suggested_tune},
+        )
 
     return render(
         request,
         "tune/play.html",
-        {"tunes": tunes, "search_form": search_form, "tune_to_play": tune_to_play},
+        {"tunes": tunes, "search_form": search_form},
     )
