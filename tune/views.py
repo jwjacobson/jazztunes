@@ -130,11 +130,18 @@ def tune_delete(request, pk):
 def tune_play(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    original_search_string = ""
+
+    is_search = False
 
     if request.method == "POST" and "search_term" in request.POST:
+        is_search = True
         search_form = SearchForm(request.POST)
+
         if search_form.is_valid():
-            search_terms = search_form.cleaned_data["search_term"].split(" ")
+            original_search_string = search_form.cleaned_data["search_term"]
+            search_terms = original_search_string.split(" ")
+
             if len(search_terms) > 4:
                 messages.error(
                     request,
@@ -147,7 +154,6 @@ def tune_play(request):
                 )
 
             tunes = query_tunes(tunes, search_terms)
-
             if not tunes:
                 messages.error(request, "No tunes match your search.")
                 return render(
@@ -159,25 +165,26 @@ def tune_play(request):
     else:
         search_form = SearchForm()
 
+    # TODO: figure out why shuffling does not work
     if len(tunes) < 3:
         suggested_tune = tunes.first()
     else:
         suggested_tune = tunes.order_by("?").first()
 
-    if request.method == "POST" and "yes" in request.POST:
-        tune_to_play = suggested_tune
-        tune_to_play.last_played = timezone.now()
-        tune_to_play.save()
-
-    else:
-        return render(
-            request,
-            "tune/play.html",
-            {"tunes": tunes, "search_form": search_form, "suggested_tune": suggested_tune},
-        )
+    if request.method == "POST":
+        if "yes" in request.POST:
+            tune_to_play = suggested_tune
+            tune_to_play.last_played = timezone.now()
+            tune_to_play.save()
+            messages.success(request, f"Played {tune_to_play.tune.title}!")
+        elif "no" in request.POST:
+            # TODO: suggest another tune
+            messages.info(request, f"Please search again")
 
     return render(
         request,
         "tune/play.html",
-        {"tunes": tunes, "search_form": search_form},
+        {"tunes": tunes, "search_form": search_form,
+         "original_search_string": original_search_string,
+         "suggested_tune": suggested_tune, "is_search": is_search},
     )

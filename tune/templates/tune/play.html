@@ -7,25 +7,21 @@
     <form method="post" action="{% url 'tune:tune_play' %}">
         {% csrf_token %}
         <label for="basic_search">Basic search: </label>
-        <input id="search_term" type="text" name="search_term">
+        <input id="search_term" type="text" name="search_term" value="{{ original_search_string }}">
         <input class="btn btn-primary" type="submit" value="Search">
     </div>
     </form>
-{% if request.method == "POST" and "search_term" in request.POST and tunes %}
-<div>
-<p>
-You should play <strong>{{ suggested_tune.tune.title }}</strong>
-</p>
-<p>
-Okay?
-</p>
-<div>
-    <form method="post" action="{% url 'tune:tune_play' %}">
-        {% csrf_token %}
-    <input id="yes" type="submit" class="btn btn-warning mr-2" name="yes" value="Play!">
-    <input id="no" type="submit" class="btn btn-danger mr-2" name="no" value="No thanks">
-    </form>
-  </div>
-</div>
-{% endif %}
+    {% if is_search %}
+      <div>
+        <p> You should play <strong>{{ suggested_tune.tune.title }}</strong> </p>
+        <p> Okay?  </p>
+        <div>
+          <form method="post" action="{% url 'tune:tune_play' %}">
+              {% csrf_token %}
+          <input id="yes" type="submit" class="btn btn-warning mr-2" name="yes" value="Play!">
+          <input id="no" type="submit" class="btn btn-danger mr-2" name="no" value="No thanks">
+          </form>
+        </div>
+      </div>
+    {% endif %}
 {% endblock %}
