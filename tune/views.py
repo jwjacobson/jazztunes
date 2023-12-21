@@ -50,6 +50,15 @@ def tune_list(request):
                 )
 
             tunes = query_tunes(tunes, search_terms)
+
+            if not tunes:
+                messages.error(request, "No tunes match your search.")
+                return render(
+                    request,
+                    "tune/play.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
+
     else:
         search_form = SearchForm()
 
@@ -179,12 +188,16 @@ def tune_play(request):
             messages.success(request, f"Played {tune_to_play.tune.title}!")
         elif "no" in request.POST:
             # TODO: suggest another tune
-            messages.info(request, f"Please search again")
+            messages.info(request, "Please search again")
 
     return render(
         request,
         "tune/play.html",
-        {"tunes": tunes, "search_form": search_form,
-         "original_search_string": original_search_string,
-         "suggested_tune": suggested_tune, "is_search": is_search},
+        {
+            "tunes": tunes,
+            "search_form": search_form,
+            "original_search_string": original_search_string,
+            "suggested_tune": suggested_tune,
+            "is_search": is_search,
+        },
     )

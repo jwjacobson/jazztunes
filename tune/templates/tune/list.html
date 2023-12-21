@@ -54,13 +54,7 @@
                 <a class="btn btn-outline-primary btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
             </td>
         </tr>
-        {% empty %}
+        {% endfor %}
         </table>
         </div>
-        <div>
-        <p class="bg-danger-subtle">
-            Your search returned no results.
-        </p>
-        </div>
-        {% endfor %}
 {% endblock %}
