@@ -116,3 +116,6 @@ class RepertoireTune(models.Model):
 
     class Meta:
         unique_together = ("tune", "player")
+
+    def __str__(self):
+        return f"Tune {self.tune} | {self.player}"
