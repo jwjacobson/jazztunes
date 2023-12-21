@@ -9,6 +9,26 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
+def query_tunes(initial_query, search_terms):
+    additional_queries = set()
+    for term in search_terms:
+        term_query = initial_query.filter(
+            Q(tune__title__icontains=term)
+            | Q(tune__composer__icontains=term)
+            | Q(tune__key__icontains=term)
+            | Q(tune__other_keys__icontains=term)
+            | Q(tune__song_form__icontains=term)
+            | Q(tune__style__icontains=term)
+            | Q(tune__meter__icontains=term)
+            | Q(tune__year__icontains=term)
+            | Q(knowledge__icontains=term)
+        )
+        additional_queries.add(term_query)
+
+    all_tunes = initial_query.intersection(*additional_queries)
+    return all_tunes
+
+
 @login_required(login_url="/accounts/login/")
 def tune_list(request):
     user = request.user
@@ -28,37 +48,11 @@ def tune_list(request):
                     "tune/list.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
-            initial_query = tunes.filter(
-                Q(tune__title__icontains=search_terms[0])
-                | Q(tune__composer__icontains=search_terms[0])
-                | Q(tune__key__icontains=search_terms[0])
-                | Q(tune__other_keys__icontains=search_terms[0])
-                | Q(tune__song_form__icontains=search_terms[0])
-                | Q(tune__style__icontains=search_terms[0])
-                | Q(tune__meter__icontains=search_terms[0])
-                | Q(tune__year__icontains=search_terms[0])
-                | Q(knowledge__icontains=search_terms[0])
-            )
-            if len(search_terms) == 1:
-                tunes = initial_query
-            else:
-                additional_queries = set()
-                for term in search_terms[1:]:
-                    term_query = tunes.filter(
-                        Q(tune__title__icontains=term)
-                        | Q(tune__composer__icontains=term)
-                        | Q(tune__key__icontains=term)
-                        | Q(tune__other_keys__icontains=term)
-                        | Q(tune__song_form__icontains=term)
-                        | Q(tune__style__icontains=term)
-                        | Q(tune__meter__icontains=term)
-                        | Q(tune__year__icontains=term)
-                        | Q(knowledge__icontains=term)
-                    )
-                    additional_queries.add(term_query)
-                tunes = initial_query.intersection(*additional_queries)
+
+            tunes = query_tunes(tunes, search_terms)
     else:
         search_form = SearchForm()
+
     return render(
         request,
         "tune/list.html",
@@ -152,37 +146,7 @@ def tune_play(request):
                     {"tunes": tunes, "search_form": search_form},
                 )
 
-            initial_query = tunes.filter(
-                Q(tune__title__icontains=search_terms[0])
-                | Q(tune__composer__icontains=search_terms[0])
-                | Q(tune__key__icontains=search_terms[0])
-                | Q(tune__other_keys__icontains=search_terms[0])
-                | Q(tune__song_form__icontains=search_terms[0])
-                | Q(tune__style__icontains=search_terms[0])
-                | Q(tune__meter__icontains=search_terms[0])
-                | Q(tune__year__icontains=search_terms[0])
-                | Q(knowledge__icontains=search_terms[0])
-            )
-
-            if len(search_terms) == 1:
-                tunes = initial_query
-
-            else:
-                additional_queries = set()
-                for term in search_terms[1:]:
-                    term_query = tunes.filter(
-                        Q(tune__title__icontains=term)
-                        | Q(tune__composer__icontains=term)
-                        | Q(tune__key__icontains=term)
-                        | Q(tune__other_keys__icontains=term)
-                        | Q(tune__song_form__icontains=term)
-                        | Q(tune__style__icontains=term)
-                        | Q(tune__meter__icontains=term)
-                        | Q(tune__year__icontains=term)
-                        | Q(knowledge__icontains=term)
-                    )
-                    additional_queries.add(term_query)
-                tunes = initial_query.intersection(*additional_queries)
+            tunes = query_tunes(tunes, search_terms)
 
             if not tunes:
                 messages.error(request, "No tunes match your search.")
