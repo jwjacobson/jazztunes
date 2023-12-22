@@ -118,4 +118,4 @@ class RepertoireTune(models.Model):
         unique_together = ("tune", "player")
 
     def __str__(self):
-        return f"Tune {self.tune} | {self.player}"
+        return f"{self.tune} | {self.player}"

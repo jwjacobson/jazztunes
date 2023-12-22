@@ -1,3 +1,5 @@
+import random
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -50,6 +52,15 @@ def tune_list(request):
                 )
 
             tunes = query_tunes(tunes, search_terms)
+
+            if not tunes:
+                messages.error(request, "No tunes match your search.")
+                return render(
+                    request,
+                    "tune/play.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
+
     else:
         search_form = SearchForm()
 
@@ -165,11 +176,10 @@ def tune_play(request):
     else:
         search_form = SearchForm()
 
-    # TODO: figure out why shuffling does not work
-    if len(tunes) < 3:
-        suggested_tune = tunes.first()
+    if len(tunes) == 1:
+        suggested_tune = tunes.get()
     else:
-        suggested_tune = tunes.order_by("?").first()
+        suggested_tune = random.choice(tunes)
 
     if request.method == "POST":
         if "yes" in request.POST:
@@ -179,12 +189,16 @@ def tune_play(request):
             messages.success(request, f"Played {tune_to_play.tune.title}!")
         elif "no" in request.POST:
             # TODO: suggest another tune
-            messages.info(request, f"Please search again")
+            messages.info(request, "Please search again")
 
     return render(
         request,
         "tune/play.html",
-        {"tunes": tunes, "search_form": search_form,
-         "original_search_string": original_search_string,
-         "suggested_tune": suggested_tune, "is_search": is_search},
+        {
+            "tunes": tunes,
+            "search_form": search_form,
+            "original_search_string": original_search_string,
+            "suggested_tune": suggested_tune,
+            "is_search": is_search,
+        },
     )
