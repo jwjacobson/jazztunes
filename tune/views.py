@@ -11,10 +11,11 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
-def query_tunes(initial_query, search_terms):
-    additional_queries = set()
+def query_tunes(tune_set, search_terms):
+    searches = set()
+
     for term in search_terms:
-        term_query = initial_query.filter(
+        term_query = tune_set.filter(
             Q(tune__title__icontains=term)
             | Q(tune__composer__icontains=term)
             | Q(tune__key__icontains=term)
@@ -25,10 +26,11 @@ def query_tunes(initial_query, search_terms):
             | Q(tune__year__icontains=term)
             | Q(knowledge__icontains=term)
         )
-        additional_queries.add(term_query)
+        searches.add(term_query)
 
-    all_tunes = initial_query.intersection(*additional_queries)
-    return all_tunes
+    search_results = tune_set.intersection(*searches)
+
+    return search_results
 
 
 @login_required(login_url="/accounts/login/")
@@ -182,14 +184,16 @@ def tune_play(request):
         suggested_tune = random.choice(tunes)
 
     if request.method == "POST":
+        # once we are inside this if statement tunes gets redefined as the full unqueried tune set.
+        # I'm adding a workaround for now but this is unexpected behavior.
         if "yes" in request.POST:
             tune_to_play = suggested_tune
             tune_to_play.last_played = timezone.now()
             tune_to_play.save()
             messages.success(request, f"Played {tune_to_play.tune.title}!")
         elif "no" in request.POST:
-            # TODO: suggest another tune
-            messages.info(request, "Please search again")
+            breakpoint()
+            pass
 
     return render(
         request,
