@@ -1,3 +1,5 @@
+import random
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -174,11 +176,10 @@ def tune_play(request):
     else:
         search_form = SearchForm()
 
-    # TODO: figure out why shuffling does not work
-    if len(tunes) < 3:
-        suggested_tune = tunes.first()
+    if len(tunes) == 1:
+        suggested_tune = tunes.get()
     else:
-        suggested_tune = tunes.order_by("?").first()
+        suggested_tune = random.choice(tunes)
 
     if request.method == "POST":
         if "yes" in request.POST:
