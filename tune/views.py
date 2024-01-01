@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from .models import Tune, RepertoireTune
-from .forms import TuneForm, RepertoireTuneForm, SearchForm
+from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
 
 
 def query_tunes(tune_set, search_terms):
@@ -144,14 +144,13 @@ def tune_play(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     original_search_string = ""
-
+    search_form = SearchForm(request.POST or None)
+    play_form = PlayForm(request.POST or None)
     is_search = False
 
-    if request.method == "POST" and "search_term" in request.POST:
-        is_search = True
-        search_form = SearchForm(request.POST)
-
+    if request.method == "POST":
         if search_form.is_valid():
+            is_search = True
             original_search_string = search_form.cleaned_data["search_term"]
             search_terms = original_search_string.split(" ")
 
@@ -175,34 +174,26 @@ def tune_play(request):
                     {"tunes": tunes, "search_form": search_form},
                 )
 
+            if len(tunes) == 1:
+                suggested_tune = tunes.get()
+
+            else:
+                suggested_tune = random.choice(tunes)
+
+            play_form = PlayForm(initial={"suggested_tune": suggested_tune})
+
+            return render(request, "tune/play.html", locals())
+
+        elif play_form.is_valid():
+            choice = play_form.cleaned_data.get("choice")
+            suggested_tune = play_form.cleaned_data.get("suggested_tune")
+            if choice == "yes":
+                suggested_tune.last_played = timezone.now()
+                suggested_tune.save()
+                messages.success(request, f"Played {suggested_tune.tune.title}!")
+
     else:
         search_form = SearchForm()
+        play_form = PlayForm()
 
-    if len(tunes) == 1:
-        suggested_tune = tunes.get()
-    else:
-        suggested_tune = random.choice(tunes)
-
-    if request.method == "POST":
-        # once we are inside this if statement tunes gets redefined as the full unqueried tune set.
-        # I'm adding a workaround for now but this is unexpected behavior.
-        if "yes" in request.POST:
-            tune_to_play = suggested_tune
-            tune_to_play.last_played = timezone.now()
-            tune_to_play.save()
-            messages.success(request, f"Played {tune_to_play.tune.title}!")
-        elif "no" in request.POST:
-            breakpoint()
-            pass
-
-    return render(
-        request,
-        "tune/play.html",
-        {
-            "tunes": tunes,
-            "search_form": search_form,
-            "original_search_string": original_search_string,
-            "suggested_tune": suggested_tune,
-            "is_search": is_search,
-        },
-    )
+    return render(request, "tune/play.html", locals())
