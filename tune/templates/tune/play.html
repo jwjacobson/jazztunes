@@ -17,9 +17,11 @@
         <p> Okay?  </p>
         <div>
           <form method="post" action="{% url 'tune:tune_play' %}">
-              {% csrf_token %}
-          <input id="yes" type="submit" class="btn btn-warning mr-2" name="yes" value="Play!">
-          <input id="no" type="submit" class="btn btn-danger mr-2" name="no" value="No thanks">
+            {% csrf_token %}
+            {{ play_form.as_p }}
+            <!-- <input id="yes" type="submit" class="btn btn-warning mr-2" name="choice" value="Play!"> -->
+            <!-- <input id="no" type="submit" class="btn btn-danger mr-2" name="choice" value="No thanks"> -->
+            <input type="submit" value="Submit">
           </form>
         </div>
       </div>
