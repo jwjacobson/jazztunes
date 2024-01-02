@@ -149,48 +149,48 @@ def tune_play(request):
     is_search = False
 
     if request.method == "POST":
-        if search_form.is_valid():
-            is_search = True
-            original_search_string = search_form.cleaned_data["search_term"]
-            search_terms = original_search_string.split(" ")
+        if "search_term" in request.POST:
+            if search_form.is_valid():
+                is_search = True
+                original_search_string = search_form.cleaned_data["search_term"]
+                search_terms = original_search_string.split(" ")
 
-            if len(search_terms) > 4:
-                messages.error(
-                    request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
-                )
-                return render(
-                    request,
-                    "tune/play.html",
-                    {"tunes": tunes, "search_form": search_form},
-                )
+                if len(search_terms) > 4:
+                    messages.error(
+                        request,
+                        f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                    )
+                    return render(
+                        request,
+                        "tune/play.html",
+                        {"tunes": tunes, "search_form": search_form},
+                    )
 
-            tunes = query_tunes(tunes, search_terms)
-            if not tunes:
-                messages.error(request, "No tunes match your search.")
-                return render(
-                    request,
-                    "tune/play.html",
-                    {"tunes": tunes, "search_form": search_form},
-                )
+                tunes = query_tunes(tunes, search_terms)
+                if not tunes:
+                    messages.error(request, "No tunes match your search.")
+                    return render(
+                        request,
+                        "tune/play.html",
+                        {"tunes": tunes, "search_form": search_form},
+                    )
 
-            if len(tunes) == 1:
-                suggested_tune = tunes.get()
+                if len(tunes) == 1:
+                    suggested_tune = tunes.get()
 
-            else:
-                suggested_tune = random.choice(tunes)
+                else:
+                    suggested_tune = random.choice(tunes)
 
-            play_form = PlayForm(initial={"suggested_tune": suggested_tune})
-
-            return render(request, "tune/play.html", locals())
-
-        elif play_form.is_valid():
-            choice = play_form.cleaned_data.get("choice")
-            suggested_tune = play_form.cleaned_data.get("suggested_tune")
-            if choice == "yes":
-                suggested_tune.last_played = timezone.now()
-                suggested_tune.save()
-                messages.success(request, f"Played {suggested_tune.tune.title}!")
+                play_form = PlayForm(initial={"suggested_tune": suggested_tune})
+                return render(request, "tune/play.html", locals())
+        elif "choice" in request.POST:
+            if play_form.is_valid():
+                choice = request.POST.get("choice")
+                suggested_tune = play_form.cleaned_data.get("suggested_tune")
+                if choice == "Play!":
+                    suggested_tune.last_played = timezone.now()
+                    suggested_tune.save()
+                    messages.success(request, f"Played {suggested_tune.tune.title}!")
 
     else:
         search_form = SearchForm()

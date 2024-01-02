@@ -59,9 +59,6 @@ class SearchForm(forms.Form):
 
 
 class PlayForm(forms.Form):
-    CHOICES = [("yes", "Play!"), ("no", "No thanks.")]
-
-    choice = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
     suggested_tune = forms.ModelChoiceField(
         queryset=RepertoireTune.objects.all(), widget=forms.HiddenInput()
     )
