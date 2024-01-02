@@ -4,25 +4,24 @@
 
 {% block content %}
 <div class="my-4">
+  <form method="post" action="{% url 'tune:tune_play' %}">
+    {% csrf_token %}
+    <label for="basic_search">Basic search: </label>
+    <input id="search_term" type="text" name="search_term" value="{{ original_search_string }}">
+    <input class="btn btn-primary" type="submit" value="Search">
+  </form>
+</div>
+
+{% if is_search %}
+  <div>
+    <p> You should play <strong>{{ suggested_tune.tune.title }}</strong> </p>
+    <p> Okay?  </p>
     <form method="post" action="{% url 'tune:tune_play' %}">
-        {% csrf_token %}
-        <label for="basic_search">Basic search: </label>
-        <input id="search_term" type="text" name="search_term" value="{{ original_search_string }}">
-        <input class="btn btn-primary" type="submit" value="Search">
-    </div>
+      {% csrf_token %}
+      {{ play_form.suggested_tune }}
+      <input type="submit" class="btn btn-warning mr-2" name="choice" value="Play!">
+      <input type="submit" class="btn btn-danger mr-2" name="choice" value="No thanks">
     </form>
-    {% if is_search %}
-      <div>
-        <p> You should play <strong>{{ suggested_tune.tune.title }}</strong> </p>
-        <p> Okay?  </p>
-        <div>
-          <form method="post" action="{% url 'tune:tune_play' %}">
-            {% csrf_token %}
-            {{ play_form.suggested_tune }}
-            <input type="submit" class="btn btn-warning mr-2" name="choice" value="Play!">
-            <input type="submit" class="btn btn-danger mr-2" name="choice" value="No thanks">
-          </div>
-          </form>
-        </div>
-    {% endif %}
+  </div>
+{% endif %}
 {% endblock %}

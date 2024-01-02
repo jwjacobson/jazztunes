@@ -183,10 +183,12 @@ def tune_play(request):
 
                 play_form = PlayForm(initial={"suggested_tune": suggested_tune})
                 return render(request, "tune/play.html", locals())
+
         elif "choice" in request.POST:
             if play_form.is_valid():
                 choice = request.POST.get("choice")
                 suggested_tune = play_form.cleaned_data.get("suggested_tune")
+                breakpoint()
                 if choice == "Play!":
                     suggested_tune.last_played = timezone.now()
                     suggested_tune.save()
