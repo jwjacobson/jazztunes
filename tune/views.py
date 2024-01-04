@@ -1,5 +1,3 @@
-import random
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -141,6 +139,7 @@ def tune_delete(request, pk):
 
 @login_required(login_url="/accounts/login")
 def tune_play(request):
+    print(request.POST)
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     original_search_string = ""
@@ -167,6 +166,7 @@ def tune_play(request):
                     )
 
                 tunes = query_tunes(tunes, search_terms)
+
                 if not tunes:
                     messages.error(request, "No tunes match your search.")
                     return render(
@@ -175,27 +175,52 @@ def tune_play(request):
                         {"tunes": tunes, "search_form": search_form},
                     )
 
-                if len(tunes) == 1:
-                    suggested_tune = tunes.get()
+                # if len(tunes) == 1:
+                #     suggested_tune = tunes.get()
 
-                else:
-                    suggested_tune = random.choice(tunes)
+                # else:
+                #     suggested_tune = None
 
-                play_form = PlayForm(initial={"suggested_tune": suggested_tune})
-                return render(request, "tune/play.html", locals())
+                # play_form = PlayForm([tune.id for tune in tunes])
+                suggested_tune = tunes.first()
+                matching_tunes = [tune.id for tune in tunes]
+                matching_tunes_queryset = RepertoireTune.objects.filter(id__in=matching_tunes)
+                play_form = PlayForm(
+                    request.POST or None,
+                    initial={"matching_tunes": matching_tunes},
+                    matching_tunes_queryset=matching_tunes_queryset,
+                )
+
+                return render(
+                    request,
+                    "tune/play.html",
+                    {
+                        "tunes": tunes,
+                        "search_form": search_form,
+                        "play_form": play_form,
+                        "is_search": is_search,
+                        "suggested_tune": suggested_tune,
+                        "matching_tunes": matching_tunes,
+                    },
+                )
 
         elif "choice" in request.POST:
             if play_form.is_valid():
                 choice = request.POST.get("choice")
                 suggested_tune = play_form.cleaned_data.get("suggested_tune")
-                breakpoint()
                 if choice == "Play!":
                     suggested_tune.last_played = timezone.now()
                     suggested_tune.save()
                     messages.success(request, f"Played {suggested_tune.tune.title}!")
+            else:
+                print(f"playform invalid: {play_form.errors}")
 
     else:
         search_form = SearchForm()
         play_form = PlayForm()
 
-    return render(request, "tune/play.html", locals())
+    return render(
+        request,
+        "tune/play.html",
+        {"tunes": tunes, "search_form": search_form, "play_form": play_form},
+    )

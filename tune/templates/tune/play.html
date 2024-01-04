@@ -18,7 +18,10 @@
     <p> Okay?  </p>
     <form method="post" action="{% url 'tune:tune_play' %}">
       {% csrf_token %}
-      {{ play_form.suggested_tune }}
+      {% for value in play_form.initial.matching_tunes %}
+        <input type="hidden" name="{{ play_form.matching_tunes.name }}" value="{{ value }}">
+      {% endfor %}
+      {{ play_form.suggested_tune.as_hidden }}
       <input type="submit" class="btn btn-warning mr-2" name="choice" value="Play!">
       <input type="submit" class="btn btn-danger mr-2" name="choice" value="No thanks">
     </form>

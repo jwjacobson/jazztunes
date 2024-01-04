@@ -59,6 +59,16 @@ class SearchForm(forms.Form):
 
 
 class PlayForm(forms.Form):
+    matching_tunes = forms.ModelMultipleChoiceField(
+        queryset=RepertoireTune.objects.none(), widget=forms.HiddenInput(), required=False
+    )
     suggested_tune = forms.ModelChoiceField(
         queryset=RepertoireTune.objects.all(), widget=forms.HiddenInput()
     )
+
+    def __init__(self, *args, **kwargs):
+        matching_tunes_queryset = kwargs.pop("matching_tunes_queryset", None)
+        super(PlayForm, self).__init__(*args, **kwargs)
+
+        if matching_tunes_queryset is not None:
+            self.fields["matching_tunes"].queryset = matching_tunes_queryset
