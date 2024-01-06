@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Tunes{% endblock %}
+
+{% block content %}
+<div class="my-4">
+<form method="post" action="{% url 'tune:tune_browse' %}">
+    {% csrf_token %}
+    <label for="basic_search">Basic search: </label>
+    <input id="search_term" type="text" name="search_term">
+    <input class="btn btn-primary" type="submit" value="Search">
+</div>
+</form>
+<h1>Tunes</h1>
+<div class="tune">
+    <!-- create a table -->
+    <table class="table table-success table-striped">
+        <tr>
+            <thead>
+                <th>Title</th>
+                <th>Composer</th>
+                <th>Key</th>
+                <th>Other Keys</th>
+                <th>Form</th>
+                <th>Style</th>
+                <th>Meter</th>
+                <th>Year</th>
+                <th>Actions</th>
+            </thead>
+        </tr>
+    {% for tune in tunes %}
+    <tr>
+        <td>{{ tune.title }}</td>
+        <td>{{ tune.composer }}</td>
+        <td>{{ tune.key }}</td>
+        <td>{{ tune.other_keys }}</td>
+        <td>{{ tune.song_form }}</td>
+        <td>{{ tune.style }}</td>
+        <td>{{ tune.meter }}</td>
+        <td>{{ tune.year }}</td>
+        <td>
+            <form method="post" action="{% url 'tune:tune_take' pk=tune.pk %}">
+                {% csrf_token %}
+                <input class="btn btn-warning btn-sm" type="submit" value="Take">
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+    </div>
+{% endblock %}
