@@ -224,3 +224,42 @@ def tune_play(request):
         "tune/play.html",
         {"tunes": tunes, "search_form": search_form, "play_form": play_form},
     )
+
+
+@login_required(login_url="/accounts/login/")
+def tune_browse(request):
+    tunes = Tune.objects.all().filter(created_by=2)
+
+    if request.method == "POST":
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_terms = search_form.cleaned_data["search_term"].split(" ")
+            if len(search_terms) > 4:
+                messages.error(
+                    request,
+                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                )
+                return render(
+                    request,
+                    "tune/browse.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
+
+            tunes = query_tunes(tunes, search_terms)
+
+            if not tunes:
+                messages.error(request, "No tunes match your search.")
+                return render(
+                    request,
+                    "tune/browse.html",
+                    {"tunes": tunes, "search_form": search_form},
+                )
+
+    else:
+        search_form = SearchForm()
+
+    return render(
+        request,
+        "tune/browse.html",
+        {"tunes": tunes, "search_form": search_form},
+    )

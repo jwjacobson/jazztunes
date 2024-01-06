@@ -9,4 +9,5 @@ urlpatterns = [
     path("edit/<int:pk>", views.tune_edit, name="tune_edit"),
     path("delete/<int:pk>", views.tune_delete, name="tune_delete"),
     path("play", views.tune_play, name="tune_play"),
+    path("browse", views.tune_browse, name="tune_browse"),
 ]
