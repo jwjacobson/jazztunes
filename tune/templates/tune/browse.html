@@ -39,7 +39,10 @@
         <td>{{ tune.meter }}</td>
         <td>{{ tune.year }}</td>
         <td>
-
+            <form method="post" action="{% url 'tune:tune_take' pk=tune.pk %}">
+                {% csrf_token %}
+                <input class="btn btn-warning btn-sm" type="submit" value="Take">
+            </form>
         </td>
     </tr>
     {% endfor %}
