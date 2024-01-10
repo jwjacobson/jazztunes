@@ -279,3 +279,94 @@ def tune_take(request, pk):
         return redirect("tune:tune_browse")
 
     return render(request, "tune/browse.html", {"tune": tune})
+
+
+# @login_required(login_url="/accounts/login")
+# def tune_search(request):
+#     user = request.user
+#     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+#     search_form = SearchForm(request.POST or None)
+#     original_search_string = ""
+#     is_search = False
+
+#     if request.method == "POST":
+#                 is_search = True
+#                 original_search_string = search_form.cleaned_data["search_term"]
+#                 search_terms = original_search_string.split(" ")
+
+#                 if len(search_terms) > 4:
+#                     messages.error(
+#                         request,
+#                         f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+#                     )
+#                     return render(
+#                         request,
+#                         "tune/play.html",
+#                         {"tunes": tunes, "search_form": search_form},
+#                     )
+
+#                 tunes = query_tunes(tunes, search_terms)
+
+#                 if not tunes:
+#                     messages.error(request, "No tunes match your search.")
+#                     return render(
+#                         request,
+#                         "tune/play.html",
+#                         {"tunes": tunes, "search_form": search_form},
+#                     )
+
+#                 # if len(tunes) == 1:
+#                 #     suggested_tune = tunes.get()
+
+#                 # else:
+#                 #     suggested_tune = None
+
+#                 # play_form = PlayForm([tune.id for tune in tunes])
+#                 suggested_tune = tunes.first()
+#                 matching_tunes = [tune.id for tune in tunes]
+#                 matching_tunes_queryset = RepertoireTune.objects.filter(id__in=matching_tunes)
+#                 play_form = PlayForm(
+#                     request.POST or None,
+#                     initial={"matching_tunes": matching_tunes},
+#                     matching_tunes_queryset=matching_tunes_queryset,
+#                 )
+
+#                 return render(
+#                     request,
+#                     "tune/play.html",
+#                     {
+#                         "tunes": tunes,
+#                         "search_form": search_form,
+#                         "play_form": play_form,
+#                         "is_search": is_search,
+#                         "suggested_tune": suggested_tune,
+#                         "matching_tunes": matching_tunes,
+#                     },
+#                 )
+
+#         elif "choice" in request.POST:
+#             if play_form.is_valid():
+#                 choice = request.POST.get("choice")
+#                 suggested_tune = play_form.cleaned_data.get("suggested_tune")
+#                 if choice == "Play!":
+#                     suggested_tune.last_played = timezone.now()
+#                     suggested_tune.save()
+#                     messages.success(request, f"Played {suggested_tune.tune.title}!")
+#             else:
+#                 print(f"playform invalid: {play_form.errors}")
+
+#     else:
+#         search_form = SearchForm()
+#         play_form = PlayForm()
+
+#     return render(
+#         request,
+#         "tune/play.html",
+#         {"tunes": tunes, "search_form": search_form, "play_form": play_form},
+#     )
+
+
+def tune_search(request):
+    user = request.user
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    return render(request, "tune/test.html", {"tunes": tunes})
