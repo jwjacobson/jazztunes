@@ -3,28 +3,19 @@
 {% block title %}Play{% endblock %}
 
 {% block content %}
-<div class="my-4">
-  <form method="post" action="{% url 'tune:tune_play' %}">
-    {% csrf_token %}
-    <label for="basic_search">Basic search: </label>
-    <input id="search_term" type="text" name="search_term" value="{{ original_search_string }}">
-    <input class="btn btn-primary" type="submit" value="Search">
-  </form>
-</div>
-
-{% if is_search %}
-  <div>
-    <p> You should play <strong>{{ suggested_tune.tune.title }}</strong> </p>
-    <p> Okay?  </p>
-    <form method="post" action="{% url 'tune:tune_play' %}">
-      {% csrf_token %}
-      {% for value in play_form.initial.matching_tunes %}
-        <input type="hidden" name="{{ play_form.matching_tunes.name }}" value="{{ value }}">
-      {% endfor %}
-      {{ play_form.suggested_tune.as_hidden }}
-      <input type="submit" class="btn btn-warning mr-2" name="choice" value="Play!">
-      <input type="submit" class="btn btn-danger mr-2" name="choice" value="No thanks">
-    </form>
+  <div class="my-4">
+    <input class="form-control" type="search"
+          name="search" placeholder="Begin Typing To Search Tunes..."
+          hx-post="{% url 'tune:search' %}"
+          hx-trigger="input changed delay:500ms, search"
+          hx-target="#song"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          hx-indicator=".htmx-indicator">
   </div>
-{% endif %}
+
+  <div>
+    <p> You should play <strong><span id="song"></span></strong> </p>
+    <p> Okay?  </p>
+
+  </div>
 {% endblock %}
