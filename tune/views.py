@@ -137,9 +137,19 @@ def tune_delete(request, pk):
     return render(request, "tune/form.html", {"tune": tune})
 
 
+@login_required
+def search(request):
+    original_search_string = request.POST.get("search", "")
+    user = request.user
+
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    search_terms = original_search_string.split(" ")
+    tunes = query_tunes(tunes, search_terms)
+    return render(request, "tune/_tunes.html", {"tune": tunes[0]})
+
+
 @login_required(login_url="/accounts/login")
 def tune_play(request):
-    print(request.POST)
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     original_search_string = ""

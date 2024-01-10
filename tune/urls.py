@@ -9,6 +9,7 @@ urlpatterns = [
     path("edit/<int:pk>", views.tune_edit, name="tune_edit"),
     path("delete/<int:pk>", views.tune_delete, name="tune_delete"),
     path("play", views.tune_play, name="tune_play"),
+    path("search", views.search, name="search"),
     path("browse", views.tune_browse, name="tune_browse"),
     path("take/<int:pk>", views.tune_take, name="tune_take"),
     path("test", views.tune_search, name="test"),
