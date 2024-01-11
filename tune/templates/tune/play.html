@@ -4,21 +4,6 @@
 
 {% block content %}
   <div class="my-4">
-<<<<<<< HEAD
-    <input class="form-control" type="search"
-          name="search" placeholder="Search Tunes..."
-          hx-post="{% url 'tune:search' %}"
-          hx-trigger="input changed delay:500ms, search"
-          hx-target="#suggested_tune"
-          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-          hx-indicator=".htmx-indicator">
-  </div>
-
-  <div>
-    <p> You should play <strong><span id="suggested_tune"></span></strong> </p>
-    <p> Okay?  </p>
-
-=======
     <input class="form-control" type="search" name="search" id="searchField" placeholder="Search tunes to play...">
     <button class="btn btn-primary"
       hx-trigger="click"
@@ -29,6 +14,5 @@
       hx-indicator=".htmx-indicator"
       >Search</button>
     <div id="tunes"></div>
->>>>>>> main
   </div>
 {% endblock %}
