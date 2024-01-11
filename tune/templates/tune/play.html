@@ -6,13 +6,12 @@
   <div class="my-4">
     <input class="form-control" type="search" name="search" id="searchField" placeholder="Search tunes to play...">
     <button class="btn btn-primary"
-      hx-post="{% url 'tune:search' %}"
       hx-trigger="click"
+      hx-get="{% url 'tune:search' %}"
       hx-include="#searchField"
-      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
       hx-target="#tunes"
-      hx-indicator=".htmx-indicator"
       hx-swap="outerHTML"
+      hx-indicator=".htmx-indicator"
       >Search</button>
     <div id="tunes"></div>
   </div>
