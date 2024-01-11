@@ -5,16 +5,16 @@
 {% block content %}
   <div class="my-4">
     <input class="form-control" type="search"
-          name="search" placeholder="Begin Typing To Search Tunes..."
+          name="search" placeholder="Search Tunes..."
           hx-post="{% url 'tune:search' %}"
           hx-trigger="input changed delay:500ms, search"
-          hx-target="#song"
+          hx-target="#suggested_tune"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-indicator=".htmx-indicator">
   </div>
 
   <div>
-    <p> You should play <strong><span id="song"></span></strong> </p>
+    <p> You should play <strong><span id="suggested_tune"></span></strong> </p>
     <p> Okay?  </p>
 
   </div>

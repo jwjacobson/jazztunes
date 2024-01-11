@@ -4,26 +4,6 @@
 
 {% block content %}
 <div class="my-4">
-    <input class="form-control" type="search" 
-    name="search" placeholder="Search tunes..." 
-    hx-post="/test" 
-    hx-trigger="input changed delay:500ms, search" 
-    hx-target="#search-results" 
-    hx-indicator=".htmx-indicator">
-</div>
-<table class="table">
-    <thead>
-    <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
-    </tr>
-    </thead>
-    <tbody id="search-results">
-    </tbody>
-</table>
-
-<div class="my-4">
 <form method="post" action="{% url 'tune:tune_browse' %}">
     {% csrf_token %}
     <label for="basic_search">Basic search: </label>

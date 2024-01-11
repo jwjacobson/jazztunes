@@ -12,5 +12,4 @@ urlpatterns = [
     path("search", views.search, name="search"),
     path("browse", views.tune_browse, name="tune_browse"),
     path("take/<int:pk>", views.tune_take, name="tune_take"),
-    path("test", views.tune_search, name="test"),
 ]
