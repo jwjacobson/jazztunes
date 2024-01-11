@@ -1,1 +1,21 @@
-{{tune}}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rtune in rep_tunes %}
+      <tr>
+        <th scope="row">{{ rtune.tune.title}}</th>
+        <td>
+          <button type="button"
+            class="btn btn-primary btn-sm"
+            hx-post="/tunes/{{ rtune.id }}/play"
+          >Play</button>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
