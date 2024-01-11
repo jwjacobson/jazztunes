@@ -1,1 +1,18 @@
-{{tune}}
+<!-- TODO: do something with random tune -->
+<table class="table">
+  <tbody>
+    {% for rtune in rep_tunes %}
+      <tr>
+        <th scope="row">{{ rtune.tune.title}}</th>
+        <td>
+          <!-- move this to tune table alongside edit / delete buttons -->
+          <button type="button"
+            class="btn btn-primary btn-sm"
+            hx-put="{% url 'tune:tune_play' rtune.id %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          >Play</button>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

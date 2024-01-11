@@ -4,6 +4,7 @@
 
 {% block content %}
   <div class="my-4">
+<<<<<<< HEAD
     <input class="form-control" type="search"
           name="search" placeholder="Search Tunes..."
           hx-post="{% url 'tune:search' %}"
@@ -17,5 +18,17 @@
     <p> You should play <strong><span id="suggested_tune"></span></strong> </p>
     <p> Okay?  </p>
 
+=======
+    <input class="form-control" type="search" name="search" id="searchField" placeholder="Search tunes to play...">
+    <button class="btn btn-primary"
+      hx-trigger="click"
+      hx-get="{% url 'tune:search' %}"
+      hx-include="#searchField"
+      hx-target="#tunes"
+      hx-swap="outerHTML"
+      hx-indicator=".htmx-indicator"
+      >Search</button>
+    <div id="tunes"></div>
+>>>>>>> main
   </div>
 {% endblock %}

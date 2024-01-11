@@ -139,17 +139,20 @@ def tune_delete(request, pk):
 
 @login_required
 def search(request):
-    original_search_string = request.POST.get("search", "")
-    user = request.user
-
-    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    # TODO: rename this view to get_random_tune
+    original_search_string = request.GET.get("search", "")
     search_terms = original_search_string.split(" ")
-    tunes = query_tunes(tunes, search_terms)
-    return render(request, "tune/_tunes.html", {"tune": tunes[0]})
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
+    rep_tunes = query_tunes(tunes, search_terms)
+    # TODO: get a random tune to avoid paradox of choice
+    return render(request, "tune/_tunes.html", {"rep_tunes": rep_tunes})
 
 
 @login_required(login_url="/accounts/login")
-def tune_play(request):
+def tune_play(request, pk=None):
+    # TODO: update view to update the tune
+    # TODO: how to send a message to the user?
+    # TODO: should row disappear after play click?
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     original_search_string = ""
