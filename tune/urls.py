@@ -12,5 +12,5 @@ urlpatterns = [
     path("search", views.search, name="search"),
     path("browse", views.tune_browse, name="tune_browse"),
     path("take/<int:pk>", views.tune_take, name="tune_take"),
-    path("play/<int:pk>", views.tune_play, name="tune_play"),
+    path("play/<int:pk>", views.play, name="play"),
 ]

@@ -148,6 +148,18 @@ def search(request):
     return render(request, "tune/_tunes.html", {"rep_tunes": rep_tunes})
 
 
+def choose(request, tunes):
+    pass
+
+
+def play(request, pk):
+    rep_tune = get_object_or_404(RepertoireTune, id=pk)
+    rep_tune.last_played = timezone.now()
+    rep_tune.save()
+    messages.success(request, f"Played {rep_tune.tune.title}!")
+    return render(request, "tune/_tunes.html")
+
+
 @login_required(login_url="/accounts/login")
 def tune_play(request, pk=None):
     # TODO: update view to update the tune
