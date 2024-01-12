@@ -13,7 +13,6 @@
 </form>
 <h1>Tunes</h1>
 <div class="tune">
-    <!-- create a table -->
     <table class="table table-success table-striped">
         <tr>
             <thead>
@@ -29,6 +28,7 @@
             </thead>
         </tr>
     {% for tune in tunes %}
+    <tbody  id="search-results">
     <tr>
         <td>{{ tune.title }}</td>
         <td>{{ tune.composer }}</td>
@@ -45,6 +45,7 @@
             </form>
         </td>
     </tr>
+    </tbody>
     {% endfor %}
     </table>
     </div>
