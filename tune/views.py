@@ -253,6 +253,9 @@ def tune_play(request, pk=None):
 
 @login_required(login_url="/accounts/login/")
 def tune_browse(request):
+    user = request.user
+    user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    user_tune_ids = {tune.tune_id for tune in user_tunes}
     tunes = Tune.objects.all().filter(created_by=2)
 
     if request.method == "POST":
@@ -286,7 +289,7 @@ def tune_browse(request):
     return render(
         request,
         "tune/browse.html",
-        {"tunes": tunes, "search_form": search_form},
+        {"tunes": tunes, "search_form": search_form, "user_tune_ids": user_tune_ids},
     )
 
 
