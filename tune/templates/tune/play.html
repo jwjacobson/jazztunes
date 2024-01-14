@@ -3,16 +3,21 @@
 {% block title %}Play{% endblock %}
 
 {% block content %}
-  <div class="my-4">
-    <input class="form-control" type="search" name="search" id="searchField" placeholder="Search tunes to play...">
-    <button class="btn btn-primary"
-      hx-trigger="click"
-      hx-get="{% url 'tune:search' %}"
-      hx-include="#searchField"
-      hx-target="#tunes"
-      hx-swap="outerHTML"
-      hx-indicator=".htmx-indicator"
-      >Search</button>
+<div class="my-4">
+    <form hx-get="{% url 'tune:search' %}" hx-include="#searchField" hx-target="#tunes" hx-swap="outerHTML" hx-indicator=".htmx-indicator" onsubmit="return false;">
+        <input class="form-control" type="search" name="search" id="searchField" placeholder="Search tunes to play..." hx-vals="{'search': this.value}">
+        <button type="submit" class="btn btn-primary" hx-trigger="click">Search</button>
+    </form>
     <div id="tunes"></div>
-  </div>
+
+    <script>
+        document.getElementById('searchField').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                htmx.trigger(this.form, 'submit');
+            }
+        });
+    </script>
+</div>
+          
 {% endblock %}
