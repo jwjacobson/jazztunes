@@ -51,6 +51,20 @@ def tune_list(request):
                     {"tunes": tunes, "search_form": search_form},
                 )
 
+            timespan = search_form.cleaned_data["timespan"]
+
+            if timespan:
+                print("timespan detected")
+            else:
+                [print("no timespan detected")]
+
+            # if timespan == 'day':
+            #     search_results = search_results.filter(timestamp__gte=datetime.now() - timedelta(days=1))
+            # elif timespan == 'week':
+            #     search_results = search_results.filter(timestamp__gte=datetime.now() - timedelta(days=7))
+            # elif timespan == 'month':
+            #     search_results = search_results.filter(timestamp__gte=datetime.now() - timedelta(days=30))
+
             tunes = query_tunes(tunes, search_terms)
 
             if not tunes:
@@ -144,6 +158,7 @@ def search(request):
     search_terms = original_search_string.split(" ")
     tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
     rep_tunes = query_tunes(tunes, search_terms)
+    rep_tunes.session["tunes"] = rep_tunes
     # TODO: get a random tune to avoid paradox of choice
     return render(request, "tune/_tunes.html", {"rep_tunes": rep_tunes})
 

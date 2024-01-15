@@ -55,7 +55,10 @@ class RepertoireTuneForm(ModelForm):
 
 
 class SearchForm(forms.Form):
+    TIMES = [("day", "Last day"), ("week", "Last week"), ("month", "Last month")]
+
     search_term = forms.CharField(label="search_term", max_length=200)
+    timespan = forms.ChoiceField(choices=TIMES, required=False)
 
 
 class PlayForm(forms.Form):
