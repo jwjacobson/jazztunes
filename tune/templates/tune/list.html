@@ -56,6 +56,7 @@
                 class="btn btn-primary btn-sm"
                 hx-put="{% url 'tune:play' pk=tune.id %}"
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-swap="outerHTML"
               >Play</button>
             </td>
         </tr>
