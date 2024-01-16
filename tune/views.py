@@ -9,7 +9,7 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
 
 
-def query_tunes(tune_set, search_terms):
+def query_tunes(tune_set, search_terms, timespan):
     searches = set()
 
     for term in search_terms:
@@ -52,20 +52,9 @@ def tune_list(request):
                 )
 
             timespan = search_form.cleaned_data["timespan"]
+            breakpoint()
 
-            if timespan:
-                print("timespan detected")
-            else:
-                [print("no timespan detected")]
-
-            # if timespan == 'day':
-            #     search_results = search_results.filter(timestamp__gte=datetime.now() - timedelta(days=1))
-            # elif timespan == 'week':
-            #     search_results = search_results.filter(timestamp__gte=datetime.now() - timedelta(days=7))
-            # elif timespan == 'month':
-            #     search_results = search_results.filter(timestamp__gte=datetime.now() - timedelta(days=30))
-
-            tunes = query_tunes(tunes, search_terms)
+            tunes = query_tunes(tunes, search_terms, timespan)
 
             if not tunes:
                 messages.error(request, "No tunes match your search.")

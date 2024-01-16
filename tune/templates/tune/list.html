@@ -8,6 +8,13 @@
     {% csrf_token %}
     <label for="basic_search">Basic search: </label>
     <input id="search_term" type="text" name="search_term">
+    <label for="timespan">Played in:</label>
+    <select id="timespan" name="timespan">
+        <option value="anytime">anytime</option>
+        <option value="day">last day</option>
+        <option value="week">last week</option>
+        <option value="month">last month</option>
+    </select>
     <input class="btn btn-primary" type="submit" value="Search">
 </div>
 </form>
