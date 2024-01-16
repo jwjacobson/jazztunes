@@ -3,6 +3,11 @@
 {% block title %}Tunes{% endblock %}
 
 {% block content %}
+<div class ="mt-4">
+    <p>
+        Here you can browse your repertoire and add, edit, and delete tunes.
+    </p>
+</div>
 <div class="my-4">
 <form method="post" action="{% url 'tune:tune_list' %}">
     {% csrf_token %}
