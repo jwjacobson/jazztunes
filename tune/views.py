@@ -11,7 +11,7 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
 
 
-def query_tunes(tune_set, search_terms):
+def query_tunes(tune_set, search_terms, timespan):
     searches = set()
 
     for term in search_terms:
@@ -53,7 +53,10 @@ def tune_list(request):
                     {"tunes": tunes, "search_form": search_form},
                 )
 
-            tunes = query_tunes(tunes, search_terms)
+            timespan = search_form.cleaned_data["timespan"]
+            breakpoint()
+
+            tunes = query_tunes(tunes, search_terms, timespan)
 
             if not tunes:
                 messages.error(request, "No tunes match your search.")
@@ -146,6 +149,7 @@ def search(request):
     search_terms = original_search_string.split(" ")
     tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
     rep_tunes = query_tunes(tunes, search_terms)
+    
     if not rep_tunes:
         return render(request, "tune/_tunes.html", {"selected_tune": None})
 
@@ -170,7 +174,6 @@ def change_tune(request):
 
     selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
     return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
-
 
 def choose(request, tunes):
     pass

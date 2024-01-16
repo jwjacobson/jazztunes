@@ -3,6 +3,7 @@
 {% block title %}Play{% endblock %}
 
 {% block content %}
+
   <div class="my-4">
     <input class="form-control"
       type="search"
@@ -20,6 +21,17 @@
       hx-target="#tunes"
       hx-indicator=".htmx-indicator"
       >Search</button>
+
     <div id="tunes"></div>
-  </div>
+
+    <script>
+        document.getElementById('searchField').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                htmx.trigger(this.form, 'submit');
+            }
+        });
+    </script>
+</div>
+          
 {% endblock %}
