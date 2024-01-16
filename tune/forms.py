@@ -3,6 +3,8 @@ from django import forms
 from .models import Tune, RepertoireTune
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from django.utils import timezone
+from datetime import timedelta
 
 
 class TuneForm(ModelForm):
@@ -56,7 +58,7 @@ class RepertoireTuneForm(ModelForm):
 
 class SearchForm(forms.Form):
     TIMES = [
-        ("anytime", "None"),
+        ("anytime", "anytime"),
         ("day", "Last day"),
         ("week", "Last week"),
         ("month", "Last month"),
@@ -64,6 +66,17 @@ class SearchForm(forms.Form):
 
     search_term = forms.CharField(label="search_term", max_length=200)
     timespan = forms.ChoiceField(choices=TIMES, required=False)
+
+    def clean_timespan(self):
+        timespan = self.cleaned_data["timespan"]
+        if timespan == "day":
+            return timezone.now() - timedelta(days=1)
+        elif timespan == "week":
+            return timezone.now() - timedelta(days=7)
+        elif timespan == "month":
+            return timezone.now() - timedelta(days=30)
+        else:
+            return None
 
 
 class PlayForm(forms.Form):
