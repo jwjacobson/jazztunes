@@ -9,7 +9,7 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
 
 
-def query_tunes(tune_set, search_terms):
+def query_tunes(tune_set, search_terms, timespan):
     searches = set()
 
     for term in search_terms:
@@ -51,7 +51,10 @@ def tune_list(request):
                     {"tunes": tunes, "search_form": search_form},
                 )
 
-            tunes = query_tunes(tunes, search_terms)
+            timespan = search_form.cleaned_data["timespan"]
+            breakpoint()
+
+            tunes = query_tunes(tunes, search_terms, timespan)
 
             if not tunes:
                 messages.error(request, "No tunes match your search.")
@@ -144,6 +147,7 @@ def search(request):
     search_terms = original_search_string.split(" ")
     tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
     rep_tunes = query_tunes(tunes, search_terms)
+    rep_tunes.session["tunes"] = rep_tunes
     # TODO: get a random tune to avoid paradox of choice
     return render(request, "tune/_tunes.html", {"rep_tunes": rep_tunes})
 
