@@ -3,11 +3,25 @@
 {% block title %}Play{% endblock %}
 
 {% block content %}
-<div class="my-4">
-    <form hx-get="{% url 'tune:search' %}" hx-include="#searchField" hx-target="#tunes" hx-swap="outerHTML" hx-indicator=".htmx-indicator" onsubmit="return false;">
-        <input class="form-control" type="search" name="search" id="searchField" placeholder="Search tunes to play..." hx-vals="{'search': this.value}">
-        <button type="submit" class="btn btn-primary" hx-trigger="click">Search</button>
-    </form>
+
+  <div class="my-4">
+    <input class="form-control"
+      type="search"
+      name="search"
+      id="searchField"
+      placeholder="Search tunes to play..."
+      hx-trigger="keyup[keyCode==13]"
+      hx-get="{% url 'tune:search' %}"
+      hx-target="#tunes"
+      hx-indicator=".htmx-indicator">
+    <button class="btn btn-primary"
+      hx-trigger="click"
+      hx-get="{% url 'tune:search' %}"
+      hx-include="#searchField"
+      hx-target="#tunes"
+      hx-indicator=".htmx-indicator"
+      >Search</button>
+
     <div id="tunes"></div>
 
     <script>

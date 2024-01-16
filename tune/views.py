@@ -1,3 +1,5 @@
+from random import choice
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -147,10 +149,31 @@ def search(request):
     search_terms = original_search_string.split(" ")
     tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
     rep_tunes = query_tunes(tunes, search_terms)
-    rep_tunes.session["tunes"] = rep_tunes
-    # TODO: get a random tune to avoid paradox of choice
-    return render(request, "tune/_tunes.html", {"rep_tunes": rep_tunes})
+    
+    if not rep_tunes:
+        return render(request, "tune/_tunes.html", {"selected_tune": None})
 
+    rep_tunes = list(rep_tunes)
+    selected_tune = choice(rep_tunes)
+
+    rep_tunes.remove(selected_tune)
+    request.session["rep_tunes"] = [rt.id for rt in rep_tunes]
+    request.session.save()
+
+    return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
+
+
+@login_required
+def change_tune(request):
+    if not request.session.get("rep_tunes"):
+        return render(request, "tune/_tunes.html", {"selected_tune": None})
+
+    chosen_tune_id = choice(request.session["rep_tunes"])
+    request.session["rep_tunes"].remove(chosen_tune_id)
+    request.session.save()
+
+    selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
+    return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
 
 def choose(request, tunes):
     pass
