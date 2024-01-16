@@ -15,30 +15,21 @@ def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
 
     for term in search_terms:
+        term_query = tune_set.filter(
+            Q(tune__title__icontains=term)
+            | Q(tune__composer__icontains=term)
+            | Q(tune__key__icontains=term)
+            | Q(tune__other_keys__icontains=term)
+            | Q(tune__song_form__icontains=term)
+            | Q(tune__style__icontains=term)
+            | Q(tune__meter__icontains=term)
+            | Q(tune__year__icontains=term)
+            | Q(knowledge__icontains=term)
+        )
+
         if timespan:
-            term_query = tune_set.filter(
-                Q(tune__title__icontains=term)
-                | Q(tune__composer__icontains=term)
-                | Q(tune__key__icontains=term)
-                | Q(tune__other_keys__icontains=term)
-                | Q(tune__song_form__icontains=term)
-                | Q(tune__style__icontains=term)
-                | Q(tune__meter__icontains=term)
-                | Q(tune__year__icontains=term)
-                | Q(knowledge__icontains=term)
-            ).exclude(last_played__gte=timespan)
-        else:
-            term_query = tune_set.filter(
-                Q(tune__title__icontains=term)
-                | Q(tune__composer__icontains=term)
-                | Q(tune__key__icontains=term)
-                | Q(tune__other_keys__icontains=term)
-                | Q(tune__song_form__icontains=term)
-                | Q(tune__style__icontains=term)
-                | Q(tune__meter__icontains=term)
-                | Q(tune__year__icontains=term)
-                | Q(knowledge__icontains=term)
-            )
+            term_query = term_query.exclude(last_played__gte=timespan)
+
         searches.add(term_query)
 
     search_results = tune_set.intersection(*searches)
