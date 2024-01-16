@@ -64,7 +64,7 @@ class SearchForm(forms.Form):
         ("month", "Last month"),
     ]
 
-    search_term = forms.CharField(label="search_term", max_length=200)
+    search_term = forms.CharField(label="search_term", max_length=200, required=False)
     timespan = forms.ChoiceField(choices=TIMES, required=False)
 
     def clean_timespan(self):
