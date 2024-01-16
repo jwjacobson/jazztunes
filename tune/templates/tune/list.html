@@ -3,32 +3,42 @@
 {% block title %}Tunes{% endblock %}
 
 {% block content %}
-<div class ="mt-4">
+<div class="row mt-4">
+<div class ="col-8">
     <p>
         Here you can browse your repertoire and add, edit, and delete tunes.
     </p>
 </div>
-<div class="my-4">
-<form method="post" action="{% url 'tune:tune_list' %}">
-    {% csrf_token %}
-    <label for="basic_search">Basic search: </label>
-    <input id="search_term" type="text" name="search_term">
-    <label for="timespan">Haven't played in:</label>
+<div class="col-4">
+    <form method="post" action="{% url 'tune:tune_new' %}">
+        {% csrf_token %}
+        <input class="btn btn-success" type="submit" value="New Tune">
+    </form>
+</div>
+</div>
+<div class="row">
+    <div class="col-12 my-1">
+        <form method="post" action="{% url 'tune:tune_list' %}">
+            {% csrf_token %}
+            <label for="basic_search">Basic search: </label>
+            <input id="search_term" type="text" name="search_term">
+    </div>
+<div class="col-12 my-2">
+<label for="timespan">Haven't played in:</label>
     <select id="timespan" name="timespan">
         <option value="anytime">n/a</option>
         <option value="day">a day</option>
         <option value="week">a week</option>
         <option value="month">a month</option>
     </select>
+</div>
+<div class="col my-1">
     <input class="btn btn-primary" type="submit" value="Search">
 </div>
 </form>
-<div class="mb-3">
-    <form method="post" action="{% url 'tune:tune_new' %}">
-        {% csrf_token %}
-        <input class="btn btn-success" type="submit" value="New Tune">
-    </form>
 </div>
+
+
     <h1>Tunes</h1>
     <div class="tune">
         <!-- create a table -->
