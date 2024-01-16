@@ -26,7 +26,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tune__meter__icontains=term)
                 | Q(tune__year__icontains=term)
                 | Q(knowledge__icontains=term)
-            ).exclude(last_played__lte=timespan)
+            ).exclude(last_played__gte=timespan)
         else:
             term_query = tune_set.filter(
                 Q(tune__title__icontains=term)
