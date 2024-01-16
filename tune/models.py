@@ -77,6 +77,8 @@ class Tune(models.Model):
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
+    is_ballad = models.BooleanField(blank=True, null=True, default=False)
+    is_contrafact = models.BooleanField(blank=True, null=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
