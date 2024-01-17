@@ -16,9 +16,10 @@
           <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     </head>
+    <div class="container my-4">
     <body class="bg-warning-subtle m-5">
         {% block body %}
-        <nav class="navbar navbar-expand-lg bg-success-subtle">
+        <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary-subtle ">
             <div class="container-fluid">
               <a class="navbar-brand" href="{% url 'tune:tune_list' %}">Tune</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,9 +70,9 @@
               {% endfor %}
             {% endif %}
 
-
             {% block content %}
             {% endblock content %}
+            </div>
         {% endblock body %}
         {% block extra_body %}
         {% endblock extra_body %}

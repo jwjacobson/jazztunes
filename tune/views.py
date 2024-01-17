@@ -329,12 +329,12 @@ def tune_take(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
 
     if request.method == "POST":
-        rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
+        RepertoireTune.objects.create(tune=tune, player=request.user)
         # rep_tune.save()
-        messages.success(
-            request,
-            f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
-        )
-        return redirect("tune:tune_browse")
+        # messages.success(
+        #     request,
+        #     f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
+        # )
+        # return redirect("tune:tune_browse")
 
     return render(request, "tune/browse.html", {"tune": tune})

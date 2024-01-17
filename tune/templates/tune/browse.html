@@ -3,6 +3,11 @@
 {% block title %}Tunes{% endblock %}
 
 {% block content %}
+<div class ="mt-4">
+    <p>
+        Here you can browse public tunes and copy them into your repertoire, where you can also edit them.
+    </p>
+  </div>
 <div class="my-4">
 <form method="post" action="{% url 'tune:tune_browse' %}">
     {% csrf_token %}
@@ -11,9 +16,9 @@
     <input class="btn btn-primary" type="submit" value="Search">
 </div>
 </form>
-<h1>Tunes</h1>
+<h1>Public Tunes</h1>
 <div class="tune">
-    <table class="table table-success table-striped">
+    <table class="table table-primary table-striped table-hover border border-success-subtle">
         <tr>
             <thead>
                 <th>Title</th>
@@ -28,7 +33,6 @@
             </thead>
         </tr>
     {% for tune in tunes %}
-    <tbody  id="search-results">
     <tr>
         <td>{{ tune.title }}</td>
         <td>{{ tune.composer }}</td>
@@ -40,16 +44,15 @@
         <td>{{ tune.year }}</td>
         <td>
             {% if tune.id in user_tune_ids %}
-            <button type="button" class="btn btn-secondary btn-sm" disabled>Take</button>
+            <button type="button" class="btn btn-tertiary btn-sm" disabled>Take</button>
             {% else %}
             <form method="post" action="{% url 'tune:tune_take' pk=tune.pk %}">
                 {% csrf_token %}
-                <input class="btn btn-warning btn-sm" type="submit" value="Take">
+                <input class="btn btn-success btn-sm" type="submit" value="Take">
             </form>
             {% endif %}
         </td>
     </tr>
-    </tbody>
     {% endfor %}
     </table>
     </div>

@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-  <h1>{% if tune %}Edit{% else %}New{% endif %} Tune</h1>
+<div class ="mt-4">
+  <p>
+      This is the form for adding a new tune or editing an existing one.
+  </p>
+</div>
+  <h3>{% if tune %}Edit{% else %}New{% endif %} Tune</h3>
   <form method="post">
     {% csrf_token %}
 
