@@ -32,12 +32,12 @@
 <div class="col-1 my-1">
     <input class="btn btn-primary" type="submit" value="Search">
 </div>
-<div class="col-1 my-1">
+<!-- <div class="col-1 my-1">
     <form method="post" action="{% url 'tune:tune_new' %}">
         {% csrf_token %}
         <input class="btn btn-success" type="submit" value="New Tune">
     </form>
-</div>
+</div> -->
 </form>
 </div>
 
@@ -71,18 +71,20 @@
             <td>{{ tune.tune.year }}</td>
             <td>{{ tune.knowledge }}</td>
             <td>
-                <div class="btn-group-vertical">
-                    <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}">
-                    {% csrf_token %}
-                    <input class="btn btn-danger btn-sm" type="submit" value="Delete">
-                    </form>
-                    <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+                <div class="btn-group">
                     <button type="button"
                     class="btn btn-primary btn-sm"
                     hx-put="{% url 'tune:play' pk=tune.id %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
                 >Play</button>
+                     <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+                  
+                <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}">
+                    {% csrf_token %}
+                    <input class="btn btn-danger btn-sm" type="submit" value="Delete">
+                    </form>
+                  
                 </div>
             </td>
         </tr>

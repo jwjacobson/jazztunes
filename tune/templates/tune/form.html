@@ -7,11 +7,11 @@
   </p>
 </div>
   <h3>{% if tune %}Edit{% else %}New{% endif %} Tune</h3>
-  <form method="post">
+  <form method="post" class="row">
     {% csrf_token %}
 
     {% for field in tune_form %}
-        <div class="mb-3">
+        <div class="col-md-5">
             <p>{{ field.label_tag }}</p>
             {{ field }}
             {{ field.errors }}
@@ -29,7 +29,7 @@
         </p>
       </div>
     {% endfor %}
-    <input type="submit" class="btn btn-success" value="{% if tune %}Save{% else %}Create{% endif %}" />
+    <input type="submit" class="btn btn-success col-2" value="{% if tune %}Save{% else %}Create{% endif %}" />
   </form>
 
 {% endblock %}
