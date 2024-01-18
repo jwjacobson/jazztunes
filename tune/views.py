@@ -67,7 +67,7 @@ def tune_list(request):
                 messages.error(request, "No tunes match your search.")
                 return render(
                     request,
-                    "tune/play.html",
+                    "tune/list.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
 
@@ -88,7 +88,10 @@ def tune_new(request):
         rep_form = RepertoireTuneForm(request.POST)
         if tune_form.is_valid():
             with transaction.atomic():
-                new_tune = tune_form.save()
+                new_tune = tune_form.save(commit=False)
+                new_tune.created_by = request.user
+                new_tune.save()
+
                 rep_tune = RepertoireTune.objects.create(
                     tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
                 )
@@ -196,8 +199,14 @@ def tune_play(request):
 @login_required
 def tune_browse(request):
     user = request.user
+
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_ids = {tune.tune_id for tune in user_tunes}
+
+    # TODO: change this to repertoire tunes
+    # A: make sure admin tunes are in admin repertoire so we can update query
+    # B: that leads to sending rep_tunes into query_tunes below as per other 2 calls
+
     tunes = Tune.objects.filter(created_by=settings.ADMIN_USER_ID)
 
     if request.method == "POST":
@@ -238,6 +247,12 @@ def tune_browse(request):
 @login_required
 def tune_take(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
+
+    if tune.created_by != request.user:
+        # make a copy of the tune
+        tune.pk = None
+        tune.created_by = request.user
+        tune.save()
 
     if request.method == "POST":
         RepertoireTune.objects.create(tune=tune, player=request.user)
