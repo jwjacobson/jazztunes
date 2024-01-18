@@ -1,7 +1,7 @@
 from random import choice
 
-from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
@@ -12,6 +12,7 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 MAX_SEARCH_TERMS = 4
+
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
@@ -68,7 +69,7 @@ def tune_list(request):
                 return render(
                     request,
                     "tune/list.html",
-                    {"tunes": tunes, "search_form": search_form},
+                    {"tunes": tunes, "user": user, "search_form": search_form},
                 )
 
     else:
@@ -199,15 +200,14 @@ def tune_play(request):
 @login_required
 def tune_browse(request):
     user = request.user
+    admin = User.objects.get(id=2)
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
-    user_tune_ids = {tune.tune_id for tune in user_tunes}
+    user_tune_titles = {
+        tune.tune.title for tune in user_tunes
+    }  # using title now since the user's and the admin's id for the same tune are now distinct
 
-    # TODO: change this to repertoire tunes
-    # A: make sure admin tunes are in admin repertoire so we can update query
-    # B: that leads to sending rep_tunes into query_tunes below as per other 2 calls
-
-    tunes = Tune.objects.filter(created_by=settings.ADMIN_USER_ID)
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -240,27 +240,26 @@ def tune_browse(request):
     return render(
         request,
         "tune/browse.html",
-        {"tunes": tunes, "search_form": search_form, "user_tune_ids": user_tune_ids},
+        {"tunes": tunes, "search_form": search_form, "user_tune_titles": user_tune_titles},
     )
 
 
 @login_required
 def tune_take(request, pk):
-    tune = get_object_or_404(Tune, pk=pk)
+    admin_tune = get_object_or_404(RepertoireTune, pk=pk)
+    tune = admin_tune.tune
 
-    if tune.created_by != request.user:
-        # make a copy of the tune
-        tune.pk = None
-        tune.created_by = request.user
-        tune.save()
+    tune.pk = None
+    tune.created_by = request.user
+    tune.save()
 
-    if request.method == "POST":
-        RepertoireTune.objects.create(tune=tune, player=request.user)
-        # rep_tune.save()
-        # messages.success(
-        #     request,
-        #     f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
-        # )
-        # return redirect("tune:tune_browse")
+    RepertoireTune.objects.create(tune=tune, player=request.user)
+
+    # rep_tune.save()
+    # messages.success(
+    #     request,
+    #     f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
+    # )
+    # return redirect("tune:tune_browse")
 
     return render(request, "tune/browse.html", {"tune": tune})

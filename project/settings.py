@@ -24,6 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
+ADMIN_USER_ID = config("ADMIN_USER_ID", default=None, cast=int)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -56,8 +57,8 @@ SITE_ID = 1
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-LOGIN_URL = 'account_login'
-LOGOUT_URL = 'account_logout'
+LOGIN_URL = "account_login"
+LOGOUT_URL = "account_logout"
 LOGIN_REDIRECT_URL = "tune_list"
 
 MIDDLEWARE = [
