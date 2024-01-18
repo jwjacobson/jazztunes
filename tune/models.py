@@ -61,7 +61,7 @@ class Tune(models.Model):
         "atonal",
     }
 
-    title = models.CharField(max_length=100, unique=True, help_text="The only required field")
+    title = models.CharField(max_length=100, help_text="The only required field")
     composer = models.CharField(max_length=30, blank=True, help_text="Last names only for now")
     key = models.CharField(
         max_length=10,
