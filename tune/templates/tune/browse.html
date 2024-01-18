@@ -43,14 +43,14 @@
         <td>{{ tune.meter }}</td>
         <td>{{ tune.year }}</td>
         <td>
-            {% if tune.id in user_tune_ids %}
-            <button type="button" class="btn btn-tertiary btn-sm" disabled>Take</button>
-            {% else %}
+          {% if tune.id in user_tune_ids %}
+            <i>Taken</i>
+          {% else %}
             <form method="post" action="{% url 'tune:tune_take' pk=tune.pk %}">
                 {% csrf_token %}
                 <input class="btn btn-success btn-sm" type="submit" value="Take">
             </form>
-            {% endif %}
+          {% endif %}
         </td>
     </tr>
     {% endfor %}
