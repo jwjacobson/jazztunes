@@ -39,7 +39,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
     return search_results
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_list(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
@@ -81,7 +81,7 @@ def tune_list(request):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_new(request):
     if request.method == "POST":
         tune_form = TuneForm(request.POST)
@@ -104,7 +104,7 @@ def tune_new(request):
     return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_edit(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
@@ -128,7 +128,7 @@ def tune_edit(request, pk):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
@@ -181,6 +181,7 @@ def change_tune(request):
     return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
 
 
+@login_required
 def play(request, pk):
     rep_tune = get_object_or_404(RepertoireTune, id=pk)
     rep_tune.last_played = timezone.now()
@@ -189,12 +190,12 @@ def play(request, pk):
     return render(request, "tune/_play.html")
 
 
-@login_required(login_url="/accounts/login")
+@login_required
 def tune_play(request):
     return render(request, "tune/play.html")
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_browse(request):
     user = request.user
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
@@ -236,7 +237,7 @@ def tune_browse(request):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_take(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
 
