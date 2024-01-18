@@ -198,7 +198,7 @@ def tune_browse(request):
     user = request.user
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_ids = {tune.tune_id for tune in user_tunes}
-    tunes = Tune.objects.all().filter(created_by=settings.ADMIN_USER_ID)
+    tunes = Tune.objects.filter(created_by=settings.ADMIN_USER_ID)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
