@@ -203,7 +203,9 @@ def tune_browse(request):
     admin = User.objects.get(id=2)
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
-    user_tune_ids = {tune.tune_id for tune in user_tunes}
+    user_tune_titles = {
+        tune.tune.title for tune in user_tunes
+    }  # using title now since the user's and the admin's id for the same tune are now distinct
 
     tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
 
@@ -238,7 +240,7 @@ def tune_browse(request):
     return render(
         request,
         "tune/browse.html",
-        {"tunes": tunes, "search_form": search_form, "user_tune_ids": user_tune_ids},
+        {"tunes": tunes, "search_form": search_form, "user_tune_titles": user_tune_titles},
     )
 
 

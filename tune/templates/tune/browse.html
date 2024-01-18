@@ -43,7 +43,7 @@
         <td>{{ tune.tune.meter }}</td>
         <td>{{ tune.tune.year }}</td>
         <td>
-          {% if tune.tune.id in user_tune_ids %}
+          {% if tune.tune.title in user_tune_titles %}
             <i>Taken</i>
           {% else %}
             <form method="post" action="{% url 'tune:tune_take' pk=tune.pk %}">
