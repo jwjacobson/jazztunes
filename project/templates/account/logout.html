@@ -4,9 +4,11 @@
     {% trans "Sign Out" %}
 {% endblock head_title %}
 {% block content %}
+<div class="my-3">
     {% element h1 %}
         {% trans "Sign Out" %}
     {% endelement %}
+</div>
     <p>{% trans 'Are you sure you want to sign out?' %}</p>
     {% url 'account_logout' as action_url %}
     {% element form method="post" action=action_url no_visible_fields=True %}

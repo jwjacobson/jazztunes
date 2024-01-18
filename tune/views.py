@@ -205,10 +205,6 @@ def tune_browse(request):
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_ids = {tune.tune_id for tune in user_tunes}
 
-    # TODO: change this to repertoire tunes
-    # A: make sure admin tunes are in admin repertoire so we can update query
-    # B: that leads to sending rep_tunes into query_tunes below as per other 2 calls
-
     tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
 
     if request.method == "POST":
@@ -248,21 +244,20 @@ def tune_browse(request):
 
 @login_required
 def tune_take(request, pk):
-    tune = get_object_or_404(Tune, pk=pk)
+    admin_tune = get_object_or_404(RepertoireTune, pk=pk)
+    tune = admin_tune.tune
 
-    if tune.created_by != request.user:
-        # make a copy of the tune
-        tune.pk = None
-        tune.created_by = request.user
-        tune.save()
+    tune.pk = None
+    tune.created_by = request.user
+    tune.save()
 
-    if request.method == "POST":
-        RepertoireTune.objects.create(tune=tune, player=request.user)
-        # rep_tune.save()
-        # messages.success(
-        #     request,
-        #     f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
-        # )
-        # return redirect("tune:tune_browse")
+    RepertoireTune.objects.create(tune=tune, player=request.user)
+
+    # rep_tune.save()
+    # messages.success(
+    #     request,
+    #     f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
+    # )
+    # return redirect("tune:tune_browse")
 
     return render(request, "tune/browse.html", {"tune": tune})
