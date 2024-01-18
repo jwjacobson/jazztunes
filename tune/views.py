@@ -1,5 +1,6 @@
 from random import choice
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -11,7 +12,6 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 MAX_SEARCH_TERMS = 4
-
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
@@ -200,7 +200,7 @@ def tune_browse(request):
     user = request.user
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_ids = {tune.tune_id for tune in user_tunes}
-    tunes = Tune.objects.all().filter(created_by=2)
+    tunes = Tune.objects.all().filter(created_by=settings.ADMIN_USER_ID)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
