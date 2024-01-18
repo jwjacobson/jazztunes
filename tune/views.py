@@ -10,6 +10,8 @@ from django.utils import timezone
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
 
+MAX_SEARCH_TERMS = 4
+
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
@@ -46,10 +48,10 @@ def tune_list(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            if len(search_terms) > 4:
+            if len(search_terms) > MAX_SEARCH_TERMS:
                 messages.error(
                     request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                    f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
                 )
                 return render(
                     request,
@@ -210,10 +212,10 @@ def tune_play(request, pk=None):
                 original_search_string = search_form.cleaned_data["search_term"]
                 search_terms = original_search_string.split(" ")
 
-                if len(search_terms) > 4:
+                if len(search_terms) > MAX_SEARCH_TERMS:
                     messages.error(
                         request,
-                        f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                        f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
                     )
                     return render(
                         request,
@@ -293,10 +295,10 @@ def tune_browse(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            if len(search_terms) > 4:
+            if len(search_terms) > MAX_SEARCH_TERMS:
                 messages.error(
                     request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                    f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
                 )
                 return render(
                     request,
