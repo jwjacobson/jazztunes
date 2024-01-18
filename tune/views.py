@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from .models import Tune, RepertoireTune
-from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
+from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 MAX_SEARCH_TERMS = 4
 
