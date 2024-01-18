@@ -69,7 +69,7 @@ def tune_list(request):
                 return render(
                     request,
                     "tune/list.html",
-                    {"tunes": tunes, "search_form": search_form},
+                    {"tunes": tunes, "user": user, "search_form": search_form},
                 )
 
     else:
