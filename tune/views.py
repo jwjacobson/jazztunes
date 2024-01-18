@@ -67,7 +67,7 @@ def tune_list(request):
                 messages.error(request, "No tunes match your search.")
                 return render(
                     request,
-                    "tune/play.html",
+                    "tune/list.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
 
