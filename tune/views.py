@@ -251,7 +251,8 @@ def tune_take(request, pk):
     if tune.created_by != request.user:
         # make a copy of the tune
         tune.pk = None
-        tune = tune.save()
+        tune.created_by = request.user
+        tune.save()
 
     if request.method == "POST":
         RepertoireTune.objects.create(tune=tune, player=request.user)
