@@ -148,8 +148,7 @@ def tune_delete(request, pk):
 
 
 @login_required
-def search(request):
-    # TODO: rename this view to get_random_tune
+def get_random_tune(request):
     original_search_string = request.GET.get("search", "")
     search_terms = original_search_string.split(" ")
     tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
