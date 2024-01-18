@@ -1,7 +1,7 @@
 from random import choice
 
-from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
@@ -12,6 +12,7 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 MAX_SEARCH_TERMS = 4
+
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
@@ -199,6 +200,7 @@ def tune_play(request):
 @login_required
 def tune_browse(request):
     user = request.user
+    admin = User.objects.get(id=2)
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_ids = {tune.tune_id for tune in user_tunes}
@@ -207,7 +209,7 @@ def tune_browse(request):
     # A: make sure admin tunes are in admin repertoire so we can update query
     # B: that leads to sending rep_tunes into query_tunes below as per other 2 calls
 
-    tunes = Tune.objects.filter(created_by=settings.ADMIN_USER_ID)
+    tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)

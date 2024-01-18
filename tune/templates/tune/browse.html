@@ -34,14 +34,14 @@
         </tr>
     {% for tune in tunes %}
     <tr>
-        <td>{{ tune.title }}</td>
-        <td>{{ tune.composer }}</td>
-        <td>{{ tune.key }}</td>
-        <td>{{ tune.other_keys }}</td>
-        <td>{{ tune.song_form }}</td>
-        <td>{{ tune.style }}</td>
-        <td>{{ tune.meter }}</td>
-        <td>{{ tune.year }}</td>
+        <td>{{ tune.tune.title }}</td>
+        <td>{{ tune.tune.composer }}</td>
+        <td>{{ tune.tune.key }}</td>
+        <td>{{ tune.tune.other_keys }}</td>
+        <td>{{ tune.tune.song_form }}</td>
+        <td>{{ tune.tune.style }}</td>
+        <td>{{ tune.tune.meter }}</td>
+        <td>{{ tune.tune.year }}</td>
         <td>
           {% if tune.id in user_tune_ids %}
             <i>Taken</i>
