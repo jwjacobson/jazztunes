@@ -245,10 +245,10 @@ def tune_browse(request):
 def tune_take(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
 
-    # TODO: if tune is not owned by me, make a private copy
-    # obj = Foo.objects.get(pk=<some_existing_pk>)
-    # obj.pk = None
-    # obj.save()
+    if tune.created_by != request.user:
+        # make a copy of the tune
+        tune.pk = None
+        tune = tune.save()
 
     if request.method == "POST":
         RepertoireTune.objects.create(tune=tune, player=request.user)
