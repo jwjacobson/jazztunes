@@ -1,5 +1,6 @@
 from random import choice
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
@@ -8,8 +9,9 @@ from django.db import transaction
 from django.utils import timezone
 
 from .models import Tune, RepertoireTune
-from .forms import TuneForm, RepertoireTuneForm, SearchForm, PlayForm
+from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
+MAX_SEARCH_TERMS = 4
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
@@ -27,7 +29,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
             | Q(knowledge__icontains=term)
         )
 
-        if timespan:
+        if timespan is not None:
             term_query = term_query.exclude(last_played__gte=timespan)
 
         searches.add(term_query)
@@ -37,7 +39,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
     return search_results
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_list(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
@@ -46,10 +48,10 @@ def tune_list(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            if len(search_terms) > 4:
+            if len(search_terms) > MAX_SEARCH_TERMS:
                 messages.error(
                     request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                    f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
                 )
                 return render(
                     request,
@@ -65,7 +67,7 @@ def tune_list(request):
                 messages.error(request, "No tunes match your search.")
                 return render(
                     request,
-                    "tune/play.html",
+                    "tune/list.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
 
@@ -79,14 +81,17 @@ def tune_list(request):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_new(request):
     if request.method == "POST":
         tune_form = TuneForm(request.POST)
         rep_form = RepertoireTuneForm(request.POST)
         if tune_form.is_valid():
             with transaction.atomic():
-                new_tune = tune_form.save()
+                new_tune = tune_form.save(commit=False)
+                new_tune.created_by = request.user
+                new_tune.save()
+
                 rep_tune = RepertoireTune.objects.create(
                     tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
                 )
@@ -102,7 +107,7 @@ def tune_new(request):
     return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_edit(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
@@ -126,7 +131,7 @@ def tune_edit(request, pk):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
@@ -146,8 +151,7 @@ def tune_delete(request, pk):
 
 
 @login_required
-def search(request):
-    # TODO: rename this view to get_random_tune
+def get_random_tune(request):
     original_search_string = request.GET.get("search", "")
     search_terms = original_search_string.split(" ")
     tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
@@ -179,124 +183,40 @@ def change_tune(request):
     return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
 
 
-def choose(request, tunes):
-    pass
-
-
+@login_required
 def play(request, pk):
     rep_tune = get_object_or_404(RepertoireTune, id=pk)
     rep_tune.last_played = timezone.now()
     rep_tune.save()
-    # messages.success(request, f"Played {rep_tune.tune.title}!")
     return render(request, "tune/_play.html")
 
 
-@login_required(login_url="/accounts/login")
-def tune_play(request, pk=None):
-    # TODO: update view to update the tune
-    # TODO: how to send a message to the user?
-    # TODO: should row disappear after play click?
-    user = request.user
-    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
-    original_search_string = ""
-    search_form = SearchForm(request.POST or None)
-    play_form = PlayForm(request.POST or None)
-    is_search = False
-
-    if request.method == "POST":
-        if "search_term" in request.POST:
-            if search_form.is_valid():
-                is_search = True
-                original_search_string = search_form.cleaned_data["search_term"]
-                search_terms = original_search_string.split(" ")
-
-                if len(search_terms) > 4:
-                    messages.error(
-                        request,
-                        f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
-                    )
-                    return render(
-                        request,
-                        "tune/play.html",
-                        {"tunes": tunes, "search_form": search_form},
-                    )
-
-                tunes = query_tunes(tunes, search_terms)
-
-                if not tunes:
-                    messages.error(request, "No tunes match your search.")
-                    return render(
-                        request,
-                        "tune/play.html",
-                        {"tunes": tunes, "search_form": search_form},
-                    )
-
-                # if len(tunes) == 1:
-                #     suggested_tune = tunes.get()
-
-                # else:
-                #     suggested_tune = None
-
-                # play_form = PlayForm([tune.id for tune in tunes])
-                suggested_tune = tunes.first()
-                matching_tunes = [tune.id for tune in tunes]
-                matching_tunes_queryset = RepertoireTune.objects.filter(id__in=matching_tunes)
-                play_form = PlayForm(
-                    request.POST or None,
-                    initial={"matching_tunes": matching_tunes},
-                    matching_tunes_queryset=matching_tunes_queryset,
-                )
-
-                return render(
-                    request,
-                    "tune/play.html",
-                    {
-                        "tunes": tunes,
-                        "search_form": search_form,
-                        "play_form": play_form,
-                        "is_search": is_search,
-                        "suggested_tune": suggested_tune,
-                        "matching_tunes": matching_tunes,
-                    },
-                )
-
-        elif "choice" in request.POST:
-            if play_form.is_valid():
-                choice = request.POST.get("choice")
-                suggested_tune = play_form.cleaned_data.get("suggested_tune")
-                if choice == "Play!":
-                    suggested_tune.last_played = timezone.now()
-                    suggested_tune.save()
-                    messages.success(request, f"Played {suggested_tune.tune.title}!")
-            else:
-                print(f"playform invalid: {play_form.errors}")
-
-    else:
-        search_form = SearchForm()
-        play_form = PlayForm()
-
-    return render(
-        request,
-        "tune/play.html",
-        {"tunes": tunes, "search_form": search_form, "play_form": play_form},
-    )
+@login_required
+def tune_play(request):
+    return render(request, "tune/play.html")
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_browse(request):
     user = request.user
+
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_ids = {tune.tune_id for tune in user_tunes}
-    tunes = Tune.objects.all().filter(created_by=2)
+
+    # TODO: change this to repertoire tunes
+    # A: make sure admin tunes are in admin repertoire so we can update query
+    # B: that leads to sending rep_tunes into query_tunes below as per other 2 calls
+
+    tunes = Tune.objects.filter(created_by=settings.ADMIN_USER_ID)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            if len(search_terms) > 4:
+            if len(search_terms) > MAX_SEARCH_TERMS:
                 messages.error(
                     request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of 4). Consider using advanced search for more granularity.",
+                    f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
                 )
                 return render(
                     request,
@@ -324,9 +244,15 @@ def tune_browse(request):
     )
 
 
-@login_required(login_url="/accounts/login/")
+@login_required
 def tune_take(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
+
+    if tune.created_by != request.user:
+        # make a copy of the tune
+        tune.pk = None
+        tune.created_by = request.user
+        tune.save()
 
     if request.method == "POST":
         RepertoireTune.objects.create(tune=tune, player=request.user)
