@@ -181,10 +181,6 @@ def change_tune(request):
     return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
 
 
-def choose(request, tunes):
-    pass
-
-
 def play(request, pk):
     rep_tune = get_object_or_404(RepertoireTune, id=pk)
     rep_tune.last_played = timezone.now()
