@@ -29,7 +29,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
             | Q(knowledge__icontains=term)
         )
 
-        if timespan:
+        if timespan is not None:
             term_query = term_query.exclude(last_played__gte=timespan)
 
         searches.add(term_query)
