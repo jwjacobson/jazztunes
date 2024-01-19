@@ -266,4 +266,4 @@ def tune_take(request, pk):
     # )
     # return redirect("tune:tune_browse")
 
-    return render(request, "tune/browse.html", {"tune": tune})
+    return render(request, "tune/_take.html")
