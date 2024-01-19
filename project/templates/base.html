@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,7 +14,8 @@
         {% block extra_head %}
         {% endblock extra_head %}
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-          <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <link rel="stylesheet" href="{% static 'tune/css/styles.css' %}">
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     </head>
     <div class="container my-4">
@@ -55,15 +57,15 @@
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'success' %}
-                <div class="alert alert-info" role="alert">
+                <div class="alert alert-info border border-warning" id="alert" role="alert">
                   {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
                 </div>
                 {% elif message.tags == 'error' %}
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger border border-warning" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% elif message.tags == 'warning' %}
-                <div class="alert alert-warning" role="alert">
+                <div class="alert alert-warning border border-warning" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% endif %}

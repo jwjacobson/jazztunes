@@ -247,6 +247,10 @@ def tune_browse(request):
 @login_required
 def tune_take(request, pk):
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
+    if admin_tune.player_id != 2:
+        messages.error(request, "You can only take public tunes into your repertoire.")
+        return render(request, "tune/browse.html", {"admin_tune": admin_tune})
+
     tune = admin_tune.tune
 
     tune.pk = None
