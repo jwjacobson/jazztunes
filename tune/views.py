@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
 from django.db import transaction
 from django.utils import timezone
+from django.conf import settings
 
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
@@ -186,7 +187,7 @@ def change_tune(request):
 
 @login_required
 def play(request, pk):
-    rep_tune = get_object_or_404(RepertoireTune, id=pk)
+    rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
     rep_tune.last_played = timezone.now()
     rep_tune.save()
     return render(request, "tune/_play.html")
@@ -200,7 +201,7 @@ def tune_play(request):
 @login_required
 def tune_browse(request):
     user = request.user
-    admin = User.objects.get(id=2)
+    admin = User.objects.get(id=settings.ADMIN_USER_ID)
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_titles = {
@@ -247,7 +248,7 @@ def tune_browse(request):
 @login_required
 def tune_take(request, pk):
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
-    if admin_tune.player_id != 2:
+    if admin_tune.player_id != settings.ADMIN_USER_ID:
         messages.error(request, "You can only take public tunes into your repertoire.")
         return render(request, "tune/browse.html", {"admin_tune": admin_tune})
 
@@ -258,12 +259,5 @@ def tune_take(request, pk):
     tune.save()
 
     RepertoireTune.objects.create(tune=tune, player=request.user)
-
-    # rep_tune.save()
-    # messages.success(
-    #     request,
-    #     f"Tune {rep_tune.tune.id}: {rep_tune.tune.title} copied to repertoire.",
-    # )
-    # return redirect("tune:tune_browse")
 
     return render(request, "tune/_take.html")

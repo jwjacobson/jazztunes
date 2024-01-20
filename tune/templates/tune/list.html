@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Tunes{% endblock %}
+{% block head_title %}Home{% endblock %}
 
 {% block content %}
 <div class="row mt-4">
@@ -8,9 +8,6 @@
     <p>
         Here you can browse and manage your repertoire.
     </p>
-</div>
-<div class="col-4">
-   
 </div>
 </div>
 <div class="row">
@@ -82,7 +79,7 @@
                   
                 <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}">
                     {% csrf_token %}
-                    <input class="btn btn-danger btn-sm" type="submit" value="Delete">
+                    <input class="btn btn-danger btn-sm" type="submit" value="Delete" onclick="return confirm('Are you sure?')">
                     </form>
                   
                 </div>

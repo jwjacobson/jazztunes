@@ -17,7 +17,9 @@ class Tune(models.Model):
         ("ABA", "ABA"),
         ("ABAB", "ABAB"),
         ("ABCD", "ABCD"),
+        ("AB", "AB"),
         ("AAB", "AAB"),
+        ("AABC", "AABC"),
         ("blues", "blues"),
         ("irregular", "irregular"),
     ]

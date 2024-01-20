@@ -57,15 +57,15 @@
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'success' %}
-                <div class="alert alert-info border border-warning" id="alert" role="alert">
+                <div class="alert alert-info border border-top-0 border-primary-subtle" id="alert" role="alert">
                   {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
                 </div>
                 {% elif message.tags == 'error' %}
-                <div class="alert alert-danger border border-warning" id="alert"  role="alert">
+                <div class="alert alert-danger border border-top-0 border-primary-subtle" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% elif message.tags == 'warning' %}
-                <div class="alert alert-warning border border-warning" id="alert"  role="alert">
+                <div class="alert alert-warning border border-top-0 border-primary-subtle" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% endif %}
