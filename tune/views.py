@@ -13,10 +13,32 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 MAX_SEARCH_TERMS = 4
+NICKNAMES = {
+    "bird": "Parker",
+    "bud": "Powell",
+    "miles": "Davis",
+    "wayne": "Shorter",
+    "joe": "Henderson",
+    "lee": "Konitz",
+    "diz": "Gillespie",
+    "dizzy": "Gillespie",
+    "duke": "Ellington",
+    "sonny": "Rollins",
+    "bill": "Evans",
+    "herbie": "Hancock",
+    "cedar": "Walton",
+}
 
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
+    nickname_search = set()
+
+    for term in search_terms:
+        if term in NICKNAMES:
+            term_query = tune_set.filter(Q(tune__composer__icontains=NICKNAMES[term]))
+        if term_query:
+            nickname_search.add(term_query)
 
     for term in search_terms:
         term_query = tune_set.filter(
@@ -36,7 +58,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
         searches.add(term_query)
 
-    search_results = tune_set.intersection(*searches)
+    search_results = nickname_search.union(tune_set.intersection(*searches))
 
     return search_results
 

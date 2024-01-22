@@ -14,7 +14,7 @@
             type="submit"
             value="Set"
             hx-trigger="click"
-            hx-get="{% url 'tune:set_knowledge' pk=tune.pk %}"
+            hx-post="{% url 'tune:set_knowledge' pk=tune.pk %}"
             hx-swap="outerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 </form>
