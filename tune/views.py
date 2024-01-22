@@ -282,15 +282,19 @@ def tune_take(request, pk):
     tune.created_by = request.user
     tune.save()
 
-    RepertoireTune.objects.create(tune=tune, player=request.user)
+    new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
 
-    return render(request, "tune/_take.html", {"rep_form": rep_form, "tune": tune})
+    return render(
+        request,
+        "tune/_take.html",
+        {"rep_form": rep_form, "tune": tune, "new_rep_tune": new_rep_tune},
+    )
 
 
 @login_required
 def set_knowledge(request, pk):
-    user = request.user
-    rep_tune = RepertoireTune.objects.select_related("tune").filter(player=user).last()
+    # user = request.user
+    rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 
     if rep_form.is_valid():
