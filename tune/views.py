@@ -248,6 +248,8 @@ def tune_browse(request):
 @login_required
 def tune_take(request, pk):
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
+    rep_form = RepertoireTuneForm(request.POST)
+
     if admin_tune.player_id != settings.ADMIN_USER_ID:
         messages.error(request, "You can only take public tunes into your repertoire.")
         return render(request, "tune/browse.html", {"admin_tune": admin_tune})
@@ -260,4 +262,20 @@ def tune_take(request, pk):
 
     RepertoireTune.objects.create(tune=tune, player=request.user)
 
-    return render(request, "tune/_take.html")
+    return render(request, "tune/_take.html", {"rep_form": rep_form, "tune": tune})
+
+
+@login_required
+def set_knowledge(request, pk):
+    user = request.user
+    rep_tune = RepertoireTune.objects.select_related("tune").filter(player=user).last()
+    rep_form = RepertoireTuneForm(request.POST)
+
+    if rep_form.is_valid():
+        rep_tune.knowledge = rep_form.cleaned_data["knowledge"]
+        rep_tune.save()
+    else:
+        print("invalid")
+        print(rep_form.errors)
+
+    return render(request, "tune/_taken.html", {"rep_form": rep_form})

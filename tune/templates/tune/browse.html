@@ -45,7 +45,7 @@
         <td>{{ tune.tune.year }}</td>
         <td>
           {% if tune.tune.title in user_tune_titles %}
-            <button type="button" class="btn btn-outline-success btn-sm" disabled>Take</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Take</button>
           {% else %}
           <button type="button"
                     class="btn btn-success btn-sm"
@@ -53,10 +53,6 @@
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
                 >Take</button>
-            <!-- <form method="post" action="{% url 'tune:tune_take' pk=tune.pk %}">
-                {% csrf_token %}
-                <input class="btn btn-success btn-sm" type="submit" value="Take">
-            </form> -->
           {% endif %}
         </td>
     </tr>
