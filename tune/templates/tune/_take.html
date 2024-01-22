@@ -1,1 +1,24 @@
-<button type="button" class="btn btn-outline-success btn-sm" disabled>Take</button>
+<form method="post" action="{% url 'tune:set_knowledge' pk=tune.pk %}" class="row" hx-swap="outerHTML" hx-trigger="submit">
+    {% csrf_token %}
+
+    {% for field in rep_form %}
+    <div class="mb-3">
+        <p>
+            <p>{{ field.label_tag }}</p>
+            {{ field }}
+            {{ field.errors }}
+        </p>
+      </div>
+    {% endfor %}
+    <input class="btn btn-success btn-sm"
+            type="submit"
+            value="Set"
+            hx-trigger="click"
+            hx-get="{% url 'tune:set_knowledge' pk=tune.pk %}"
+            hx-swap="outerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+</form>
+ <!-- <form method="post" action="{% url 'tune:set_knowledge' pk=tune.pk %}">
+    {% csrf_token %}
+    <input class="btn btn-success btn-sm" type="submit" value="Set">
+</form> -->

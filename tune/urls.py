@@ -14,4 +14,5 @@ urlpatterns = [
     path("browse", views.tune_browse, name="tune_browse"),
     path("take/<int:pk>", views.tune_take, name="tune_take"),
     path("play/<int:pk>", views.play, name="play"),
+    path("set/<int:pk>", views.set_knowledge, name="set_knowledge"),
 ]
