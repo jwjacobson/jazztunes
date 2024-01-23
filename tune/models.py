@@ -9,10 +9,6 @@ class Tag(models.Model):
         return self.name
 
 
-ballad = Tag(name="ballad")
-ballad.save()
-
-
 class Tune(models.Model):
     """
     The Tune is the heart of this app; each tune is one song that can be added to a user's repertoire and should contain all relevant musical information.
