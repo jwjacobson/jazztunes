@@ -32,19 +32,12 @@ NICKNAMES = {
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
-    nickname_search = set()
 
     for term in search_terms:
         if term in NICKNAMES:
             term_query = tune_set.filter(Q(tune__composer__icontains=NICKNAMES[term]))
-            nickname_search.add(term_query)
+            searches.add(term_query)
 
-    print("\n")
-    print("Nickname search:")
-    for match in nickname_search:
-        print(match)
-
-    for term in search_terms:
         term_query = tune_set.filter(
             Q(tune__title__icontains=term)
             | Q(tune__composer__icontains=term)
@@ -62,23 +55,10 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
         searches.add(term_query)
 
-    print("\n")
-    print("Search without nickname:")
-    for match in searches:
-        print(match)
+    search_results = searches.pop()
 
-    if nickname_search:
-        searches = nickname_search.union(searches)
-
-    print("\n")
-    print("Combined searches:")
-    for match in searches:
-        print(match)
-
-    search_results = tune_set.intersection(*searches)
-
-    print("\n")
-    print(f"Search results: {search_results}")
+    while searches:
+        search_results = search_results | searches.pop()
 
     return search_results
 
