@@ -37,8 +37,12 @@ def query_tunes(tune_set, search_terms, timespan=None):
     for term in search_terms:
         if term in NICKNAMES:
             term_query = tune_set.filter(Q(tune__composer__icontains=NICKNAMES[term]))
-        if term_query:
             nickname_search.add(term_query)
+
+    print("\n")
+    print("Nickname search:")
+    for match in nickname_search:
+        print(match)
 
     for term in search_terms:
         term_query = tune_set.filter(
@@ -58,7 +62,23 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
         searches.add(term_query)
 
-    search_results = nickname_search.union(tune_set.intersection(*searches))
+    print("\n")
+    print("Search without nickname:")
+    for match in searches:
+        print(match)
+
+    if nickname_search:
+        searches = nickname_search.union(searches)
+
+    print("\n")
+    print("Combined searches:")
+    for match in searches:
+        print(match)
+
+    search_results = tune_set.intersection(*searches)
+
+    print("\n")
+    print(f"Search results: {search_results}")
 
     return search_results
 
@@ -293,7 +313,6 @@ def tune_take(request, pk):
 
 @login_required
 def set_knowledge(request, pk):
-    # user = request.user
     rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 

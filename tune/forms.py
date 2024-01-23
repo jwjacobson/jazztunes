@@ -19,6 +19,7 @@ class TuneForm(ModelForm):
             "style",
             "meter",
             "year",
+            "tags",
         ]
 
     def clean_key(self):
@@ -46,6 +47,16 @@ class TuneForm(ModelForm):
             if other_key.lower() not in Tune.KEYS:
                 raise ValidationError(_(f'"{other_key}" is not a valid key.'))
             formatted_data.append(other_key.title())
+        data = " ".join(formatted_data)
+        return data
+
+    def clean_tags(self):
+        data = self.cleaned_data["tags"]
+        if data is None:
+            return data
+        formatted_data = []
+        for tag in data.split():
+            formatted_data.append(tag.lower())
         data = " ".join(formatted_data)
         return data
 
