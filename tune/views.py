@@ -13,10 +13,36 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 MAX_SEARCH_TERMS = 4
+NICKNAMES = {
+    "bird": "Parker",
+    "bud": "Powell",
+    "miles": "Davis",
+    "wayne": "Shorter",
+    "joe": "Henderson",
+    "lee": "Konitz",
+    "diz": "Gillespie",
+    "dizzy": "Gillespie",
+    "duke": "Ellington",
+    "sonny": "Rollins",
+    "bill": "Evans",
+    "herbie": "Hancock",
+    "cedar": "Walton",
+}
 
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
+    nickname_search = set()
+
+    for term in search_terms:
+        if term in NICKNAMES:
+            term_query = tune_set.filter(Q(tune__composer__icontains=NICKNAMES[term]))
+            nickname_search.add(term_query)
+
+    print("\n")
+    print("Nickname search:")
+    for match in nickname_search:
+        print(match)
 
     for term in search_terms:
         term_query = tune_set.filter(
@@ -36,7 +62,23 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
         searches.add(term_query)
 
+    print("\n")
+    print("Search without nickname:")
+    for match in searches:
+        print(match)
+
+    if nickname_search:
+        searches = nickname_search.union(searches)
+
+    print("\n")
+    print("Combined searches:")
+    for match in searches:
+        print(match)
+
     search_results = tune_set.intersection(*searches)
+
+    print("\n")
+    print(f"Search results: {search_results}")
 
     return search_results
 
@@ -262,12 +304,15 @@ def tune_take(request, pk):
 
     new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
 
-    return render(request, "tune/_take.html", {"rep_form": rep_form, "tune": tune, "new_rep_tune": new_rep_tune})
+    return render(
+        request,
+        "tune/_take.html",
+        {"rep_form": rep_form, "tune": tune, "new_rep_tune": new_rep_tune},
+    )
 
 
 @login_required
 def set_knowledge(request, pk):
-    user = request.user
     rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 

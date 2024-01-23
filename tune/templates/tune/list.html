@@ -29,12 +29,6 @@
 <div class="col-1 my-1">
     <input class="btn btn-primary" type="submit" value="Search">
 </div>
-<!-- <div class="col-1 my-1">
-    <form method="post" action="{% url 'tune:tune_new' %}">
-        {% csrf_token %}
-        <input class="btn btn-success" type="submit" value="New Tune">
-    </form>
-</div> -->
 </form>
 </div>
 
@@ -52,6 +46,7 @@
                     <th>Style</th>
                     <th>Meter</th>
                     <th>Year</th>
+                    <th>Tags</th>
                     <th>Knowledge</th>
                     <th>Actions</th>
                 </thead>
@@ -66,6 +61,7 @@
             <td>{{ tune.tune.style }}</td>
             <td>{{ tune.tune.meter }}</td>
             <td>{{ tune.tune.year }}</td>
+            <td>{{ tune.tune.tags }}</td>
             <td>{{ tune.knowledge }}</td>
             <td>
                 <div class="btn-group">

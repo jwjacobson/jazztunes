@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
+
 class Tune(models.Model):
     """
     The Tune is the heart of this app; each tune is one song that can be added to a user's repertoire and should contain all relevant musical information.
@@ -85,6 +92,7 @@ class Tune(models.Model):
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
+    tags = models.ManyToManyField(Tag, related_name="tags")
 
     @property
     def decade(self):
