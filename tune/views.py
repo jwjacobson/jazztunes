@@ -116,6 +116,7 @@ def tune_new(request):
                 new_tune = tune_form.save(commit=False)
                 new_tune.created_by = request.user
                 new_tune.save()
+                tune_form.save_m2m()
 
                 rep_tune = RepertoireTune.objects.create(
                     tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
