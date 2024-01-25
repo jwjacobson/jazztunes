@@ -1,3 +1,7 @@
 #alert {
     border-radius: 0;
 }
+
+#form-container {
+    width: 20%;
+}

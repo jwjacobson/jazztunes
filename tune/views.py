@@ -87,6 +87,9 @@ def tune_list(request):
             timespan = search_form.cleaned_data["timespan"]
 
             tunes = query_tunes(tunes, search_terms, timespan)
+            print("matches:")
+            for tune in tunes:
+                print(tune)
 
             if not tunes:
                 messages.error(request, "No tunes match your search.")
@@ -139,6 +142,7 @@ def tune_edit(request, pk):
 
     tune_form = TuneForm(request.POST or None, instance=tune)
     rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
+
     if tune_form.is_valid() and rep_form.is_valid():
         with transaction.atomic():
             updated_tune = tune_form.save()
@@ -164,7 +168,6 @@ def tune_delete(request, pk):
     if request.method == "POST":
         deleted_id, deleted_title = tune.id, tune.title
         with transaction.atomic():
-            tune.delete()
             rep_tune.delete()
             messages.success(
                 request,
@@ -172,7 +175,7 @@ def tune_delete(request, pk):
             )
         return redirect("tune:tune_list")
 
-    return render(request, "tune/form.html", {"tune": tune})
+    return render(request, "tune/list.html", {"tune": tune})
 
 
 @login_required
@@ -249,6 +252,9 @@ def tune_browse(request):
                 )
 
             tunes = query_tunes(tunes, search_terms)
+            print("matches:")
+            for tune in tunes:
+                print(tune)
 
             if not tunes:
                 messages.error(request, "No tunes match your search.")
@@ -270,6 +276,7 @@ def tune_browse(request):
 
 @login_required
 def tune_take(request, pk):
+    user = request.user
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 
@@ -280,7 +287,7 @@ def tune_take(request, pk):
     tune = admin_tune.tune
 
     tune.pk = None
-    tune.created_by = request.user
+    tune.created_by = user
     tune.save()
 
     new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
