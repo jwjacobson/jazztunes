@@ -2,7 +2,7 @@
     {% csrf_token %}
 
     {% for field in rep_form %}
-    <div class="mb-3">
+    <div class="mb-3 mx-auto">
         <p>
             <p>{{ field.label_tag }}</p>
             {{ field }}
@@ -10,6 +10,7 @@
         </p>
       </div>
     {% endfor %}
+    <div class="d-grid gap-2 mx-auto">
     <input class="btn btn-success btn-sm"
             type="submit"
             value="Set"
@@ -18,6 +19,7 @@
             hx-post="{% url 'tune:set_knowledge' pk=new_rep_tune.id %}"
             hx-swap="outerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    </div>
 </form>
  <!-- <form method="post" action="{% url 'tune:set_knowledge' pk=tune.pk %}">
     {% csrf_token %}

@@ -70,7 +70,7 @@ class Tune(models.Model):
         "atonal",
     }
 
-    title = models.CharField(max_length=100, help_text="The only required field")
+    title = models.CharField(max_length=90, help_text="The only required field")
     composer = models.CharField(max_length=30, blank=True, help_text="Last names only for now")
     key = models.CharField(
         max_length=10,
@@ -86,13 +86,12 @@ class Tune(models.Model):
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
-    is_ballad = models.BooleanField(blank=True, null=True, default=False)
     is_contrafact = models.BooleanField(blank=True, null=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
-    tags = models.ManyToManyField(Tag, related_name="tags")
+    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
 
     @property
     def decade(self):
@@ -121,9 +120,7 @@ class RepertoireTune(models.Model):
     tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
     player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     last_played = models.DateTimeField(blank=True, null=True)
-    knowledge = models.CharField(
-        choices=KNOWLEDGES, max_length=15, default="know", blank=True, null=True
-    )
+    knowledge = models.CharField(choices=KNOWLEDGES, max_length=15, default="know", blank=True)
     started_learning = models.DateTimeField(blank=True, null=True)
 
     class Meta:

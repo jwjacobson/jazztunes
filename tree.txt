@@ -1,0 +1,47 @@
+.
+├── db.sqlite3
+├── LICENSE
+├── manage.py
+├── project
+│   ├── asgi.py
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── settings.py
+│   ├── templates
+│   ├── urls.py
+│   └── wsgi.py
+├── __pycache__
+│   └── manage.cpython-311.pyc
+├── pytest.ini
+├── README.md
+├── requirements.txt
+├── tests
+│   ├── __init__.py
+│   ├── __pycache__
+│   └── test_views.py
+├── tree.txt
+├── tune
+│   ├── admin.py
+│   ├── apps.py
+│   ├── fixtures
+│   ├── forms.py
+│   ├── __init__.py
+│   ├── migrations
+│   ├── models.py
+│   ├── __pycache__
+│   ├── signals.py
+│   ├── static
+│   ├── templates
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+└── venv
+    ├── bin
+    ├── include
+    ├── lib
+    ├── lib64 -> lib
+    ├── pyvenv.cfg
+    ├── requirements.txt
+    └── share
+
+19 directories, 26 files

@@ -1,10 +1,10 @@
 <div id="playTuneWrapper">
 
   {% if selected_tune %}
-    <p>Selected tune: <strong>{{selected_tune.tune.title}}</strong></p>
+    <p>You should play <strong>{{selected_tune.tune.title}}</strong></p>
 
     <button type="button"
-      class="btn btn-primary"
+      class="btn btn-warning"
       hx-put="{% url 'tune:play' pk=selected_tune.id %}"
       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
       hx-swap="outerHTML"
