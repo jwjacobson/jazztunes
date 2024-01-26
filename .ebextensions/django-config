@@ -5,4 +5,7 @@ option_settings:
 option_settings:
   aws:elasticbeanstalk:container:python:
     DATABASE_URL: postgres://postgres:password@0.0.0.0:5432/jazzTunes
-q
+
+option_settings:
+  aws:elasticbeanstalk:environment:proxy:staticfiles:
+    tune/static/tune: css
