@@ -1,3 +1,7 @@
 option_settings:
   aws:elasticbeanstalk:container:python:
     WSGIPath: project.wsgi:application
+
+option_settings:
+  aws:elasticbeanstalk:container:python:
+    DATABASE_URL: postgres://postgres:password@0.0.0.0:5432/jazzTunes
