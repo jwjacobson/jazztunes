@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from decouple import config
 from pathlib import Path
+import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +29,7 @@ ADMIN_USER_ID = config("ADMIN_USER_ID", default=2, cast=int)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["127.0.0.1", "jazztunes-dev.us-west-2.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "jazztunes-dev.us-west-2.elasticbeanstalk.com", "172.31.21.218"]
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "allauth",
     "allauth.account",
-    "allauth.socialaccount",
+    # "allauth.socialaccount",
     "tune.apps.TuneConfig",
     "debug_toolbar",
 ]
@@ -101,7 +102,6 @@ WSGI_APPLICATION = "project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}
 
 if "RDS_HOSTNAME" in os.environ:
     DATABASES = {
@@ -114,6 +114,10 @@ if "RDS_HOSTNAME" in os.environ:
             "PORT": os.environ["RDS_PORT"],
         }
     }
+
+else:
+    DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
