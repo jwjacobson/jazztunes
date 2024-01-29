@@ -10,26 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from decouple import config
+from decouple import config, Csv
 from pathlib import Path
 import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ADMIN_USER_ID = config("ADMIN_USER_ID", default=2, cast=int)
-
-# SECURITY WARNING: don't run with debug turned on in production!
-
-ALLOWED_HOSTS = ["127.0.0.1", "jazztunes-dev.us-west-2.elasticbeanstalk.com", "172.31.21.218"]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -49,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "allauth",
     "allauth.account",
-    # "allauth.socialaccount",
+    "allauth.socialaccount",
     "tune.apps.TuneConfig",
     "debug_toolbar",
 ]
@@ -60,10 +56,11 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
-LOGIN_REDIRECT_URL = "tune_list"
+LOGIN_REDIRECT_URL = "tune:tune_list"
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -154,9 +151,17 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_HOST = config("DJANGO_STATIC_HOST", default="")
+STATIC_URL = STATIC_HOST + "/static/"
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"),)
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
