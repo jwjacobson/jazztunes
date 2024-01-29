@@ -35,9 +35,7 @@ nodeenv==1.8.0
 oauthlib==3.2.2
 packaging==23.2
 parso==0.8.3
-pendulum==2.1.2
 pexpect==4.9.0
-pgcli==4.0.1
 pgspecial==2.1.1
 pip-tools==7.3.0
 platformdirs==4.0.0
