@@ -83,6 +83,7 @@ typing_extensions==4.8.0
 url-normalize==1.4.3
 urllib3==1.26.18
 virtualenv==20.24.7
-wcwidth==0.2.12
+#wcwidth==0.2.12
+wcwidth
 whitenoise==6.6.0
 gunicorn==21.2.0
