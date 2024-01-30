@@ -14,6 +14,7 @@ from decouple import config, Csv
 from pathlib import Path
 import dj_database_url
 import os
+import requests
 import sentry_sdk
 
 
@@ -54,7 +55,27 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+    # sentry != local = in prod
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
+
+MAILTRAP_API_TOKEN = config("MAILTRAP_API_TOKEN")
+
+response = requests.get("https://mailtrap.io/api/v1/inboxes.json?api_token=<MAILTRAP_API_TOKEN>")
+credentials = response.json()[0]
+
+EMAIL_HOST = credentials["domain"]
+EMAIL_HOST_USER = credentials["username"]
+EMAIL_HOST_PASSWORD = credentials["password"]
+EMAIL_PORT = credentials["smtp_ports"][0]
+EMAIL_USE_TLS = True
+
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
@@ -171,7 +192,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 sentry_sdk.init(
-    dsn="https://42f8b5161127bab475c6a1fd88632993@o4506640954359808.ingest.sentry.io/4506656893763584",
+    dsn=os.environ.get("SENTRY_DSN"),
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     traces_sample_rate=1.0,
