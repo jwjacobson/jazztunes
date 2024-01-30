@@ -68,6 +68,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
 def tune_list(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    tune_count = len(tunes)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -87,17 +88,22 @@ def tune_list(request):
             timespan = search_form.cleaned_data["timespan"]
 
             tunes = query_tunes(tunes, search_terms, timespan)
-            print("matches:")
-            for tune in tunes:
-                print(tune)
 
             if not tunes:
+                tune_count = 0
                 messages.error(request, "No tunes match your search.")
                 return render(
                     request,
                     "tune/list.html",
-                    {"tunes": tunes, "user": user, "search_form": search_form},
+                    {
+                        "tunes": tunes,
+                        "user": user,
+                        "search_form": search_form,
+                        "tune_count": tune_count,
+                    },
                 )
+            else:
+                tune_count = len(tunes)
 
     else:
         search_form = SearchForm()
@@ -105,7 +111,7 @@ def tune_list(request):
     return render(
         request,
         "tune/list.html",
-        {"tunes": tunes, "search_form": search_form},
+        {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
     )
 
 

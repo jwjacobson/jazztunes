@@ -33,7 +33,18 @@
 </div>
 
 
-    <h1 class="mt-4 text-info-emphasis">{{ user }}'s Tunes</h1>
+<div class="row mt-4 align-items-end justify-content-evenly">
+    <div class="col-10">
+        <h1
+            class="text-info-emphasis">{{ user }}'s repertoire
+        </h1>
+    </div>
+    <div class="col-2">
+        <h4>
+            {{ tune_count }} tunes
+        </h5>
+    </div>
+</div>
     <div class="tune">
         <table class="table table-success table-striped table-hover border border-primary-subtle ">
             <tr>
@@ -73,10 +84,12 @@
                 >Play</button>
                      <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
                   
-                <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}">
+                <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}" style="display: inline;">
                     {% csrf_token %}
-                    <input class="btn btn-danger btn-sm" type="submit" value="Delete" onclick="return confirm('Are you sure?')">
-                    </form>
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                    Delete 
+                    </button>
+                </form>
                 </div>
             </td>
         </tr>
