@@ -67,7 +67,7 @@ else:
 
 MAILTRAP_API_TOKEN = config("MAILTRAP_API_TOKEN")
 
-response = requests.get("https://mailtrap.io/api/v1/inboxes.json?api_token=<MAILTRAP_API_TOKEN>")
+response = requests.get("https://mailtrap.io/api/v1/inboxes.json?api_token=" + MAILTRAP_API_TOKEN)
 credentials = response.json()[0]
 
 EMAIL_HOST = credentials["domain"]
