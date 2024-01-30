@@ -39,16 +39,20 @@
             class="text-info-emphasis">{{ user }}'s repertoire
         </h1>
     </div>
-    <div class="col-2">
+    <div class="col-2" style="text-align: right;">
         <h4>
+            {% if tune_count == 1 %}
+            {{ tune_count }} tune
+            {% else %}
             {{ tune_count }} tunes
-        </h5>
+            {% endif %}
+        </h4>
     </div>
 </div>
     <div class="tune">
         <table class="table table-success table-striped table-hover border border-primary-subtle ">
+            <thead>
             <tr>
-                <thead>
                     <th>Title</th>
                     <th>Composer</th>
                     <th>Key</th>
@@ -60,8 +64,9 @@
                     <!-- <th>Tags</th> -->
                     <th>Knowledge</th>
                     <th>Actions</th>
-                </thead>
-            </tr>
+                </tr>
+            </thead>
+        <tbody hx-confirm="Are you sure?" hx-target="closest tr" hx-swap="outerHTML swap">
         {% for tune in tunes %}
         <tr>
             <td>{{ tune.tune.title }}</td>
@@ -82,18 +87,26 @@
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
                 >Play</button>
-                     <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+
+                    <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
                   
-                <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}" style="display: inline;">
+                <!-- <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
                     Delete 
                     </button>
-                </form>
+                </form> -->
+                <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-swap="outerHTML"
+                        class="btn btn-danger btn-sm">
+                    Delete
+                </button>
                 </div>
             </td>
         </tr>
         {% endfor %}
+        </tbody>
         </table>
         </div>
 {% endblock %}

@@ -65,16 +65,18 @@ else:
 
     sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
 
-MAILTRAP_API_TOKEN = config("MAILTRAP_API_TOKEN")
+    MAILTRAP_API_TOKEN = config("MAILTRAP_API_TOKEN")
 
-response = requests.get("https://mailtrap.io/api/v1/inboxes.json?api_token=" + MAILTRAP_API_TOKEN)
-credentials = response.json()[0]
+    response = requests.get(
+        "https://mailtrap.io/api/v1/inboxes.json?api_token=" + MAILTRAP_API_TOKEN
+    )
+    credentials = response.json()[0]
 
-EMAIL_HOST = credentials["domain"]
-EMAIL_HOST_USER = credentials["username"]
-EMAIL_HOST_PASSWORD = credentials["password"]
-EMAIL_PORT = credentials["smtp_ports"][0]
-EMAIL_USE_TLS = True
+    EMAIL_HOST = credentials["domain"]
+    EMAIL_HOST_USER = credentials["username"]
+    EMAIL_HOST_PASSWORD = credentials["password"]
+    EMAIL_PORT = credentials["smtp_ports"][0]
+    EMAIL_USE_TLS = True
 
 
 LOGIN_URL = "account_login"
