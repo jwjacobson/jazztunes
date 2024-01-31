@@ -66,7 +66,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-        <tbody hx-confirm="Are you sure?" hx-target="closest tr" hx-swap="outerHTML swap">
+        <tbody hx-swap="outerHTML swap">
         {% for tune in tunes %}
         <tr>
             <td>{{ tune.tune.title }}</td>
@@ -86,19 +86,16 @@
                     hx-put="{% url 'tune:play' pk=tune.id %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
+                    hx-target="this"
                 >Play</button>
 
                     <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
-                  
-                <!-- <form method="post" action="{% url 'tune:tune_delete' pk=tune.tune.pk %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                    Delete 
-                    </button>
-                </form> -->
-                <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
+                
+                    <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         hx-swap="outerHTML"
+                        hx-confirm="Are you sure?"
+                        hx-target="closest tr" 
                         class="btn btn-danger btn-sm">
                     Delete
                 </button>
