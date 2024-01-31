@@ -91,7 +91,9 @@ class Tune(models.Model):
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
-    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
+    tags = models.ManyToManyField(
+        Tag, related_name="tags", blank=True, help_text="(feature under construction)"
+    )
 
     @property
     def decade(self):
