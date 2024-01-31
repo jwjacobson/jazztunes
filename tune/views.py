@@ -168,24 +168,6 @@ def tune_edit(request, pk):
     )
 
 
-# @login_required
-# def tune_delete(request, pk):
-#     tune = get_object_or_404(Tune, pk=pk)
-#     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
-
-#     if request.method == "POST":
-#         deleted_id, deleted_title = tune.id, tune.title
-#         with transaction.atomic():
-#             rep_tune.delete()
-#             messages.success(
-#                 request,
-#                 f"Deleted Tune {deleted_id}: {deleted_title} from {rep_tune.player}'s repertoire.",
-#             )
-#         return redirect("tune:tune_list")
-
-#     return render(request, "tune/list.html", {"tune": tune})
-
-
 @login_required
 def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
