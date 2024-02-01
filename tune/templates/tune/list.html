@@ -27,7 +27,7 @@
     </select>
 </div>
 <div class="col-1 my-1">
-    <input class="btn btn-info" type="submit" value="Search">
+    <input class="btn btn-primary" type="submit" value="Search">
 </div>
 </form>
 </div>
@@ -50,7 +50,7 @@
     </div>
 </div>
     <div class="tune">
-        <table class="table table-success table-striped table-hover border border-primary-subtle ">
+        <table class="table table-success table-striped table-hover border border-primary ">
             <thead>
             <tr>
                     <th>Title</th>
@@ -82,21 +82,21 @@
             <td>
                 <div class="btn-group">
                     <button type="button"
-                    class="btn btn-primary btn-sm"
+                    class="btn btn-outline-primary btn-sm"
                     hx-put="{% url 'tune:play' pk=tune.id %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
                     hx-target="this"
                 >Play</button>
 
-                    <a class="btn btn-warning btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+                    <a class="btn btn-outline-success btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
                 
                     <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         hx-swap="outerHTML"
                         hx-confirm="Are you sure?"
                         hx-target="closest tr" 
-                        class="btn btn-danger btn-sm">
+                        class="btn btn-outline-info btn-sm">
                     Delete
                 </button>
                 </div>

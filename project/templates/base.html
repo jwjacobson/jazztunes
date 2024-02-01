@@ -27,9 +27,9 @@
 
     </head>
     <div class="container my-4">
-    <body class="bg-warning-subtle m-5">
+    <body class="bg-primary-subtle m-5">
         {% block body %}
-        <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary-subtle ">
+        <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary ">
             <div class="container-fluid">
               <a class="navbar-brand text-info-emphasis" href="{% url 'tune:tune_list' %}"><i>jazztunes</i></a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,15 +65,15 @@
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'success' %}
-                <div class="alert alert-info border border-top-0 border-primary-subtle" id="alert" role="alert">
+                <div class="alert alert-secondary border border-top-0 border-primary" id="alert" role="alert">
                   {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
                 </div>
                 {% elif message.tags == 'error' %}
-                <div class="alert alert-danger border border-top-0 border-primary-subtle" id="alert"  role="alert">
+                <div class="alert alert-danger border border-top-0 border-primary" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% elif message.tags == 'warning' %}
-                <div class="alert alert-warning border border-top-0 border-primary-subtle" id="alert"  role="alert">
+                <div class="alert alert-warning border border-top-0 border-primary" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% endif %}
