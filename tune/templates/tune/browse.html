@@ -19,7 +19,7 @@
 </form>
 <h1 class="text-info-emphasis">Public Tunes</h1>
 <div class="tune">
-    <table class="table table-info table-striped table-hover border border-success-subtle" id="public-table">
+    <table class="table table-success table-striped table-hover border border-primary" id="public-table">
         <tr>
             <thead>
                 <th scope="col">Title</th>
@@ -47,7 +47,7 @@
         <!-- <td>{{ tune.tune.tags }}</td> -->
         <td class="w-auto">
           {% if tune.tune.title in user_tune_titles %}
-            <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Take</button>
+            <button type="button" class="btn btn-outline-dark btn-sm" disabled>Take</button>
           {% else %}
           <button type="button"
                     class="btn btn-success btn-sm"
