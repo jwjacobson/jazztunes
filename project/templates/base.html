@@ -31,7 +31,7 @@
         {% block body %}
         <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary ">
             <div class="container-fluid">
-              <a class="navbar-brand text-info-emphasis" href="{% url 'tune:tune_list' %}"><i>jazztunes</i></a>
+              <a class="navbar-brand text-primary-emphasis" href="{% url 'tune:tune_list' %}"><b><i>jazztunes</i></b></a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -39,23 +39,23 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tune:tune_new' %}">Create</a>
+                    <a class="nav-link text-primary" href="{% url 'tune:tune_new' %}">Create</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tune:tune_play' %}">Play</a>
+                    <a class="nav-link text-primary" href="{% url 'tune:tune_play' %}">Play</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tune:tune_browse' %}">Public</a>
+                    <a class="nav-link text-primary" href="{% url 'tune:tune_browse' %}">Public</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
+                    <a class="nav-link text-primary" href="{% url 'account_logout' %}">Log Out</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
+                    <a class="nav-link text-primary" href="{% url 'account_login' %}">Log In</b></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_signup' %}">Create an Account</a>
+                    <a class="nav-link text-primary" href="{% url 'account_signup' %}">Create an Account</a>
                   </li>
                 {% endif %}
                 </ul>

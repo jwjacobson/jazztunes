@@ -109,6 +109,7 @@ def tune_list(request):
     else:
         search_form = SearchForm()
 
+    request.session["tune_count"] = tune_count
     return render(
         request,
         "tune/list.html",
@@ -175,7 +176,19 @@ def tune_delete(request, pk):
 
     rep_tune.delete()
 
-    return HttpResponse(status=200)
+    tune_count = request.session["tune_count"] - 1
+    request.session["tune_count"] = tune_count
+    request.session.modified = True
+
+    response = HttpResponse(status=200)
+    response["HX-Trigger"] = "tuneDeleted"
+    return response
+
+
+@login_required
+def recount(request):
+    tune_count = request.session["tune_count"]
+    return render(request, "tune/_count.html", {"tune_count": tune_count})
 
 
 @login_required
