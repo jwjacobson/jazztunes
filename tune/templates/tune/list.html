@@ -10,7 +10,38 @@
     </p>
 </div>
 </div>
-<div class="row">
+<!-- <div class="row"> -->
+    <!-- <div class="col-3 my-1"> -->
+    <div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
+        <div class="card-body">
+            <h5 class = "card-title">Tune Search</h5>
+                <div>
+                    <form method="post" action="{% url 'tune:tune_list' %}">
+                        {% csrf_token %}
+                        <label for="basic_search"></label>
+                        <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
+                </div>
+            <div class="col-12 my-2">
+            <label for="timespan">Haven't played in:</label>
+                <select id="timespan" name="timespan">
+                    <option value="anytime">n/a</option>
+                    <option value="day">a day</option>
+                    <option value="week">a week</option>
+                    <option value="month">a month</option>
+                </select>
+            </div>
+            <div class="col-1 my-1">
+                <input class="btn btn-primary" type="submit" value="Search">
+            </div>
+            </form>
+            
+    
+        </div>
+    
+    </div>
+<!-- </div> -->
+<!-- </div> -->
+<!-- <div>
     <div class="col-4 my-1">
         <form method="post" action="{% url 'tune:tune_list' %}">
             {% csrf_token %}
@@ -30,7 +61,8 @@
     <input class="btn btn-primary" type="submit" value="Search">
 </div>
 </form>
-</div>
+</div> -->
+
 
 
 <div class="row mt-4 align-items-end justify-content-evenly">
