@@ -10,60 +10,30 @@
     </p>
 </div>
 </div>
-<!-- <div class="row"> -->
-    <!-- <div class="col-3 my-1"> -->
-    <div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
-        <div class="card-body">
-            <h5 class = "card-title">Tune Search</h5>
-                <div>
-                    <form method="post" action="{% url 'tune:tune_list' %}">
-                        {% csrf_token %}
-                        <label for="basic_search"></label>
-                        <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
-                </div>
-            <div class="col-12 my-2">
-            <label for="timespan">Haven't played in:</label>
-                <select id="timespan" name="timespan">
-                    <option value="anytime">n/a</option>
-                    <option value="day">a day</option>
-                    <option value="week">a week</option>
-                    <option value="month">a month</option>
-                </select>
+<div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
+    <div class="card-body">
+        <h5 class = "card-title">Tune Search</h5>
+            <div>
+                <form method="post" action="{% url 'tune:tune_list' %}">
+                    {% csrf_token %}
+                    <label for="basic_search"></label>
+                    <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
             </div>
-            <div class="col-1 my-1">
-                <input class="btn btn-primary" type="submit" value="Search">
-            </div>
-            </form>
-            
-    
+        <div class="col-12 my-2">
+        <label for="timespan">Haven't played in:</label>
+            <select id="timespan" name="timespan">
+                <option value="anytime">n/a</option>
+                <option value="day">a day</option>
+                <option value="week">a week</option>
+                <option value="month">a month</option>
+            </select>
         </div>
-    
+        <div class="col-1 my-1">
+            <input class="btn btn-primary" type="submit" value="Search">
+        </div>
+        </form>
     </div>
-<!-- </div> -->
-<!-- </div> -->
-<!-- <div>
-    <div class="col-4 my-1">
-        <form method="post" action="{% url 'tune:tune_list' %}">
-            {% csrf_token %}
-            <label for="basic_search">Basic search: </label>
-            <input id="search_term" type="text" name="search_term">
-    </div>
-<div class="col-12 my-2">
-<label for="timespan">Haven't played in:</label>
-    <select id="timespan" name="timespan">
-        <option value="anytime">n/a</option>
-        <option value="day">a day</option>
-        <option value="week">a week</option>
-        <option value="month">a month</option>
-    </select>
 </div>
-<div class="col-1 my-1">
-    <input class="btn btn-primary" type="submit" value="Search">
-</div>
-</form>
-</div> -->
-
-
 
 <div class="row mt-4 align-items-end justify-content-evenly">
     <div class="col-10">
@@ -81,74 +51,77 @@
         </h4>
     </div>
 </div>
-    <div class="tune">
-        <table class="table table-success table-striped table-hover border border-primary" id="rep-table">
-            <thead>
-            <tr>
-                    <th>Title</th>
-                    <th>Composer</th>
-                    <th>Key</th>
-                    <th>Other Keys</th>
-                    <th>Form</th>
-                    <th>Style</th>
-                    <th>Meter</th>
-                    <th>Year</th>
-                    <!-- <th>Tags</th> -->
-                    <th>Knowledge</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-        <tbody hx-swap="outerHTML swap">
-        {% for tune in tunes %}
-        <tr>
-            <td>{{ tune.tune.title }}</td>
-            <td>{{ tune.tune.composer }}</td>
-            <td>{{ tune.tune.key }}</td>
-            <td>{{ tune.tune.other_keys }}</td>
-            <td>{{ tune.tune.song_form }}</td>
-            <td>{{ tune.tune.style }}</td>
-            <td>{{ tune.tune.meter }}</td>
-            <td>{{ tune.tune.year }}</td>
-            <!-- <td>{{ tune.tune.tags.name }}</td> -->
-            <td>{{ tune.knowledge }}</td>
-            <td>
-                <div class="btn-group">
-                    <button type="button"
-                    class="btn btn-outline-primary btn-sm"
-                    hx-put="{% url 'tune:play' pk=tune.id %}"
-                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                    hx-swap="outerHTML"
-                    hx-target="this"
-                >Play</button>
 
-                    <a class="btn btn-outline-success btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
-                
-                    <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
-                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                        hx-swap="outerHTML"
-                        hx-confirm="Are you sure?"
-                        hx-target="closest tr" 
-                        class="btn btn-outline-info btn-sm">
-                    Delete
-                </button>
-                </div>
-            </td>
+<div>
+<table class="table table-success table-striped table-hover border border-primary" id="rep-table">
+    <thead>
+    <tr>
+            <th>Title</th>
+            <th>Composer</th>
+            <th>Key</th>
+            <th>Other keys</th>
+            <th>Form</th>
+            <th>Style</th>
+            <th>Meter</th>
+            <th>Year</th>
+            <!-- <th>Tags</th> -->
+            <th>Knowledge</th>
+            <th>Last played</th>
+            <th>Actions</th>
         </tr>
-        {% endfor %}
-        </tbody>
-        </table>
+    </thead>
+<tbody hx-swap="outerHTML swap">
+{% for tune in tunes %}
+<tr>
+    <td>{{ tune.tune.title }}</td>
+    <td>{{ tune.tune.composer }}</td>
+    <td>{{ tune.tune.key }}</td>
+    <td>{{ tune.tune.other_keys }}</td>
+    <td>{{ tune.tune.song_form }}</td>
+    <td>{{ tune.tune.style }}</td>
+    <td>{{ tune.tune.meter }}</td>
+    <td>{{ tune.tune.year }}</td>
+    <!-- <td>{{ tune.tune.tags.name }}</td> -->
+    <td>{{ tune.knowledge }}</td>
+    <td>{{ tune.last_played|date:"SHORT_DATE_FORMAT"}}</td>
+    <td>
+        <div class="btn-group">
+            <button type="button"
+            class="btn btn-outline-primary btn-sm"
+            hx-put="{% url 'tune:play' pk=tune.id %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-swap="outerHTML"
+            hx-target="this"
+        >Play</button>
+
+            <a class="btn btn-outline-success btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+        
+            <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-swap="outerHTML"
+                hx-confirm="Are you sure?"
+                hx-target="closest tr" 
+                class="btn btn-outline-info btn-sm">
+            Delete
+        </button>
         </div>
-        <script>
-        $(document).ready( function () {
-            $('#rep-table').DataTable({
-                "searching": false,
-                "info": false,
-                "lengthChange": false,
-                "paging": false
-            }
-            );
-        });
-        </script>
-  
-        {% endblock %}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<script>
+$(document).ready( function () {
+    $('#rep-table').DataTable({
+        "searching": false,
+        "info": false,
+        "lengthChange": false,
+        "paging": false
+    }
+    );
+});
+</script>
+
+{% endblock %}
        
