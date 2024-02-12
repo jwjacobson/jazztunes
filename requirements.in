@@ -86,3 +86,4 @@ wcwidth
 whitenoise
 gunicorn
 django-bootstrap5
+jquery

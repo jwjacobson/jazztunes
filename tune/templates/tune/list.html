@@ -82,7 +82,7 @@
     </div>
 </div>
     <div class="tune">
-        <table class="table table-success table-striped table-hover border border-primary">
+        <table class="table table-success table-striped table-hover border border-primary" id="rep-table">
             <thead>
             <tr>
                     <th>Title</th>
@@ -138,4 +138,17 @@
         </tbody>
         </table>
         </div>
-{% endblock %}
+        <script>
+        $(document).ready( function () {
+            $('#rep-table').DataTable({
+                "searching": false,
+                "info": false,
+                "lengthChange": false,
+                "paging": false
+            }
+            );
+        });
+        </script>
+  
+        {% endblock %}
+       
