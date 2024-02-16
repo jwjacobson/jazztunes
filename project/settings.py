@@ -14,7 +14,6 @@ from decouple import config, Csv
 from pathlib import Path
 import dj_database_url
 import os
-import requests
 import sentry_sdk
 
 
@@ -60,24 +59,14 @@ if DEBUG:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-    # sentry != local = in prod
-    from sentry_sdk.integrations.django import DjangoIntegration
+    # from sentry_sdk.integrations.django import DjangoIntegration
+    # sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
 
-    sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
-
-    MAILTRAP_API_TOKEN = config("MAILTRAP_API_TOKEN")
-
-    response = requests.get(
-        "https://mailtrap.io/api/v1/inboxes.json?api_token=" + MAILTRAP_API_TOKEN
-    )
-    credentials = response.json()[0]
-
-    EMAIL_HOST = credentials["domain"]
-    EMAIL_HOST_USER = credentials["username"]
-    EMAIL_HOST_PASSWORD = credentials["password"]
-    EMAIL_PORT = credentials["smtp_ports"][0]
+    EMAIL_HOST = "smtp.sendgrid.net"
+    EMAIL_HOST_USER = "apikey"
+    EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")
+    EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"

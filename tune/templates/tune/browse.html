@@ -20,8 +20,8 @@
 <h1 class="text-info-emphasis">Public Tunes</h1>
 <div class="tune">
     <table class="table table-success table-striped table-hover border border-primary" id="public-table">
-        <tr>
-            <thead>
+        <thead>
+            <tr>
                 <th scope="col">Title</th>
                 <th scope="col">Composer</th>
                 <th scope="col">Key</th>
@@ -32,8 +32,9 @@
                 <th scope="col">Year</th>
                 <!-- <th>Tags</th> -->
                 <th scope="col">Actions</th>
-            </thead>
-        </tr>
+            </tr>
+        </thead>
+    <tbody>
     {% for tune in tunes %}
     <tr>
         <td class="w-auto">{{ tune.tune.title }}</td>
@@ -59,6 +60,18 @@
         </td>
     </tr>
     {% endfor %}
+    </tbody>
     </table>
     </div>
+    <script>
+        $(document).ready( function () {
+            $('#public-table').DataTable({
+                "searching": false,
+                "info": false,
+                "lengthChange": false,
+                "paging": false
+            }
+            );
+        });
+        </script>
 {% endblock %}
