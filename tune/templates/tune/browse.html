@@ -13,7 +13,7 @@
     <div class="card-body">
         <h5 class = "card-title">Tune Search</h5>
             <div>
-                <form method="post" action="{% url 'tune:tune_list' %}">
+                <form method="post" action="{% url 'tune:tune_browse' %}">
                     {% csrf_token %}
                     <label for="basic_search"></label>
                     <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">

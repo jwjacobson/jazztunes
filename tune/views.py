@@ -254,6 +254,7 @@ def tune_browse(request):
     }  # using title now since the user's and the admin's id for the same tune are now distinct
 
     tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
+    tune_count = len(tunes)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -276,20 +277,29 @@ def tune_browse(request):
                 print(tune)
 
             if not tunes:
+                tune_count = 0
                 messages.error(request, "No tunes match your search.")
                 return render(
                     request,
                     "tune/browse.html",
                     {"tunes": tunes, "search_form": search_form},
                 )
+            else:
+                tune_count = len(tunes)
 
     else:
         search_form = SearchForm()
 
+    request.session["tune_count"] = tune_count
     return render(
         request,
         "tune/browse.html",
-        {"tunes": tunes, "search_form": search_form, "user_tune_titles": user_tune_titles},
+        {
+            "tunes": tunes,
+            "search_form": search_form,
+            "user_tune_titles": user_tune_titles,
+            "tune_count": tune_count,
+        },
     )
 
 
