@@ -112,15 +112,27 @@
 </table>
 </div>
 <script>
-$(document).ready( function () {
+$(document).ready(function() {
     $('#rep-table').DataTable({
         "searching": false,
         "info": false,
         "lengthChange": false,
-        "paging": false
-    }
-    );
+        "paging": false,
+        dom: 'Bfrtip', // This needs to be included to show buttons
+        buttons: [
+            'colvis' // This button will allow users to toggle column visibility
+        ]
+    });
 });
+// $(document).ready( function () {
+//     $('#rep-table').DataTable({
+//         "searching": false,
+//         "info": false,
+//         "lengthChange": false,
+//         "paging": false
+//     }
+//     );
+// });
 </script>
 
 {% endblock %}
