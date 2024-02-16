@@ -59,23 +59,23 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <a class="nav-link text-primary" href="{% url 'tune:tune_new' %}">Create</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_new' %}">Create</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-primary" href="{% url 'tune:tune_play' %}">Play</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_play' %}">Play</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-primary" href="{% url 'tune:tune_browse' %}">Public</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_browse' %}">Public</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-primary" href="{% url 'account_logout' %}">Log Out</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'account_logout' %}">Log Out</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a class="nav-link text-primary" href="{% url 'account_login' %}">Log In</b></a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'account_login' %}">Log In</b></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link text-primary" href="{% url 'account_signup' %}">Create an Account</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'account_signup' %}">Create an Account</a>
                   </li>
                 {% endif %}
                 </ul>
