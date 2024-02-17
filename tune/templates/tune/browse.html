@@ -9,16 +9,40 @@
         Here you can browse public tunes and copy them into your repertoire.
     </p>
   </div>
-<div class="my-4">
-<form method="post" action="{% url 'tune:tune_browse' %}">
-    {% csrf_token %}
-    <label for="basic_search">Basic search: </label>
-    <input id="search_term" type="text" name="search_term">
-    <input class="btn btn-primary" type="submit" value="Search">
+  <div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
+    <div class="card-body">
+        <h5 class = "card-title">Tune Search</h5>
+            <div>
+                <form method="post" action="{% url 'tune:tune_browse' %}">
+                    {% csrf_token %}
+                    <label for="basic_search"></label>
+                    <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
+            </div>
+        <div class="col-1 my-3">
+            <input class="btn btn-primary" type="submit" value="Search">
+        </div>
+        </form>
+    </div>
 </div>
-</form>
-<h1 class="text-info-emphasis">Public Tunes</h1>
-<div class="tune">
+
+<div class="row mt-4 align-items-end justify-content-evenly">
+    <div class="col-10">
+        <h1
+            class="text-info-emphasis">Public Tunes
+        </h1>
+    </div>
+    <div class="col-2" style="text-align: right;" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
+        <h4>
+            {% if tune_count == 1 %}
+            {{ tune_count }} tune
+            {% else %}
+            {{ tune_count }} tunes
+            {% endif %}
+        </h4>
+    </div>
+</div>
+
+<div>
     <table class="table table-success table-striped table-hover border border-primary" id="public-table">
         <thead>
             <tr>
