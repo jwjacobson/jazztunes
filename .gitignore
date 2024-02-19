@@ -165,4 +165,4 @@ cython_debug/
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-tune/scratch.py
+tune/scratch*.py

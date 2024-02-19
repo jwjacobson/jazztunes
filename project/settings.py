@@ -68,6 +68,7 @@ else:
     EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
