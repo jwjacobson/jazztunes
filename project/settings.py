@@ -59,14 +59,16 @@ if DEBUG:
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-    # from sentry_sdk.integrations.django import DjangoIntegration
-    # sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
 
     EMAIL_HOST = "smtp.sendgrid.net"
     EMAIL_HOST_USER = "apikey"
     EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
+    DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"

@@ -1,10 +1,5 @@
 from random import choice
 
-# SendGrid imports
-# import os
-# import logging
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail
 
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -201,7 +196,11 @@ def recount(request):
 def get_random_tune(request):
     original_search_string = request.GET.get("search", "")
     search_terms = original_search_string.split(" ")
-    tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
+    tunes = (
+        RepertoireTune.objects.select_related("tune")
+        .filter(player=request.user)
+        .exclude(knowledge="don't know")
+    )
     rep_tunes = query_tunes(tunes, search_terms)
 
     if not rep_tunes:
@@ -341,26 +340,3 @@ def set_knowledge(request, pk):
         print(rep_form.errors)
 
     return render(request, "tune/_taken.html", {"rep_form": rep_form})
-
-
-# Code for simple email sending, to be deleted once email confirmed working
-# logger = logging.getLogger(__name__)
-
-# def email_test(request):
-#     message = Mail(
-#         from_email='xxx@xxx.xxx',
-#         to_emails='xxx@xxx.xxx',
-#         subject='Sending with Twilio SendGrid is Fun',
-#         html_content='<strong>and easy to do anywhere, even with Python</strong>')
-
-#     try:
-#         sg = SendGridAPIClient(settings.EMAIL_HOST_PASSWORD)
-#         response = sg.send(message)
-#         logger.info(f"SendGrid Response Status: {response.status_code}")
-#         logger.info(f"Response Body: {response.body}")
-#         logger.info(f"Response Headers: {response.headers}")
-#         return HttpResponse("Email sent successfully.")
-#     except Exception as e:
-#         error_message = str(e)
-#         logger.error(f"SendGrid Error: {error_message}")
-#         return HttpResponse(f"Failed to send email: {error_message}")
