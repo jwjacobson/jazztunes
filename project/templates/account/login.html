@@ -5,9 +5,11 @@
     {% trans "Sign In" %}
 {% endblock head_title %}
 {% block content %}
-    {% element h1 %}
+    <!-- {% element h1 %}
         {% trans "Sign In" %}
-    {% endelement %}
+    {% endelement %} -->
+    <h1 class="my-3">Welcome!</h1>
+    <p>Jazztunes is a free jazz repertoire management app.</p>
     <p>
         {% blocktrans %}If you have not created an account yet, then please
     <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}

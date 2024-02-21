@@ -85,15 +85,16 @@
     <td>{{ tune.tune.year }}</td>
     <!-- <td>{{ tune.tune.tags.name }}</td> -->
     <td>{{ tune.knowledge }}</td>
-    <td>{{ tune.last_played|date:"SHORT_DATE_FORMAT"}}</td>
+    <td id="last-played-{{ tune.id }}">{{ tune.last_played|date:"MONTH_DAY_FORMAT"}}</td>
+
     <td>
         <div class="btn-group">
             <button type="button"
             class="btn btn-outline-primary btn-sm"
             hx-put="{% url 'tune:play' pk=tune.id %}"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-swap="outerHTML"
-            hx-target="this"
+            hx-swap="innerHTML"
+            hx-target="#last-played-{{ tune.id }}"
         >Play</button>
 
             <a class="btn btn-outline-success btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>

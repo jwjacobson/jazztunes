@@ -234,7 +234,7 @@ def play(request, pk):
     rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
     rep_tune.last_played = timezone.now()
     rep_tune.save()
-    return render(request, "tune/_play.html")
+    return render(request, "tune/_play.html", {"last_played": rep_tune.last_played})
 
 
 @login_required
@@ -271,9 +271,6 @@ def tune_browse(request):
                 )
 
             tunes = query_tunes(tunes, search_terms)
-            print("matches:")
-            for tune in tunes:
-                print(tune)
 
             if not tunes:
                 tune_count = 0
@@ -281,7 +278,7 @@ def tune_browse(request):
                 return render(
                     request,
                     "tune/browse.html",
-                    {"tunes": tunes, "search_form": search_form},
+                    {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
                 )
             else:
                 tune_count = len(tunes)
