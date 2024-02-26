@@ -8,9 +8,12 @@
     <!-- {% element h1 %}
         {% trans "Sign In" %}
     {% endelement %} -->
-    <h1 class="my-3">Welcome!</h1>
-    <p>Jazztunes is a free jazz repertoire management app.</p>
-    <p>
+    <div class="row my-3">
+        <div class="col">
+    <h1>Welcome!</h1>
+    <p>Jazztunes is a free jazz repertoire management app that runs in your browser.</p>
+</div>    
+</div>
         {% blocktrans %}If you have not created an account yet, then please
     <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
     </p>
