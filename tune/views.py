@@ -1,6 +1,5 @@
 from random import choice
 
-
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -201,6 +200,7 @@ def get_random_tune(request):
         .filter(player=request.user)
         .exclude(knowledge="don't know")
     )
+
     rep_tunes = query_tunes(tunes, search_terms)
 
     if not rep_tunes:

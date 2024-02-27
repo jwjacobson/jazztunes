@@ -121,7 +121,7 @@ class RepertoireTune(models.Model):
 
     tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
     player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    last_played = models.DateTimeField(blank=True, null=True)
+    last_played = models.DateField(blank=True, null=True)
     knowledge = models.CharField(choices=KNOWLEDGES, max_length=15, default="know", blank=True)
     started_learning = models.DateTimeField(blank=True, null=True)
 

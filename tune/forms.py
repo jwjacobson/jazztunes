@@ -61,10 +61,29 @@ class TuneForm(ModelForm):
     #     return data
 
 
+class DateInput(forms.DateInput):
+    input_type = "date"
+
+
 class RepertoireTuneForm(ModelForm):
+    # def __init__(self, *args, **kwargs):
+    #     super(RepertoireTuneForm, self).__init__(*args, **kwargs)
+    #     current_year = timezone.now().year
+    #     first_year = current_year - 5
+    #     self.fields['last_played'] = forms.DateField(
+    #         required=False,
+    #         widget=forms.SelectDateWidget(years=range(first_year, current_year + 1))
+    #     )
+
+    # last_played = forms.DateTimeField(
+    #     input_formats=['%d/%m/%Y %H:%M'],
+    #     widget=BootstrapDateTimePickerInput()
+    # )
+
     class Meta:
         model = RepertoireTune
-        exclude = ["tune", "player", "last_played", "started_learning"]
+        exclude = ["tune", "player", "started_learning"]
+        widgets = {"last_played": DateInput()}
 
 
 class SearchForm(forms.Form):
@@ -73,6 +92,7 @@ class SearchForm(forms.Form):
         ("day", "a day"),
         ("week", "a week"),
         ("month", "a month"),
+        ("two_months", "2 months"),
     ]
 
     search_term = forms.CharField(label="search_term", max_length=200, required=False)
@@ -86,5 +106,7 @@ class SearchForm(forms.Form):
             return timezone.now() - timedelta(days=7)
         elif timespan == "month":
             return timezone.now() - timedelta(days=30)
+        elif timespan == "two_months":
+            return timezone.now() - timedelta(days=60)
         else:
             return None
