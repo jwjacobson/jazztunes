@@ -66,20 +66,6 @@ class DateInput(forms.DateInput):
 
 
 class RepertoireTuneForm(ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     super(RepertoireTuneForm, self).__init__(*args, **kwargs)
-    #     current_year = timezone.now().year
-    #     first_year = current_year - 5
-    #     self.fields['last_played'] = forms.DateField(
-    #         required=False,
-    #         widget=forms.SelectDateWidget(years=range(first_year, current_year + 1))
-    #     )
-
-    # last_played = forms.DateTimeField(
-    #     input_formats=['%d/%m/%Y %H:%M'],
-    #     widget=BootstrapDateTimePickerInput()
-    # )
-
     class Meta:
         model = RepertoireTune
         exclude = ["tune", "player", "started_learning"]

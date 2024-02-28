@@ -129,12 +129,12 @@ def tune_new(request):
                 new_tune.save()
                 tune_form.save_m2m()
 
-                rep_tune = RepertoireTune.objects.create(
+                RepertoireTune.objects.create(
                     tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
                 )
                 messages.success(
                     request,
-                    f"Added Tune {new_tune.id}: {new_tune.title} to {rep_tune.player}'s repertoire.",
+                    f"{new_tune.title} has been added to your repertoire.",
                 )
             return redirect("tune:tune_list")
     else:
@@ -158,7 +158,7 @@ def tune_edit(request, pk):
             rep_form.save()
             messages.success(
                 request,
-                f"Updated Tune {updated_tune.id}: {updated_tune.title} in {rep_tune.player}'s repertoire.",
+                f"{updated_tune.title} has been updated.",
             )
         return redirect("tune:tune_list")
 
