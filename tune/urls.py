@@ -16,5 +16,4 @@ urlpatterns = [
     path("play/<int:pk>", views.play, name="play"),
     path("set/<int:pk>", views.set_knowledge, name="set_knowledge"),
     path("count", views.recount, name="recount"),
-    # path("email", views.email_test, name="email"),
 ]
