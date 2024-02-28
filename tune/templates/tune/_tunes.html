@@ -10,7 +10,7 @@
         <div class="my-1">
           <button type="button"
           class="btn btn-outline-info"
-          hx-put="{% url 'tune:play' pk=selected_tune.id %}"
+          hx-put="{% url 'tune:play_play' pk=selected_tune.id %}"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-swap="outerHTML"
         >Play</button>
