@@ -231,10 +231,16 @@ def change_tune(request):
 
 @login_required
 def play(request, pk):
+    url_name = request.resolver_match.url_name
+    templates = {
+        "play_list": "tune/_play_list.html",
+        "play_play": "tune/_play_play.html",
+    }
+
     rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
     rep_tune.last_played = timezone.now()
     rep_tune.save()
-    return render(request, "tune/_play.html", {"last_played": rep_tune.last_played})
+    return render(request, templates.get(url_name, "/"), {"last_played": rep_tune.last_played})
 
 
 @login_required

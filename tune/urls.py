@@ -13,7 +13,8 @@ urlpatterns = [
     path("random", views.get_random_tune, name="get_random_tune"),
     path("browse", views.tune_browse, name="tune_browse"),
     path("take/<int:pk>", views.tune_take, name="tune_take"),
-    path("play/<int:pk>", views.play, name="play"),
+    path("play/list/<int:pk>", views.play, name="play_list"),
+    path("play/play/<int:pk>", views.play, name="play_play"),
     path("set/<int:pk>", views.set_knowledge, name="set_knowledge"),
     path("count", views.recount, name="recount"),
 ]
