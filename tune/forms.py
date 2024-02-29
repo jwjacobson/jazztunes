@@ -21,6 +21,11 @@ class TuneForm(ModelForm):
             "year",
             "tags",
         ]
+    
+    def __init__(self, *args, **kwargs):
+        super(TuneForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
 
     def clean_key(self):
         """
