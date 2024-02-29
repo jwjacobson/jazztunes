@@ -300,7 +300,7 @@ def set_knowledge(request, pk):
 
 def return_search_results(request, search_terms, tunes, search_form, timespan=None):
     """
-    Return a list of tunes that match the search terms.
+    Return a list of tunes that match the search terms. #TODO: @Jeff please review
     """
     if len(search_terms) > MAX_SEARCH_TERMS:
         messages.error(
