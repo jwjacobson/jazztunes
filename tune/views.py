@@ -75,36 +75,9 @@ def tune_list(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            if len(search_terms) > MAX_SEARCH_TERMS:
-                messages.error(
-                    request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
-                )
-                return render(
-                    request,
-                    "tune/list.html",
-                    {"tunes": tunes, "search_form": search_form},
-                )
-
-            timespan = search_form.cleaned_data["timespan"]
-
-            tunes = query_tunes(tunes, search_terms, timespan)
-
-            if not tunes:
-                tune_count = 0
-                messages.error(request, "No tunes match your search.")
-                return render(
-                    request,
-                    "tune/list.html",
-                    {
-                        "tunes": tunes,
-                        "user": user,
-                        "search_form": search_form,
-                        "tune_count": tune_count,
-                    },
-                )
-            else:
-                tune_count = len(tunes)
+            results = return_search_results(request, search_terms, tunes, search_form)
+            tunes = results.get("tunes")
+            tune_count = results.get("tune_count")
 
     else:
         search_form = SearchForm()
@@ -265,29 +238,9 @@ def tune_browse(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            if len(search_terms) > MAX_SEARCH_TERMS:
-                messages.error(
-                    request,
-                    f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
-                )
-                return render(
-                    request,
-                    "tune/browse.html",
-                    {"tunes": tunes, "search_form": search_form},
-                )
-
-            tunes = query_tunes(tunes, search_terms)
-
-            if not tunes:
-                tune_count = 0
-                messages.error(request, "No tunes match your search.")
-                return render(
-                    request,
-                    "tune/browse.html",
-                    {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
-                )
-            else:
-                tune_count = len(tunes)
+            results = return_search_results(request, search_terms, tunes, search_form)
+            tunes = results.get("tunes")
+            tune_count = results.get("tune_count")
 
     else:
         search_form = SearchForm()
@@ -343,3 +296,36 @@ def set_knowledge(request, pk):
         print(rep_form.errors)
 
     return render(request, "tune/_taken.html", {"rep_form": rep_form})
+
+
+def return_search_results(request, search_terms, tunes, search_form, timespan=None):
+    """
+    Return a list of tunes that match the search terms.
+    """
+    if len(search_terms) > MAX_SEARCH_TERMS:
+        messages.error(
+            request,
+            f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
+        )
+        return render(
+            request,
+            "tune/list.html",
+            {"tunes": tunes, "search_form": search_form},
+        )
+    if not timespan:
+        tunes = query_tunes(tunes, search_terms)
+    else:
+        tunes = query_tunes(tunes, search_terms, timespan)
+
+    if not tunes:
+        tune_count = 0
+        messages.error(request, "No tunes match your search.")
+        return render(
+            request,
+            "tune/browse.html",
+            {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
+        )
+    else:
+        tune_count = len(tunes)
+
+    return {"tunes": tunes, "tune_count": tune_count}
