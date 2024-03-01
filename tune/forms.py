@@ -22,6 +22,11 @@ class TuneForm(ModelForm):
             "tags",
         ]
 
+    def __init__(self, *args, **kwargs):
+        super(TuneForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
+
     def clean_key(self):
         """
         Check if the key entered is a real key and raise a ValidationError if it is not;
@@ -70,6 +75,11 @@ class RepertoireTuneForm(ModelForm):
         model = RepertoireTune
         exclude = ["tune", "player", "started_learning"]
         widgets = {"last_played": DateInput()}
+
+    def __init__(self, *args, **kwargs):
+        super(RepertoireTuneForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
 
 
 class SearchForm(forms.Form):

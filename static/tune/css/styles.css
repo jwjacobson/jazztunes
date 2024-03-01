@@ -11860,7 +11860,7 @@ textarea.form-control-lg {
 }
 
 #public-table {
-  table-layout: fixed;
+  /* table-layout: fixed; */
 }
 
 #search-card {

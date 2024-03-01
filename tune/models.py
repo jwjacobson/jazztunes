@@ -70,6 +70,23 @@ class Tune(models.Model):
         "atonal",
     }
 
+    MAX_SEARCH_TERMS = 4
+    NICKNAMES = {
+        "bird": "Parker",
+        "bud": "Powell",
+        "miles": "Davis",
+        "wayne": "Shorter",
+        "joe": "Henderson",
+        "lee": "Konitz",
+        "diz": "Gillespie",
+        "dizzy": "Gillespie",
+        "duke": "Ellington",
+        "sonny": "Rollins",
+        "bill": "Evans",
+        "herbie": "Hancock",
+        "cedar": "Walton",
+    }
+
     title = models.CharField(max_length=90, help_text="The only required field")
     composer = models.CharField(max_length=30, blank=True, help_text="Last names only for now")
     key = models.CharField(
