@@ -19,7 +19,7 @@ class TuneForm(ModelForm):
             "style",
             "meter",
             "year",
-            "tags",
+            # "tags",
         ]
 
     def __init__(self, *args, **kwargs):
