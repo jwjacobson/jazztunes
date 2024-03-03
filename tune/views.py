@@ -19,8 +19,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
     for term in search_terms:
         if term in Tune.NICKNAMES:
-            term_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
-            searches.add(term_query)
+            nickname_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
 
         term_query = tune_set.filter(
             Q(tune__title__icontains=term)
@@ -44,6 +43,9 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
     while searches:
         search_results = search_results & searches.pop()
+
+    if nickname_query:
+        search_results = search_results | nickname_query
 
     return search_results
 
