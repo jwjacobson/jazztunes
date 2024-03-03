@@ -13,30 +13,13 @@ from django.http import HttpResponse
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
-MAX_SEARCH_TERMS = 4
-NICKNAMES = {
-    "bird": "Parker",
-    "bud": "Powell",
-    "miles": "Davis",
-    "wayne": "Shorter",
-    "joe": "Henderson",
-    "lee": "Konitz",
-    "diz": "Gillespie",
-    "dizzy": "Gillespie",
-    "duke": "Ellington",
-    "sonny": "Rollins",
-    "bill": "Evans",
-    "herbie": "Hancock",
-    "cedar": "Walton",
-}
-
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
 
     for term in search_terms:
-        if term in NICKNAMES:
-            term_query = tune_set.filter(Q(tune__composer__icontains=NICKNAMES[term]))
+        if term in Tune.NICKNAMES:
+            term_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
             searches.add(term_query)
 
         term_query = tune_set.filter(
@@ -306,10 +289,10 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
     """
     Return a list of tunes that match the search terms.
     """
-    if len(search_terms) > MAX_SEARCH_TERMS:
+    if len(search_terms) > Tune.MAX_SEARCH_TERMS:
         messages.error(
             request,
-            f"Your query is too long ({len(search_terms)} terms, maximum of {MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
+            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
         )
         return render(
             request,
