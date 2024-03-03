@@ -239,6 +239,7 @@ def play(request, pk):
 
     rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
     rep_tune.last_played = timezone.now()
+    rep_tune.play_count += 1
     rep_tune.save()
 
     # if url_name == "_play_play":

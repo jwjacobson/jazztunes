@@ -73,7 +73,7 @@ class DateInput(forms.DateInput):
 class RepertoireTuneForm(ModelForm):
     class Meta:
         model = RepertoireTune
-        exclude = ["tune", "player", "started_learning"]
+        exclude = ["tune", "player", "started_learning", "play_count"]
         widgets = {"last_played": DateInput()}
 
     def __init__(self, *args, **kwargs):
