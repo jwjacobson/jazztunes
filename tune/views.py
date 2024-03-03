@@ -16,6 +16,7 @@ from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
+    nickname_query = ""
 
     for term in search_terms:
         if term in Tune.NICKNAMES:
