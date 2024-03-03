@@ -5,31 +5,49 @@
 {% endblock %}
 
 {% block content %}
-
-  <h2 class="my-3">{% if tune %}Edit{% else %}New{% endif %} Tune</h2>
-  <form method="post" class="row">
+<div class="row my-3">
+<div class="col md-6">
+<!-- <div class="card bg-info-subtle border-primary" style="border-radius: 0;">
+  <div class="card-body"> -->
+    <h2 class="text-info-emphasis">{% if tune %}Edit{% else %}New{% endif %} Tune</h2>
+  <!-- </div>
+</div> -->
+</div>
+<div class="col-md-6"></div>
+</div>
+  <form method="post">
+  <div class="row">
+  <div class="col-md-6">
+  </div>
+  <div class="col-md-6"></div>
     {% csrf_token %}
-
     {% for field in tune_form %}
-        <div class="col-md-5">
+        <div class="col-md-3">
             <p>{{ field.label_tag }}</p>
             {{ field }}
             {{ field.errors }}
             {% if field.help_text %}
               <p class="help">{{ field.help_text|safe }}</p>
             {% endif %}
-        </div>
+          </div>
+            {% if forloop.counter|divisibleby:2 %}
+            <div class="col-md-6"></div>
+            {% endif %}
     {% endfor %}
     {% for field in rep_form %}
-    <div class="mb-3">
+    <div class="col-md-3">
         <p>
             <p>{{ field.label_tag }}</p>
             {{ field }}
             {{ field.errors }}
         </p>
       </div>
-    {% endfor %}
+      {% endfor %}
+    <div class="col-md-6"></div>
+    <div class="col-md-6 my-3">
     <input type="submit" class="btn btn-success col-2" value="{% if tune %}Save{% else %}Create{% endif %}" />
+    </div>
+  </div>
   </form>
 
 {% endblock %}

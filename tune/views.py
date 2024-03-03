@@ -204,7 +204,7 @@ def get_random_tune(request):
     rep_tunes = query_tunes(tunes, search_terms)
 
     if not rep_tunes:
-        return render(request, "tune/_tunes.html", {"selected_tune": None})
+        return render(request, "tune/_play_card.html", {"selected_tune": None})
 
     rep_tunes = list(rep_tunes)
     selected_tune = choice(rep_tunes)
@@ -213,7 +213,7 @@ def get_random_tune(request):
     request.session["rep_tunes"] = [rt.id for rt in rep_tunes]
     request.session.save()
 
-    return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
+    return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
 
 
 @login_required
@@ -239,7 +239,12 @@ def play(request, pk):
 
     rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
     rep_tune.last_played = timezone.now()
+    rep_tune.play_count += 1
     rep_tune.save()
+
+    # if url_name == "_play_play":
+    #     new_button = render_to_string("tune/_no_thanks_replacement.html", context)
+
     return render(request, templates.get(url_name, "/"), {"last_played": rep_tune.last_played})
 
 
