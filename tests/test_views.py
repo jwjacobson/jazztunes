@@ -9,7 +9,7 @@ from tune.models import Tune
 @pytest.fixture
 def logged_in_user(client):
     """
-    Create a user and logs them in, to be used by all tests which require a user.
+    Create a user and log them in, to be used by all tests which require a user.
     """
     user_model = get_user_model()
     user = user_model.objects.create_user(username="testuser", password="12345")
@@ -52,6 +52,7 @@ def new_tune_form(logged_in_user):
 def test_new_tune(logged_in_user, new_tune_form):
     response = logged_in_user.get(reverse("tune:tune_new"))
     assert response.status_code == 200
+    breakpoint()
     assert "form" in response.context
     assert response.context["form"].instance.pk is None
 
