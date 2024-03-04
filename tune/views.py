@@ -88,7 +88,10 @@ def tune_new(request):
                 tune_form.save_m2m()
 
                 RepertoireTune.objects.create(
-                    tune=new_tune, player=request.user, knowledge=rep_form.data["knowledge"]
+                    tune=new_tune,
+                    player=request.user,
+                    knowledge=rep_form.data["knowledge"],
+                    last_played=rep_form.data["last_played"],
                 )
                 messages.success(
                     request,
