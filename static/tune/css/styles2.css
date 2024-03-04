@@ -11860,11 +11860,15 @@ textarea.form-control-lg {
 }
 
 #public-table {
-  /* table-layout: fixed; */
+  table-layout: fixed;
 }
 
 #search-card {
   max-width: 18rem;
 }
 
-/*# sourceMappingURL=styles.css.map */
+.btn {
+  border-radius: 0;
+}
+
+/*# sourceMappingURL=styles2.css.map */
