@@ -77,35 +77,37 @@ def tune_list(request):
 
 @login_required
 def tune_new(request):
-    if request.method == "POST":
-        tune_form = TuneForm(request.POST)
-        rep_form = RepertoireTuneForm(request.POST)
-        if tune_form.is_valid():
-            with transaction.atomic():
-                new_tune = tune_form.save(commit=False)
-                new_tune.created_by = request.user
-                new_tune.save()
-                tune_form.save_m2m()
-                if rep_form.is_valid():
-                    last_played_cleaned = rep_form.cleaned_data.get("last_played")
-                    if not last_played_cleaned:
-                        last_played_cleaned = None
-                    RepertoireTune.objects.create(
-                        tune=new_tune,
-                        player=request.user,
-                        knowledge=rep_form.data["knowledge"],
-                        last_played=last_played_cleaned,
-                    )
-                    messages.success(
-                        request,
-                        f"{new_tune.title} has been added to your repertoire.",
-                    )
-            return redirect("tune:tune_list")
-    else:
+    if request.method != "POST":
         tune_form = TuneForm()
         rep_form = RepertoireTuneForm()
+        return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
 
-    return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
+    tune_form = TuneForm(request.POST)
+    rep_form = RepertoireTuneForm(request.POST)
+
+    if not tune_form.is_valid() or not rep_form.is_valid():
+        return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
+
+    with transaction.atomic():
+        new_tune = tune_form.save(commit=False)
+        new_tune.created_by = request.user
+        new_tune.save()
+        tune_form.save_m2m()
+        if rep_form.is_valid():
+            last_played_cleaned = rep_form.cleaned_data.get("last_played")
+            if not last_played_cleaned:
+                last_played_cleaned = None
+            RepertoireTune.objects.create(
+                tune=new_tune,
+                player=request.user,
+                knowledge=rep_form.data["knowledge"],
+                last_played=last_played_cleaned,
+            )
+            messages.success(
+                request,
+                f"{new_tune.title} has been added to your repertoire.",
+            )
+    return redirect("tune:tune_list")
 
 
 @login_required
