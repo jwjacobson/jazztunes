@@ -173,7 +173,12 @@ STATIC_HOST = config("DJANGO_STATIC_HOST", default="")
 STATIC_URL = STATIC_HOST + "/static/"
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 
 STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"), BASE_DIR / "static")
 
