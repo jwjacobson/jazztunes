@@ -86,17 +86,20 @@ def tune_new(request):
                 new_tune.created_by = request.user
                 new_tune.save()
                 tune_form.save_m2m()
-
-                RepertoireTune.objects.create(
-                    tune=new_tune,
-                    player=request.user,
-                    knowledge=rep_form.data["knowledge"],
-                    last_played=rep_form.data["last_played"],
-                )
-                messages.success(
-                    request,
-                    f"{new_tune.title} has been added to your repertoire.",
-                )
+                if rep_form.is_valid():
+                    last_played_cleaned = rep_form.cleaned_data.get("last_played")
+                    if not last_played_cleaned:
+                        last_played_cleaned = None
+                    RepertoireTune.objects.create(
+                        tune=new_tune,
+                        player=request.user,
+                        knowledge=rep_form.data["knowledge"],
+                        last_played=last_played_cleaned,
+                    )
+                    messages.success(
+                        request,
+                        f"{new_tune.title} has been added to your repertoire.",
+                    )
             return redirect("tune:tune_list")
     else:
         tune_form = TuneForm()
