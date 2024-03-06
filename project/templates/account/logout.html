@@ -5,30 +5,27 @@
 {% endblock head_title %}
 {% block content %}
 <div class="row my-3">
-    <div class="col-2">
-    <div class="card bg-success-subtle border-primary"
-    style="
-    border-radius: 0;
-    ">
-        <div class="card-body">
-            <h3 class="card-title text-info-emphasis">Sign out</h3>
-            <p class="card-text">Are you sure?</p>
-    {% url 'account_logout' as action_url %}
-    {% element form method="post" action=action_url no_visible_fields=True %}
+  <div class="col-2">
+    <div class="card bg-success-subtle border-primary" style="border-radius: 0;">
+      <div class="card-body">
+        <h3 class="card-title text-info-emphasis">Sign out</h3>
+        <p class="card-text">Are you sure?</p>
+        {% url 'account_logout' as action_url %}
+        {% element form method="post" action=action_url no_visible_fields=True %}
         {% slot body %}
-            {% csrf_token %}
-            {% if redirect_field_value %}
-                <input type="hidden"
-                       name="{{ redirect_field_name }}"
-                       value="{{ redirect_field_value }}" />
-            {% endif %}
+        {% csrf_token %}
+        {% if redirect_field_value %}
+        <input type="hidden"
+        name="{{ redirect_field_name }}"
+        value="{{ redirect_field_value }}" />
+        {% endif %}
         {% endslot %}
         {% slot actions %}
         <input class="btn btn-primary" type="submit" value="Yes">
         {% endslot %}
     {% endelement %}
-</div>
-</div>
-</div>    
+      </div>
+    </div>
+  </div>    
 </div>
 {% endblock content %}
