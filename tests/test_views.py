@@ -31,19 +31,24 @@ def new_tune_form(logged_in_user):
     meter = 4
     year = 2023
 
-    response = logged_in_user.post(
-        reverse("tune:tune_new"),
-        {
-            "title": title,
-            "composer": composer,
-            "key": key,
-            "other_keys": other_keys,
-            "song_form": song_form,
-            "style": style,
-            "meter": meter,
-            "year": year,
-        },
-    )
+    knowledge = "know"
+    last_played = "2024-02-01"
+
+    post_data = {
+        "title": title,
+        "composer": composer,
+        "key": key,
+        "other_keys": other_keys,
+        "song_form": song_form,
+        "style": style,
+        "meter": meter,
+        "year": year,
+        "knowledge": knowledge,
+        "last_played": last_played,
+        # Add any other RepertoireTuneForm fields here
+    }
+
+    response = logged_in_user.post(reverse("tune:tune_new"), post_data)
 
     return response
 
