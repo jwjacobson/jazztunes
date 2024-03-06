@@ -5,14 +5,11 @@
     {% trans "Sign In" %}
 {% endblock head_title %}
 {% block content %}
-    <div class="row my-3">
-        <div class="col-6">
-        <div class="card bg-success-subtle border-primary"
-        style="
-        border-radius: 0;
-        ">
-            <div class="card-body">
-                <h3 class = "card-title">Welcome!</h3>
+<div class="row my-3">
+  <div class="col-6">
+    <div class="card bg-success-subtle border-primary"style=" border-radius: 0;">
+        <div class="card-body">
+                <h3 class = "card-title text-info-emphasis">Welcome!</h3>
                 <p class="card-text">Jazztunes is a jazz repertoire management app that runs in your browser.</p>
                 <p class="card-text">It is free to use, modify, and distribute.</p>
                 {% blocktrans %}If you have not created an account yet, then please
@@ -35,9 +32,8 @@
         {% endslot %}
     {% endelement %}
 
-            </div>
-            
-        </div>
-</div>    
+      </div>
+    </div>
+  </div>    
 </div>
 {% endblock content %}
