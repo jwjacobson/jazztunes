@@ -310,6 +310,9 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
             "tune/list.html",
             {"tunes": tunes, "search_form": search_form},
         )
+
+    breakpoint()
+
     if not timespan:
         tunes = query_tunes(tunes, search_terms)
     else:
