@@ -5,15 +5,15 @@
     {% trans "Sign In" %}
 {% endblock head_title %}
 {% block content %}
-<div class="row my-3">
+<div class="row my-4">
   <div class="col-6">
     <div class="card bg-success-subtle border-primary"style=" border-radius: 0;">
         <div class="card-body">
                 <h3 class = "card-title text-info-emphasis">Welcome!</h3>
                 <p class="card-text">Jazztunes is a jazz repertoire management app that runs in your browser.</p>
-                <p class="card-text">It is free to use, modify, and distribute.</p>
-                {% blocktrans %}If you have not created an account yet, then please
-    <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+                <p class="card-text">It is free to use, modify, and distribute;
+                  see the <a href="https://github.com/jwjacobson/jazz_repertoire/blob/main/LICENSE">license</a> for more info.</p>
+                {% blocktrans %} <a href="{{ signup_url }}">Sign up</a> for an account or log in below.{% endblocktrans %}
     </p>
     {% url 'account_login' as login_url %}
     {% element form form=form method="post" action=login_url tags="entrance,login" %}
