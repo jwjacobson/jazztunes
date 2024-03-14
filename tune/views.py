@@ -63,7 +63,7 @@ def tune_list(request):
             search_terms = search_form.cleaned_data["search_term"].split(" ")
             results = return_search_results(request, search_terms, tunes, search_form)
             tunes = results.get("tunes")
-            tune_count = results.get("tune_count")
+            tune_count = results.get("tune_count", 0)
     else:
         search_form = SearchForm()
 
@@ -310,8 +310,6 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
             "tune/list.html",
             {"tunes": tunes, "search_form": search_form},
         )
-
-    breakpoint()
 
     if not timespan:
         tunes = query_tunes(tunes, search_terms)

@@ -100,3 +100,21 @@ def test_tune_edit_success(user_tune_rep, client):
     assert tune.year == 1939
     assert rep_tune.knowledge == "learning"
     assert rep_tune.last_played == date(2024, 3, 1)
+
+
+@pytest.mark.django_db
+def test_tune_delete_success(user_tune_rep, client):
+    rep_tune = user_tune_rep["rep_tune"]
+
+    session = client.session
+    session["tune_count"] = 1
+    session.save()
+
+    url = reverse("tune:tune_delete", kwargs={"pk": rep_tune.pk})
+    response = client.post(url)
+
+    client.session.save()
+    session = client.session
+
+    assert response.status_code == 200
+    assert session["tune_count"] == 0
