@@ -238,8 +238,15 @@ def test_tune_delete_success(user_tune_rep, client):
 
 
 @pytest.mark.django_db
-def test_query_tunes(tune_set):
+def test_query_tunes_kern(tune_set):
     search_terms = ["kern"]
     result = query_tunes(tune_set, search_terms)
     assert result.count() == 3
     assert all("Kern" in tune.tune.composer for tune in result)
+
+
+@pytest.mark.django_db
+def test_query_tunes_no_term(tune_set):
+    search_terms = [""]
+    result = query_tunes(tune_set, search_terms)
+    assert result.count() == 10
