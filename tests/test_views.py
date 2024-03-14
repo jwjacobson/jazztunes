@@ -271,7 +271,28 @@ def test_query_tunes_no_results(tune_set):
 def test_query_tunes_nickname(tune_set):
     search_terms = ["bird"]
     result = query_tunes(tune_set, search_terms)
+
     assert result.count() == 2
+
+    result_titles = {tune.tune.title for tune in result}
+    expected_titles = {"Confirmation", "Dewey Square"}
+
+    for title in expected_titles:
+        assert title in result_titles
+
+
+@pytest.mark.django_db
+def test_query_tunes_common_fragment(tune_set):
+    search_terms = ["love"]
+    result = query_tunes(tune_set, search_terms)
+
+    assert result.count() == 2
+
+    result_titles = {tune.tune.title for tune in result}
+    expected_titles = {"Dearly Beloved", "A Flower is a Lovesome Thing"}
+
+    for title in expected_titles:
+        assert title in result_titles
 
 
 # Two term tests
@@ -280,4 +301,7 @@ def test_query_tunes_kern2(tune_set):
     search_terms = ["kern", "love"]
     result = query_tunes(tune_set, search_terms)
     assert result.count() == 1
-    assert all("Kern" in tune.tune.composer for tune in result)
+
+    expected_title = "Dearly Beloved"
+    result_title = result.first().tune.title
+    assert result_title == expected_title
