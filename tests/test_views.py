@@ -43,7 +43,7 @@ def tune_set(db, client):
     """
     Create a tune set for use in tests that require one.
     """
-    tunes = [
+    tunes = {
         Tune.objects.create(
             title="Confirmation",
             composer="Parker",
@@ -142,7 +142,7 @@ def tune_set(db, client):
             meter=4,
             year=1941,
         ),
-    ]
+    }
 
     user_model = get_user_model()
     user = user_model.objects.create_user(username="testuser", password="12345")
@@ -237,12 +237,20 @@ def test_tune_delete_success(user_tune_rep, client):
     assert session["tune_count"] == 0
 
 
+# Single term tests
 @pytest.mark.django_db
 def test_query_tunes_kern(tune_set):
     search_terms = ["kern"]
     result = query_tunes(tune_set, search_terms)
+
     assert result.count() == 3
     assert all("Kern" in tune.tune.composer for tune in result)
+
+    result_titles = {tune.tune.title for tune in result}
+    expected_titles = {"All the Things You Are", "Dearly Beloved", "Long Ago and Far Away"}
+
+    for title in expected_titles:
+        assert title in result_titles
 
 
 @pytest.mark.django_db
@@ -257,3 +265,19 @@ def test_query_tunes_no_results(tune_set):
     search_terms = ["xx"]
     result = query_tunes(tune_set, search_terms)
     assert result.count() == 0
+
+
+@pytest.mark.django_db
+def test_query_tunes_nickname(tune_set):
+    search_terms = ["bird"]
+    result = query_tunes(tune_set, search_terms)
+    assert result.count() == 2
+
+
+# Two term tests
+@pytest.mark.django_db
+def test_query_tunes_kern2(tune_set):
+    search_terms = ["kern", "love"]
+    result = query_tunes(tune_set, search_terms)
+    assert result.count() == 1
+    assert all("Kern" in tune.tune.composer for tune in result)
