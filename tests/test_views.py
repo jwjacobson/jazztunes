@@ -250,3 +250,10 @@ def test_query_tunes_no_term(tune_set):
     search_terms = [""]
     result = query_tunes(tune_set, search_terms)
     assert result.count() == 10
+
+
+@pytest.mark.django_db
+def test_query_tunes_no_results(tune_set):
+    search_terms = ["xx"]
+    result = query_tunes(tune_set, search_terms)
+    assert result.count() == 0
