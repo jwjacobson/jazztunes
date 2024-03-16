@@ -1,5 +1,8 @@
 import pytest
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from tune.models import Tune, RepertoireTune
 from tune.views import query_tunes
@@ -115,8 +118,10 @@ def tune_set(db, client):
     user = user_model.objects.create_user(username="testuser", password="12345")
     client.force_login(user)
 
-    for tune in tunes:
-        RepertoireTune.objects.create(tune=tune, player=user)
+    now = timezone.now()
+    for i, tune in enumerate(tunes):
+        last_played_date = now - timedelta(weeks=i)
+        RepertoireTune.objects.create(tune=tune, player=user, last_played=last_played_date)
 
     return RepertoireTune.objects.all()
 
@@ -200,6 +205,24 @@ def test_query_tunes_decade(tune_set):
         assert title in result_titles
 
 
+@pytest.mark.django_db
+def test_query_tunes_form(tune_set):
+    search_terms = ["abac"]
+    result = query_tunes(tune_set, search_terms)
+
+    assert result.count() == 3
+
+    result_titles = {tune.tune.title for tune in result}
+    expected_titles = {
+        "Dearly Beloved",
+        "Someday My Prince Will Come",
+        "Long Ago and Far Away",
+    }
+
+    for title in expected_titles:
+        assert title in result_titles
+
+
 # Two term tests
 @pytest.mark.django_db
 def test_query_tunes_kern2(tune_set):
@@ -208,6 +231,17 @@ def test_query_tunes_kern2(tune_set):
     assert result.count() == 1
 
     expected_title = "Dearly Beloved"
+    result_title = result.first().tune.title
+    assert result_title == expected_title
+
+
+@pytest.mark.django_db
+def test_query_tunes_monk(tune_set):
+    search_terms = ["monk", "hudson"]
+    result = query_tunes(tune_set, search_terms)
+    assert result.count() == 1
+
+    expected_title = "Coming on the Hudson"
     result_title = result.first().tune.title
     assert result_title == expected_title
 
