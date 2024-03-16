@@ -71,6 +71,7 @@ class Tune(models.Model):
     }
 
     MAX_SEARCH_TERMS = 4
+
     NICKNAMES = {
         "bird": "Parker",
         "bud": "Powell",
