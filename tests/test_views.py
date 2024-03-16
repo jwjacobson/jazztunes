@@ -305,3 +305,15 @@ def test_query_tunes_kern2(tune_set):
     expected_title = "Dearly Beloved"
     result_title = result.first().tune.title
     assert result_title == expected_title
+
+
+@pytest.mark.django_db
+def test_query_tunes_nickname2(tune_set):
+    search_terms = ["bird", "dewey"]
+    result = query_tunes(tune_set, search_terms)
+
+    assert result.count() == 1
+
+    expected_title = "Dewey Square"
+    result_title = result.first().tune.title
+    assert result_title == expected_title

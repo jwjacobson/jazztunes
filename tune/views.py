@@ -16,12 +16,9 @@ from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
-    nickname_query = ""
+    nickname_query = None
 
     for term in search_terms:
-        if term in Tune.NICKNAMES:
-            nickname_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
-
         term_query = tune_set.filter(
             Q(tune__title__icontains=term)
             | Q(tune__composer__icontains=term)
@@ -35,6 +32,10 @@ def query_tunes(tune_set, search_terms, timespan=None):
             | Q(knowledge__icontains=term)
         )
 
+        if term in Tune.NICKNAMES:
+            nickname_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
+            term_query = term_query | nickname_query
+
         if timespan is not None:
             term_query = term_query.exclude(last_played__gte=timespan)
 
@@ -44,9 +45,6 @@ def query_tunes(tune_set, search_terms, timespan=None):
 
     while searches:
         search_results = search_results & searches.pop()
-
-    if nickname_query:
-        search_results = search_results | nickname_query
 
     return search_results
 
