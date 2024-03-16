@@ -120,7 +120,7 @@ def tune_set(db, client):
 
     now = timezone.now()
     for i, tune in enumerate(tunes):
-        last_played_date = now - timedelta(weeks=i)
+        last_played_date = now - timedelta(days=i)
         RepertoireTune.objects.create(tune=tune, player=user, last_played=last_played_date)
 
     return RepertoireTune.objects.all()
@@ -256,3 +256,13 @@ def test_query_tunes_nickname2(tune_set):
     expected_title = "Dewey Square"
     result_title = result.first().tune.title
     assert result_title == expected_title
+
+
+# timespan tests
+@pytest.mark.django_db
+def test_query_tunes_no_timespan(tune_set):
+    search_terms = [""]
+    timespan = None
+    result = query_tunes(tune_set, search_terms, timespan)
+
+    assert result.count() == 10
