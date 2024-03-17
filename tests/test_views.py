@@ -2,6 +2,7 @@ import pytest
 from datetime import date
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.test import Client
 
 from tune.models import Tune, RepertoireTune
 
@@ -117,3 +118,9 @@ def test_tune_delete_success(user_tune_rep, client):
 
     assert response.status_code == 200
     assert session["tune_count"] == 0
+
+
+def test_tune_list_unauthenticated():
+    client = Client()
+    response = client.get(reverse("tune:tune_list"))
+    assert response.status_code == 302  # Assuming the user is redirected to login page
