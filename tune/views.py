@@ -59,7 +59,8 @@ def tune_list(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            results = return_search_results(request, search_terms, tunes, search_form)
+            timespan = search_form.cleaned_data["timespan"]
+            results = return_search_results(request, search_terms, tunes, search_form, timespan)
             tunes = results.get("tunes")
             tune_count = results.get("tune_count", 0)
     else:
