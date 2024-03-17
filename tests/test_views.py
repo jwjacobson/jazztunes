@@ -64,6 +64,19 @@ def test_tune_new_success(user_tune_rep, client):
 
 
 @pytest.mark.django_db
+def test_tune_new_get(user_tune_rep, client):
+    url = reverse("tune:tune_new")
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "tune/form.html" in [t.name for t in response.templates]
+    assert "tune_form" in response.context
+    assert "rep_form" in response.context
+    assert not response.context["tune_form"].is_bound
+    assert not response.context["rep_form"].is_bound
+
+
+@pytest.mark.django_db
 def test_tune_edit_success(user_tune_rep, client):
     tune = user_tune_rep["tune"]
     user = user_tune_rep["user"]
@@ -124,7 +137,7 @@ def test_tune_delete_success(user_tune_rep, client):
 def test_tune_list_unauthenticated():
     client = Client()
     response = client.get(reverse("tune:tune_list"))
-    assert response.status_code == 302  # Assuming the user is redirected to login page
+    assert response.status_code == 302
 
 
 @pytest.mark.django_db
