@@ -3,9 +3,15 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.contrib.messages.storage.fallback import FallbackStorage
+from django.http import HttpRequest
 
 from tune.models import Tune, RepertoireTune
-from tune.views import query_tunes
+from tune.views import query_tunes, return_search_results
+
+"""
+Tests for non-view functions in views.py
+"""
 
 
 @pytest.fixture
@@ -124,6 +130,23 @@ def tune_set(db, client):
         RepertoireTune.objects.create(tune=tune, player=user, last_played=last_played_date)
 
     return RepertoireTune.objects.all()
+
+
+@pytest.fixture
+def request_fixture():
+    request = HttpRequest()
+    setattr(request, "session", "session")
+    messages = FallbackStorage(request)
+    setattr(request, "_messages", messages)
+    return request
+
+
+@pytest.fixture
+def search_form_fixture():
+    from tune.forms import SearchForm
+
+    form = SearchForm()
+    return form
 
 
 # Single term tests
@@ -293,3 +316,9 @@ def test_query_tunes_timespan_month(tune_set):
     result = query_tunes(tune_set, search_terms, timespan)
 
     assert result.count() == 0
+
+
+def test_return_search_results_too_many(request_fixture, tune_set, search_form_fixture):
+    search_terms = ["a", "b", "c", "d", "e"]
+    _ = return_search_results(request_fixture, search_terms, tune_set, search_form_fixture)
+    assert any("Your query is too long" in msg.message for msg in request_fixture._messages)
