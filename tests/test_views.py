@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client
 
 from tune.models import Tune, RepertoireTune
+from tune.forms import SearchForm
 
 
 @pytest.fixture
@@ -124,3 +125,24 @@ def test_tune_list_unauthenticated():
     client = Client()
     response = client.get(reverse("tune:tune_list"))
     assert response.status_code == 302  # Assuming the user is redirected to login page
+
+
+@pytest.mark.django_db
+def test_tune_list_authenticated(user_tune_rep, client):
+    response = client.get(reverse("tune:tune_list"))
+
+    assert response.status_code == 200
+    assert len(response.context["tunes"]) == 1
+    assert isinstance(response.context["search_form"], SearchForm)
+
+
+@pytest.mark.django_db
+def test_tune_list_invalid_timespan(user_tune_rep, client):
+    response = client.post(reverse("tune:tune_list"), {"timespan": "year"})
+
+    assert response.status_code == 200
+    assert "search_form" in response.context
+    form = response.context["search_form"]
+
+    assert form.is_valid() is False
+    assert "timespan" in form.errors
