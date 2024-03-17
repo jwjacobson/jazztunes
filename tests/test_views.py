@@ -146,3 +146,10 @@ def test_tune_list_invalid_timespan(user_tune_rep, client):
 
     assert form.is_valid() is False
     assert "timespan" in form.errors
+
+
+@pytest.mark.django_db
+def test_tune_list_valid_form(user_tune_rep, client):
+    response = client.post(reverse("tune:tune_list"), {"search_terms": [""]})
+    assert response.status_code == 200
+    assert len(response.context["tunes"]) == 1
