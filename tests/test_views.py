@@ -2,7 +2,7 @@ import pytest
 from datetime import date
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.test import Client
+from django.conf import settings
 
 from tune.models import Tune, RepertoireTune
 from tune.forms import SearchForm
@@ -36,6 +36,38 @@ def user_tune_rep(client):
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "user": user}
+
+
+@pytest.fixture
+def admin_tune_rep(client):
+    """
+    Create an admin user, tune, and associated repertoire tune for use by tune_browse
+    """
+    user_model = get_user_model()
+    admin = user_model.objects.create_user(username="admin", password="secret")
+    client.force_login(admin)
+
+    settings.ADMIN_USER_ID = admin.id
+
+    tune = Tune.objects.create(
+        title="test title",
+        composer="test composer",
+        key="C",
+        other_keys="D Eb F#",
+        song_form="aaba",
+        style="standard",
+        meter=4,
+        year=2023,
+    )
+
+    rep_tune = RepertoireTune.objects.create(
+        tune=tune,
+        player=admin,
+        knowledge="know",
+        last_played="2024-02-01",
+    )
+
+    return {"tune": tune, "rep_tune": rep_tune, "admin": admin}
 
 
 @pytest.mark.django_db
@@ -134,8 +166,7 @@ def test_tune_delete_success(user_tune_rep, client):
     assert session["tune_count"] == 0
 
 
-def test_tune_list_unauthenticated():
-    client = Client()
+def test_tune_list_unauthenticated(client):
     response = client.get(reverse("tune:tune_list"))
     assert response.status_code == 302
 
@@ -164,5 +195,38 @@ def test_tune_list_invalid_timespan(user_tune_rep, client):
 @pytest.mark.django_db
 def test_tune_list_valid_form(user_tune_rep, client):
     response = client.post(reverse("tune:tune_list"), {"search_terms": [""]})
+    assert response.status_code == 200
+    assert len(response.context["tunes"]) == 1
+
+
+def test_tune_browse_unauthenticated(client):
+    response = client.get(reverse("tune:tune_browse"))
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
+def test_tune_browse_authenticated(admin_tune_rep, client):
+    response = client.get(reverse("tune:tune_browse"))
+
+    assert response.status_code == 200
+    assert len(response.context["tunes"]) == 1
+    assert isinstance(response.context["search_form"], SearchForm)
+
+
+@pytest.mark.django_db
+def test_tune_browse_invalid_timespan(admin_tune_rep, client):
+    response = client.post(reverse("tune:tune_browse"), {"timespan": "year"})
+
+    assert response.status_code == 200
+    assert "search_form" in response.context
+    form = response.context["search_form"]
+
+    assert form.is_valid() is False
+    assert "timespan" in form.errors
+
+
+@pytest.mark.django_db
+def test_tune_browse_valid_form(admin_tune_rep, client):
+    response = client.post(reverse("tune:tune_browse"), {"search_terms": [""]})
     assert response.status_code == 200
     assert len(response.context["tunes"]) == 1
