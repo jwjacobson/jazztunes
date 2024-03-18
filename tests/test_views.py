@@ -236,18 +236,14 @@ def test_tune_browse_valid_form(admin_tune_rep, client):
 @pytest.mark.django_db
 def test_recount(user_tune_rep, client):
     user = user_tune_rep["user"]
-
     session = client.session
     session["tune_count"] = 5
     session.save()
-
     response = client.get(reverse("tune:recount"))
 
     assert response.status_code == 200
-
     assert "tune_count" in response.context
     assert response.context["tune_count"] == 5
-
     assert "tune/_count.html" in [t.name for t in response.templates]
     assert response.context["user"] == user
 
