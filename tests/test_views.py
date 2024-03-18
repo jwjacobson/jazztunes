@@ -2,6 +2,7 @@ import pytest
 from datetime import date
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
 from django.conf import settings
 
 from tune.models import Tune, RepertoireTune
@@ -249,3 +250,25 @@ def test_recount(user_tune_rep, client):
 
     assert "tune/_count.html" in [t.name for t in response.templates]
     assert response.context["user"] == user
+
+
+@pytest.mark.django_db
+def test_tune_take_success(client, user_tune_rep, admin_tune_rep):
+    client.force_login(user_tune_rep["user"])
+
+    response = client.post(reverse("tune:tune_take", args=[admin_tune_rep["tune"].pk]))
+
+    assert response.status_code == 200
+    assert RepertoireTune.objects.filter(
+        player=user_tune_rep["user"], tune__title=admin_tune_rep["tune"].title
+    ).exists()
+
+
+@pytest.mark.django_db
+def test_tune_take_nonpublic(client, user_tune_rep):
+    response = client.post(reverse("tune:tune_take", args=[user_tune_rep["tune"].pk]))
+
+    assert response.status_code == 200
+
+    messages = [msg.message for msg in get_messages(response.wsgi_request)]
+    assert "You can only take public tunes into your repertoire." in messages
