@@ -184,14 +184,14 @@ def get_random_tune(request):
 @login_required
 def change_tune(request):
     if not request.session.get("rep_tunes"):
-        return render(request, "tune/_tunes.html", {"selected_tune": None})
+        return render(request, "tune/_play_card.html", {"selected_tune": None})
 
     chosen_tune_id = choice(request.session["rep_tunes"])
     request.session["rep_tunes"].remove(chosen_tune_id)
     request.session.save()
 
     selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
-    return render(request, "tune/_tunes.html", {"selected_tune": selected_tune})
+    return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
 
 
 @login_required
