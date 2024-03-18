@@ -2,6 +2,7 @@ import pytest
 from datetime import date
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.contrib.messages import get_messages
 from django.conf import settings
 
 from tune.models import Tune, RepertoireTune
@@ -249,3 +250,54 @@ def test_recount(user_tune_rep, client):
 
     assert "tune/_count.html" in [t.name for t in response.templates]
     assert response.context["user"] == user
+
+
+@pytest.mark.django_db
+def test_tune_take_success(client, user_tune_rep, admin_tune_rep):
+    response = client.post(reverse("tune:tune_take", args=[admin_tune_rep["tune"].pk]))
+
+    assert response.status_code == 200
+    assert RepertoireTune.objects.filter(
+        player=user_tune_rep["user"], tune__title=admin_tune_rep["tune"].title
+    ).exists()
+
+
+@pytest.mark.django_db
+def test_tune_take_nonpublic(client, user_tune_rep):
+    response = client.post(reverse("tune:tune_take", args=[user_tune_rep["tune"].pk]))
+
+    assert response.status_code == 200
+
+    messages = [msg.message for msg in get_messages(response.wsgi_request)]
+    assert "You can only take public tunes into your repertoire." in messages
+
+
+@pytest.mark.django_db
+def test_set_knowledge_success(client, user_tune_rep):
+    tune_pk = user_tune_rep["rep_tune"].pk
+    new_knowledge = "learning"
+
+    response = client.post(
+        reverse("tune:set_knowledge", args=[tune_pk]), {"knowledge": new_knowledge}
+    )
+
+    assert response.status_code == 200
+
+    user_tune_rep["rep_tune"].refresh_from_db()
+    assert user_tune_rep["rep_tune"].knowledge == new_knowledge
+
+
+@pytest.mark.django_db
+def test_set_knowledge_invalid_form(client, user_tune_rep):
+    tune_pk = user_tune_rep["rep_tune"].pk
+    original_knowledge = user_tune_rep["rep_tune"].knowledge
+    invalid_knowledge = "whatever"
+
+    response = client.post(
+        reverse("tune:set_knowledge", args=[tune_pk]), {"knowledge": invalid_knowledge}
+    )
+
+    assert response.status_code == 200
+
+    user_tune_rep["rep_tune"].refresh_from_db()
+    assert user_tune_rep["rep_tune"].knowledge == original_knowledge
