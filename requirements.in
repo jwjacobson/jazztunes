@@ -5,7 +5,6 @@ awsebcli
 blessed
 botocore
 build
-cattrs
 cement
 certifi
 cffi
@@ -49,7 +48,6 @@ prompt-toolkit
 psycopg2
 ptyprocess
 pure-eval
-pybites_search
 pycparser
 Pygments
 PyJWT
@@ -63,7 +61,6 @@ python3-openid
 pytzdata
 PyYAML
 requests
-requests-cache
 requests-oauthlib
 rich
 ruff
