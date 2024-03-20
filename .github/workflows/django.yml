@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env: 
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+
 jobs:
   build:
 
@@ -26,7 +30,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
-      env: 
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      
       run: |
         python manage.py test
