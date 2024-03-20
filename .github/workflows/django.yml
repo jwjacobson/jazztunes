@@ -7,8 +7,14 @@ on:
     branches: [ "main" ]
 
 env: 
-  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
   ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DEBUG: ${{ secrets.DEBUG }}
+  DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   build:
