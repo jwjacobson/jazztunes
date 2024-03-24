@@ -38,22 +38,24 @@ jobs:
       
       
       run: |
-        echo "Checking if ADMIN_USER_ID is set"
-        if [ -z "$ADMIN_USER_ID" ]; then
-        echo "ADMIN_USER_ID is not set"
-        else
-        echo "ADMIN_USER_ID is set"
-        fi
+        # echo "Checking if ADMIN_USER_ID is set"
+        # if [ -z "$ADMIN_USER_ID" ]; then
+        # echo "ADMIN_USER_ID is not set"
+        # else
+        # echo "ADMIN_USER_ID is set"
+        # fi
         echo "Checking if DATABASE_URL is set"
         if [ -z "$DATABASE_URL" ]; then
         echo "DATABASE_URL is not set"
         else
         echo "DATABASE_URL is set"
         fi
-        echo "Checking if SENTRY_DSN is set"
-        if [ -z "$SENTRY_DSN" ]; then
-        echo "SENTRY_DSN is not set"
-        else
-        echo "SENTRY_DSN is set"
-        fi
+        # echo "Checking if SENTRY_DSN is set"
+        # if [ -z "$SENTRY_DSN" ]; then
+        # echo "SENTRY_DSN is not set"
+        # else
+        # echo "SENTRY_DSN is set"
+        # fi
+        echo "Checking environment variables"
+        env | grep -vE '^(PATH|HOME|RUNNER|GITHUB_)='
         python manage.py test
