@@ -1,22 +1,22 @@
-name: Django CI
+name: jazztunes CI and Deployment
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  
 env: 
   ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
   ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   DEBUG: ${{ secrets.DEBUG }}
   DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
   SECRET_KEY: ${{ secrets.SECRET_KEY }}
   SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
-  build:
+  build-and-deploy:
     environment: jazztunes
     runs-on: ubuntu-latest
     strategy:
@@ -47,3 +47,11 @@ jobs:
         echo "Checking environment variables"
         env | grep -vE '^(PATH|HOME|RUNNER|GITHUB_)='
         python manage.py test
+
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: |
+        git fetch --unshallow || true
+        git push https://heroku:$HEROKU_API_KEY@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git HEAD:main -f
+
