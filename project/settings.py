@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from decouple import config, Csv
+# from decouple import config, Csv
 from pathlib import Path
 import dj_database_url
 import os
@@ -24,10 +24,11 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", default=False, cast=bool)
-ADMIN_USER_ID = config("ADMIN_USER_ID", default=2, cast=int)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", default=False)
+ADMIN_USER_ID = os.getenv("ADMIN_USER_ID")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -65,10 +66,10 @@ else:
 
     EMAIL_HOST = "smtp.sendgrid.net"
     EMAIL_HOST_USER = "apikey"
-    EMAIL_HOST_PASSWORD = config("SENDGRID_API_KEY")
+    EMAIL_HOST_PASSWORD = os.getenv("SENDGRID_API_KEY")
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+    DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
@@ -129,7 +130,7 @@ if "RDS_HOSTNAME" in os.environ:
     }
 
 else:
-    DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}
+    DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
 
 
 # Password validation
@@ -169,7 +170,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_HOST = config("DJANGO_STATIC_HOST", default="")
+STATIC_HOST = os.getenv("DJANGO_STATIC_HOST", default="")
 STATIC_URL = STATIC_HOST + "/static/"
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
