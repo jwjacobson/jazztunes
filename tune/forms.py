@@ -89,6 +89,7 @@ class SearchForm(forms.Form):
         ("week", "a week"),
         ("month", "a month"),
         ("two_months", "2 months"),
+        ("three_months", "3 months"),
     ]
 
     search_term = forms.CharField(label="search_term", max_length=200, required=False)
@@ -104,5 +105,7 @@ class SearchForm(forms.Form):
             return timezone.now() - timedelta(days=30)
         elif timespan == "two_months":
             return timezone.now() - timedelta(days=60)
+        elif timespan == "three_months":
+            return timezone.now() - timedelta(days=90)
         else:
             return None
