@@ -76,6 +76,7 @@
               </div>
             </div>
           </nav>
+          <div id="messages">
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'success' %}
@@ -93,6 +94,7 @@
                 {% endif %}
               {% endfor %}
             {% endif %}
+          </div>
 
             {% block content %}
             {% endblock content %}
