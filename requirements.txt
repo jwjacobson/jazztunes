@@ -224,9 +224,12 @@ pytest==8.1.1
     #   -r requirements.in
     #   pytest-cov
     #   pytest-django
+    #   pytest-env
 pytest-cov==4.1.0
     # via -r requirements.in
 pytest-django==4.8.0
+    # via -r requirements.in
+pytest-env==1.1.3
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via

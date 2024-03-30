@@ -1,3 +1,14 @@
-<button type="button" class="btn btn-outline-info" disabled>
-    Play
-</button>
+<div id="buttonWrapper" class="my-1">
+    <button type="button"
+    class="btn btn-outline-info"
+    hx-put="{% url 'tune:play_play' pk=selected_tune.id %}"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-target="buttonWrapper" hx-swap="outerHTML"
+  >Play</button>
+  <div id="second-button">
+  <button type="button" class="btn btn-outline-dark " hx-get="{% url 'tune:change_tune' %}" hx-target="#playTuneWrapper">No thanks...</button>
+  </div>
+  </div>
+<!-- <button type="button" class="btn btn-outline-info" disabled> -->
+    <!-- Play -->
+<!-- </button> -->

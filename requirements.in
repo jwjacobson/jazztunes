@@ -85,3 +85,4 @@ gunicorn
 django-bootstrap5
 sendgrid
 python-dotenv
+pytest-env

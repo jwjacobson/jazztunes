@@ -9,6 +9,7 @@ from django.http import HttpRequest
 from tune.models import Tune, RepertoireTune
 from tune.views import query_tunes, return_search_results
 
+
 """
 Tests for non-view functions in views.py
 """
