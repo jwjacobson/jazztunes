@@ -1,18 +1,13 @@
 asgiref
 asttokens
 attrs
-awsebcli
-blessed
-botocore
 build
-cement
 certifi
 cffi
 cfgv
 charset-normalizer
 cli-helpers
 click
-colorama
 configobj
 coverage
 cryptography
@@ -30,7 +25,6 @@ idna
 ipdb
 ipython
 jedi
-jmespath
 markdown-it-py
 matplotlib-inline
 mdurl
@@ -64,7 +58,6 @@ requests
 requests-oauthlib
 rich
 ruff
-semantic-version
 sentry-sdk
 setproctitle
 shellingham
@@ -72,7 +65,6 @@ six
 sqlparse
 stack-data
 tabulate
-termcolor
 traitlets
 typer
 typing_extensions
@@ -85,3 +77,4 @@ gunicorn
 django-bootstrap5
 sendgrid
 python-dotenv
+pytest-env

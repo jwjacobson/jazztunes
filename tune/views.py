@@ -208,7 +208,8 @@ def play(request, pk):
     rep_tune.save()
 
     # if url_name == "_play_play":
-    #     new_button = render_to_string("tune/_no_thanks_replacement.html", context)
+
+    # _ = render_to_string("tune/_no_thanks_replacement.html")
 
     return render(request, templates.get(url_name, "/"), {"last_played": rep_tune.last_played})
 
