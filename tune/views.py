@@ -206,12 +206,21 @@ def play(request, pk):
     rep_tune.last_played = timezone.now()
     rep_tune.play_count += 1
     rep_tune.save()
+    print(f"Played {rep_tune}")
+    print(url_name)
 
-    # if url_name == "_play_play":
+    if url_name == "play_play":
+        return render(
+            request,
+            "tune/_another_button.html",
+            {"last_played": rep_tune.last_played, "selected_tune": rep_tune},
+        )
 
-    # _ = render_to_string("tune/_no_thanks_replacement.html")
-
-    return render(request, templates.get(url_name, "/"), {"last_played": rep_tune.last_played})
+    return render(
+        request,
+        templates.get(url_name, "/"),
+        {"last_played": rep_tune.last_played, "selected_tune": rep_tune},
+    )
 
 
 @login_required
@@ -264,7 +273,7 @@ def tune_take(request, pk):
 
     if admin_tune.player_id != settings.ADMIN_USER_ID:
         messages.error(request, "You can only take public tunes into your repertoire.")
-        return render(request, "tune/browse.html", {"admin_tune": admin_tune})
+        return render(request, "tune/browse.html")
 
     tune = admin_tune.tune
 

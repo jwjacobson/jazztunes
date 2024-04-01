@@ -1,18 +1,18 @@
 <div id="playTuneWrapper">
-  <div class="card bg-danger border-primary" style="height: 200px; max-width: 18rem; border-radius: 0;">
+  <div class="card bg-danger border-primary" style="height: 200px; max-width: 22rem; border-radius: 0;">
     <div class="card-body">
       {% if selected_tune %}
       <h5 class = "card-title">You should play</h5>
         <div class="my-1">
           <p class="h4 text-info-emphasis my-4"><strong>{{selected_tune.tune.title}}</strong></p>
         </div>
-        <div id="buttonWrapper" class="my-1">
+        <div class="btn-group my-1">
           <button type="button"
           class="btn btn-outline-info"
           hx-put="{% url 'tune:play_play' pk=selected_tune.id %}"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-          hx-target = "buttonWrapper"
-          hx-swap="outerHTML">
+          hx-swap="outerHTML"
+          hx-target="#playTuneWrapper">
           Play
           </button>
         <div id="second-button">
