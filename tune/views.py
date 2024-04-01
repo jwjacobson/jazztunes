@@ -206,8 +206,6 @@ def play(request, pk):
     rep_tune.last_played = timezone.now()
     rep_tune.play_count += 1
     rep_tune.save()
-    print(f"Played {rep_tune}")
-    print(url_name)
 
     if url_name == "play_play":
         return render(
