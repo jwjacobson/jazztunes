@@ -4,12 +4,6 @@ on:
   push:
     branches: [ "main" ]
 
-# env: 
-  # HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  # ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
-  # ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
-  # SECRET_KEY: ${{ secrets.SECRET_KEY }}
-
 jobs:
   build-and-deploy:
     environment: jazztunes
