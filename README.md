@@ -1,15 +1,15 @@
 # jazztunes - a jazz repertoire management app
 
-### Why build this app? The problem
+### Why build this app?
 An important part of learning to play jazz is memorizing tunes, usually taken from the canon of [jazz](https://en.wikipedia.org/wiki/List_of_jazz_standards) and [popular](https://en.wikipedia.org/wiki/Great_American_Songbook) standard songs.
 These can number less than 10 for the beginning student, up to 100 or more for more advanced students, to hundreds or even over a thousand for professionals. Shared knowledge of a common set of tunes allows jazz musicians to successfully make music together with little to no preparation and is a distinctive feature of the artform.
 
 My own experience learning to play jazz has included a fair amount of frustration in trying to grow my repertoire. Tunes have to be regularly integrated into practice so that they enter long-term memory. This isn't difficult when one only knows a few tunes, but as my own repertoire approached the 100-tune threshold, I had difficulty keeping them all straight, and it often felt that for every new tune I learned, another one would slip out of the rotation and be forgotten, necessitating tiresome relearning. I have talked to enough other players to know that this issue is not unique to me; it is a general problem for jazz musicians, at least at the student and amateur level.
 
-Jazztunes helps you keep track of all the tunes you know, search and sort them by various criteria, and, crucially, see when you last played a tune, so you know which ones you need to revisit.
+Jazztunes helps to solve this problem by allowing you keep track of all the tunes you know, search and sort them by various criteria, and, crucially, see when you last played a tune, so you know which ones you need to revisit.
 
 ### How to use jazztunes
-Jazztunes is a web app; if you'd like to use it, go to jazztunes.org and create an account! It is and always will be free. If you'd prefer to run jazztunes locally for any reason, you can find instructions further down. Here I'll focus on the different sections of the app.
+Jazztunes is a web app; if you'd like to use it, go to [jazztunes.org](https://jazztunes.org/) and create an account! It is and always will be free. If you'd prefer to run jazztunes locally for any reason, you can find instructions further down. Here I'll focus on the different sections of the app.
 
 #### Home
 This page displays your repertoire. You can use the search box up top to filter results You can also click the header of any column to sort by that column, and shift-click to sort by multiple columns. The Actions column on the far right has buttons to "play" (mark a tune's "last played" field with today's date), edit, or delete a tune. Be careful with delete; there's no way to get a deleted tune back!
