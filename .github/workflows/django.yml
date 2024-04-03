@@ -38,15 +38,7 @@ jobs:
       
       
       run: |
-        echo "Checking if DATABASE_URL is set"
-        if [ -z "$DATABASE_URL" ]; then
-        echo "DATABASE_URL is not set"
-        else
-        echo "DATABASE_URL is set"
-        fi
-        echo "Checking environment variables"
-        env | grep -vE '^(PATH|HOME|RUNNER|GITHUB_)='
-        python manage.py test
+        pytest
 
     - name: Deploy to Heroku
       env:
