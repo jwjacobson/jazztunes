@@ -7,12 +7,12 @@ on:
 env: 
   ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
   ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
-  DEBUG: ${{ secrets.DEBUG }}
-  DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+  # DEBUG: ${{ secrets.DEBUG }}
+  # DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
   HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
   SECRET_KEY: ${{ secrets.SECRET_KEY }}
-  SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  # SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+  # SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   build-and-deploy:
