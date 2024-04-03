@@ -4,15 +4,11 @@ on:
   push:
     branches: [ "main" ]
 
-env: 
-  ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
-  ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
-  # DEBUG: ${{ secrets.DEBUG }}
-  # DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
-  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-  SECRET_KEY: ${{ secrets.SECRET_KEY }}
-  # SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-  # SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+# env: 
+  # HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+  # ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
+  # ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+  # SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:
   build-and-deploy:
@@ -51,8 +47,11 @@ jobs:
         pip install -r requirements.txt
     - name: Run Tests
       env:
-        # Set DATABASE_URL for Django to connect to the test database
         DATABASE_URL: postgres://testuser:testpass@localhost:5432/testdb
+        ADMIN_USER_ID: ${{ secrets.ADMIN_USER_ID }}
+        ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
       run: |
         pytest
     - name: Deploy to Heroku
