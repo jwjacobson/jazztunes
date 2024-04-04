@@ -289,12 +289,13 @@ def tune_take(request, pk):
 
 
 @login_required
-def set_knowledge(request, pk):
+def set_rep_fields(request, pk):
     rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 
     if rep_form.is_valid():
         rep_tune.knowledge = rep_form.cleaned_data["knowledge"]
+        rep_tune.last_played = rep_form.cleaned_data["last_played"]
         rep_tune.save()
     else:
         print("invalid")

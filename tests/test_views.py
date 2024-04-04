@@ -33,7 +33,7 @@ def user_tune_rep(client):
         tune=tune,
         player=user,
         knowledge="know",
-        last_played="2024-02-01",
+        last_played=date(2024, 2, 1),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "user": user}
@@ -65,7 +65,7 @@ def admin_tune_rep(client):
         tune=tune,
         player=admin,
         knowledge="know",
-        last_played="2024-02-01",
+        last_played=date(2024, 2, 1),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "admin": admin}
@@ -84,7 +84,7 @@ def test_tune_new_success(user_tune_rep, client):
         "meter": 3,
         "year": 2024,
         "knowledge": "learning",
-        "last_played": "2024-03-01",
+        "last_played": date(2024, 3, 1),
     }
 
     response = client.post(url, post_data)
@@ -125,7 +125,7 @@ def test_tune_edit_success(user_tune_rep, client):
         "style": "jazz",
         "year": 1939,
         "knowledge": "learning",
-        "last_played": "2024-03-01",
+        "last_played": date(2024, 3, 1),
     }
 
     url = reverse("tune:tune_edit", kwargs={"pk": tune.pk})
@@ -269,31 +269,50 @@ def test_tune_take_nonpublic(client, user_tune_rep):
 
 
 @pytest.mark.django_db
-def test_set_knowledge_success(client, user_tune_rep):
+def test_set_rep_fields_success(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
-    new_knowledge = "learning"
+    knowledge = "learning"
+    last_played = date(2024, 3, 1)
 
     response = client.post(
-        reverse("tune:set_knowledge", args=[tune_pk]), {"knowledge": new_knowledge}
+        reverse("tune:set_rep_fields", args=[tune_pk]),
+        {"knowledge": knowledge, "last_played": last_played},
     )
 
     assert response.status_code == 200
 
     user_tune_rep["rep_tune"].refresh_from_db()
-    assert user_tune_rep["rep_tune"].knowledge == new_knowledge
+    assert user_tune_rep["rep_tune"].knowledge == knowledge
+    assert user_tune_rep["rep_tune"].last_played == last_played
 
 
 @pytest.mark.django_db
-def test_set_knowledge_invalid_form(client, user_tune_rep):
+def test_set_rep_fields_invalid_knowledge(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
     original_knowledge = user_tune_rep["rep_tune"].knowledge
     invalid_knowledge = "whatever"
 
     response = client.post(
-        reverse("tune:set_knowledge", args=[tune_pk]), {"knowledge": invalid_knowledge}
+        reverse("tune:set_rep_fields", args=[tune_pk]), {"knowledge": invalid_knowledge}
     )
 
     assert response.status_code == 200
 
     user_tune_rep["rep_tune"].refresh_from_db()
     assert user_tune_rep["rep_tune"].knowledge == original_knowledge
+
+
+@pytest.mark.django_db
+def test_set_rep_fields_invalid_last_played(client, user_tune_rep):
+    tune_pk = user_tune_rep["rep_tune"].pk
+    original_last_played = user_tune_rep["rep_tune"].last_played
+    invalid_last_played = "tomorrow"
+
+    response = client.post(
+        reverse("tune:set_rep_fields", args=[tune_pk]), {"last_played": invalid_last_played}
+    )
+
+    assert response.status_code == 200
+
+    user_tune_rep["rep_tune"].refresh_from_db()
+    assert user_tune_rep["rep_tune"].last_played == original_last_played
