@@ -269,18 +269,21 @@ def test_tune_take_nonpublic(client, user_tune_rep):
 
 
 @pytest.mark.django_db
-def test_set_knowledge_success(client, user_tune_rep):
+def test_set_rep_fields_success(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
-    new_knowledge = "learning"
+    knowledge = "learning"
+    last_played = "2024-02-01"
 
     response = client.post(
-        reverse("tune:set_knowledge", args=[tune_pk]), {"knowledge": new_knowledge}
+        reverse("tune:set_rep_fields", args=[tune_pk]),
+        {"knowledge": knowledge, "last_played": last_played},
     )
 
     assert response.status_code == 200
 
     user_tune_rep["rep_tune"].refresh_from_db()
-    assert user_tune_rep["rep_tune"].knowledge == new_knowledge
+    assert user_tune_rep["rep_tune"].knowledge == knowledge
+    assert user_tune_rep["rep_tune"].last_played == last_played
 
 
 @pytest.mark.django_db
