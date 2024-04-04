@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'tune:set_knowledge' pk=tune.pk %}" class="row" hx-swap="outerHTML" hx-trigger="submit" id="rep_form">
+<form method="post" action="{% url 'tune:set_rep_fields' pk=tune.pk %}" class="row" hx-swap="outerHTML" hx-trigger="submit" id="rep_form">
     {% csrf_token %}
 
     {% for field in rep_form %}
@@ -18,7 +18,7 @@
             value="Set"
             hx-target="#rep_form"
             hx-trigger="click"
-            hx-post="{% url 'tune:set_knowledge' pk=new_rep_tune.id %}"
+            hx-post="{% url 'tune:set_rep_fields' pk=new_rep_tune.id %}"
             hx-swap="outerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     </div>

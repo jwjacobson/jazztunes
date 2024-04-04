@@ -15,6 +15,6 @@ urlpatterns = [
     path("take/<int:pk>", views.tune_take, name="tune_take"),
     path("play/list/<int:pk>", views.play, name="play_list"),
     path("play/play/<int:pk>", views.play, name="play_play"),
-    path("set/<int:pk>", views.set_knowledge, name="set_knowledge"),
+    path("set/<int:pk>", views.set_rep_fields, name="set_rep_fields"),
     path("count", views.recount, name="recount"),
 ]
