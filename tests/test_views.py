@@ -33,7 +33,7 @@ def user_tune_rep(client):
         tune=tune,
         player=user,
         knowledge="know",
-        last_played="2024-02-01",
+        last_played=date(2024, 2, 1),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "user": user}
@@ -65,7 +65,7 @@ def admin_tune_rep(client):
         tune=tune,
         player=admin,
         knowledge="know",
-        last_played="2024-02-01",
+        last_played=date(2024, 2, 1),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "admin": admin}
@@ -84,7 +84,7 @@ def test_tune_new_success(user_tune_rep, client):
         "meter": 3,
         "year": 2024,
         "knowledge": "learning",
-        "last_played": "2024-03-01",
+        "last_played": date(2024, 3, 1),
     }
 
     response = client.post(url, post_data)
@@ -125,7 +125,7 @@ def test_tune_edit_success(user_tune_rep, client):
         "style": "jazz",
         "year": 1939,
         "knowledge": "learning",
-        "last_played": "2024-03-01",
+        "last_played": date(2024, 3, 1),
     }
 
     url = reverse("tune:tune_edit", kwargs={"pk": tune.pk})
@@ -272,7 +272,7 @@ def test_tune_take_nonpublic(client, user_tune_rep):
 def test_set_rep_fields_success(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
     knowledge = "learning"
-    last_played = "2024-02-01"
+    last_played = date(2024, 3, 1)
 
     response = client.post(
         reverse("tune:set_rep_fields", args=[tune_pk]),
