@@ -293,10 +293,26 @@ def test_set_rep_fields_invalid_knowledge(client, user_tune_rep):
     invalid_knowledge = "whatever"
 
     response = client.post(
-        reverse("tune:set_knowledge", args=[tune_pk]), {"knowledge": invalid_knowledge}
+        reverse("tune:set_rep_fields", args=[tune_pk]), {"knowledge": invalid_knowledge}
     )
 
     assert response.status_code == 200
 
     user_tune_rep["rep_tune"].refresh_from_db()
     assert user_tune_rep["rep_tune"].knowledge == original_knowledge
+
+
+@pytest.mark.django_db
+def test_set_rep_fields_invalid_last_played(client, user_tune_rep):
+    tune_pk = user_tune_rep["rep_tune"].pk
+    original_last_played = user_tune_rep["rep_tune"].last_played
+    invalid_last_played = "tomorrow"
+
+    response = client.post(
+        reverse("tune:set_rep_fields", args=[tune_pk]), {"last_played": invalid_last_played}
+    )
+
+    assert response.status_code == 200
+
+    user_tune_rep["rep_tune"].refresh_from_db()
+    assert user_tune_rep["rep_tune"].last_played == original_last_played
