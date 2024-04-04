@@ -287,7 +287,7 @@ def test_set_rep_fields_success(client, user_tune_rep):
 
 
 @pytest.mark.django_db
-def test_set_knowledge_invalid_form(client, user_tune_rep):
+def test_set_rep_fields_invalid_knowledge(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
     original_knowledge = user_tune_rep["rep_tune"].knowledge
     invalid_knowledge = "whatever"
