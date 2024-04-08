@@ -301,7 +301,7 @@ def tune_browse(request):
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_titles = {
         tune.tune.title for tune in user_tunes
-    }  # using title now since the user's and the admin's id for the same tune are now distinct
+    }  # using title since the user's and the admin's id for the same tune are distinct
 
     tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
     tune_count = len(tunes)
@@ -312,7 +312,7 @@ def tune_browse(request):
             search_terms = search_form.cleaned_data["search_term"].split(" ")
             results = return_search_results(request, search_terms, tunes, search_form)
             tunes = results.get("tunes")
-            tune_count = results.get("tune_count")
+            tune_count = results.get("tune_count", 0)
 
     else:
         search_form = SearchForm()
