@@ -1,3 +1,5 @@
+import pytest  # noqa
+
 from tune.models import Tune
 
 
@@ -21,7 +23,6 @@ def test_tune_field_access():
     assert tune.style == "standard"
     assert tune.meter == 4
     assert tune.year == 2023
-    breakpoint()
 
 
 def test_tune_defaults():
