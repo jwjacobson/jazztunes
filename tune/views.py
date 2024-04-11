@@ -15,6 +15,9 @@ from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
 def query_tunes(tune_set, search_terms, timespan=None):
+    """
+    Runs a search of the user's repertoire and return the results.
+    """
     searches = set()
     nickname_query = None
 
@@ -49,8 +52,40 @@ def query_tunes(tune_set, search_terms, timespan=None):
     return search_results
 
 
+def return_search_results(request, search_terms, tunes, search_form, timespan=None):
+    """
+    Function that runs query_tunes and returns the tune set to the view that called it.
+    """
+    if len(search_terms) > Tune.MAX_SEARCH_TERMS:
+        messages.error(
+            request,
+            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
+        )
+        return render(
+            request,
+            "tune/list.html",
+            {"tunes": tunes, "search_form": search_form},
+        )
+
+    tunes = query_tunes(tunes, search_terms, timespan=timespan)
+
+    tune_count = len(tunes)
+    if not tune_count:
+        messages.error(request, "No tunes match your search.")
+        return render(
+            request,
+            "tune/browse.html",
+            {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
+        )
+
+    return {"tunes": tunes, "tune_count": tune_count}
+
+
 @login_required
 def tune_list(request):
+    """
+    View for the app's home page, which shows a user's repertoire and allows searching and tune management.
+    """
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     tune_count = len(tunes)
@@ -76,6 +111,9 @@ def tune_list(request):
 
 @login_required
 def tune_new(request):
+    """
+    View for creating a new tune in a user's repertoire.
+    """
     if request.method != "POST":
         tune_form = TuneForm()
         rep_form = RepertoireTuneForm()
@@ -111,6 +149,9 @@ def tune_new(request):
 
 @login_required
 def tune_edit(request, pk):
+    """
+    View for editing a tune in a user's repertoire.
+    """
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
@@ -136,6 +177,9 @@ def tune_edit(request, pk):
 
 @login_required
 def tune_delete(request, pk):
+    """
+    View for deleting a tune from a user's repertoire.
+    """
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
@@ -152,12 +196,18 @@ def tune_delete(request, pk):
 
 @login_required
 def recount(request):
+    """
+    View for updating the tune count that displays on the home and public pages.
+    """
     tune_count = request.session["tune_count"]
     return render(request, "tune/_count.html", {"tune_count": tune_count})
 
 
 @login_required
 def get_random_tune(request):
+    """
+    Function for getting a random tune from the search results on the play page.
+    """
     original_search_string = request.GET.get("search", "")
     search_terms = original_search_string.split(" ")
     tunes = (
@@ -183,6 +233,9 @@ def get_random_tune(request):
 
 @login_required
 def change_tune(request):
+    """
+    Function for selecting a different random tune from the search results on the play page if the previous one is rejected.
+    """
     if not request.session.get("rep_tunes"):
         return render(request, "tune/_play_card.html", {"selected_tune": None})
 
@@ -196,6 +249,9 @@ def change_tune(request):
 
 @login_required
 def play(request, pk):
+    """
+    View for updating a tune's last_played field, functioning differently if called from the home or play pages.
+    """
     url_name = request.resolver_match.url_name
     templates = {
         "play_list": "tune/_play_list.html",
@@ -223,18 +279,24 @@ def play(request, pk):
 
 @login_required
 def tune_play(request):
+    """
+    View for loading the play page.
+    """
     return render(request, "tune/play.html")
 
 
 @login_required
 def tune_browse(request):
+    """
+    View for loading the public page, where users can browse public tunes and take them into their repertoire
+    """
     user = request.user
     admin = User.objects.get(id=settings.ADMIN_USER_ID)
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     user_tune_titles = {
         tune.tune.title for tune in user_tunes
-    }  # using title now since the user's and the admin's id for the same tune are now distinct
+    }  # using title since the user's and the admin's id for the same tune are distinct
 
     tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
     tune_count = len(tunes)
@@ -245,7 +307,7 @@ def tune_browse(request):
             search_terms = search_form.cleaned_data["search_term"].split(" ")
             results = return_search_results(request, search_terms, tunes, search_form)
             tunes = results.get("tunes")
-            tune_count = results.get("tune_count")
+            tune_count = results.get("tune_count", 0)
 
     else:
         search_form = SearchForm()
@@ -265,6 +327,9 @@ def tune_browse(request):
 
 @login_required
 def tune_take(request, pk):
+    """
+    View for taking a public tune into a user's repertoire.
+    """
     user = request.user
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
@@ -290,6 +355,9 @@ def tune_take(request, pk):
 
 @login_required
 def set_rep_fields(request, pk):
+    """
+    View for setting the knowledge and last_played fields when a user takes a public tune into their repertoire.
+    """
     rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 
@@ -302,37 +370,3 @@ def set_rep_fields(request, pk):
         print(rep_form.errors)
 
     return render(request, "tune/_taken.html", {"rep_form": rep_form})
-
-
-def return_search_results(request, search_terms, tunes, search_form, timespan=None):
-    """
-    Return a list of tunes that match the search terms.
-    """
-    if len(search_terms) > Tune.MAX_SEARCH_TERMS:
-        messages.error(
-            request,
-            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
-        )
-        return render(
-            request,
-            "tune/list.html",
-            {"tunes": tunes, "search_form": search_form},
-        )
-
-    if not timespan:
-        tunes = query_tunes(tunes, search_terms)
-    else:
-        tunes = query_tunes(tunes, search_terms, timespan)
-
-    if not tunes:
-        tune_count = 0
-        messages.error(request, "No tunes match your search.")
-        return render(
-            request,
-            "tune/browse.html",
-            {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
-        )
-    else:
-        tune_count = len(tunes)
-
-    return {"tunes": tunes, "tune_count": tune_count}
