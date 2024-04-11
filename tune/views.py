@@ -67,21 +67,16 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
             {"tunes": tunes, "search_form": search_form},
         )
 
-    if not timespan:
-        tunes = query_tunes(tunes, search_terms)
-    else:
-        tunes = query_tunes(tunes, search_terms, timespan)
+    tunes = query_tunes(tunes, search_terms, timespan=timespan)
 
-    if not tunes:
-        tune_count = 0
+    tune_count = len(tunes)
+    if not tune_count:
         messages.error(request, "No tunes match your search.")
         return render(
             request,
             "tune/browse.html",
             {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
         )
-    else:
-        tune_count = len(tunes)
 
     return {"tunes": tunes, "tune_count": tune_count}
 
