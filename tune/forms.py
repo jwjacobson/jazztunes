@@ -35,7 +35,7 @@ class TuneForm(ModelForm):
         data = self.cleaned_data["key"]
         if data and data.lower() not in Tune.KEYS:
             raise ValidationError(
-                {_('Invalid key (all normal keys accepted plus "none" and "atonal").')}
+                'Invalid key (all normal keys accepted plus "none" and "atonal").'
             )
         return data.title()
 

@@ -88,14 +88,14 @@
     </table>
     </div>
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $('#public-table').DataTable({
                 "searching": false,
                 "info": false,
                 "lengthChange": false,
                 "paging": false,
-                "language": {emptyTable: ' '}
-            );
+                "language": { "emptyTable": "No data available" }
+            });
         });
-        </script>
+    </script>
 {% endblock %}

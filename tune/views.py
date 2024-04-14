@@ -9,6 +9,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.conf import settings
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
@@ -205,30 +206,36 @@ def recount(request):
 
 @login_required
 def get_random_tune(request):
-    """
-    Function for getting a random tune from the search results on the play page.
-    """
-    original_search_string = request.GET.get("search", "")
-    search_terms = original_search_string.split(" ")
+    user = request.user
     tunes = (
         RepertoireTune.objects.select_related("tune")
-        .filter(player=request.user)
+        .filter(player=user)
         .exclude(knowledge="don't know")
     )
+    search_form = SearchForm(request.POST or None)
 
-    rep_tunes = query_tunes(tunes, search_terms)
+    if not search_form.is_valid():
+        return HttpResponse("Invalid search", status=400)
 
-    if not rep_tunes:
-        return render(request, "tune/_play_card.html", {"selected_tune": None})
+    search_terms = search_form.cleaned_data["search_term"].split(" ")
+    timespan = search_form.cleaned_data.get("timespan", None)
+    result_dict = return_search_results(request, search_terms, tunes, search_form, timespan)
 
-    rep_tunes = list(rep_tunes)
-    selected_tune = choice(rep_tunes)
+    if "error" in result_dict:
+        return render(request, result_dict["template"], result_dict)
 
-    rep_tunes.remove(selected_tune)
-    request.session["rep_tunes"] = [rt.id for rt in rep_tunes]
+    tunes = result_dict.get("tunes")
+
+    if not tunes:
+        return HttpResponse("No tunes found", status=404)
+
+    selected_tune = choice(tunes)
+    remaining_rep_tunes_ids = [tune.id for tune in tunes if tune != selected_tune]
+    request.session["rep_tunes"] = remaining_rep_tunes_ids
     request.session.save()
 
-    return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
+    html = render_to_string("tune/_play_card.html", {"selected_tune": selected_tune}, request)
+    return HttpResponse(html)
 
 
 @login_required
@@ -290,29 +297,24 @@ def tune_browse(request):
     """
     View for loading the public page, where users can browse public tunes and take them into their repertoire
     """
-    user = request.user
-    admin = User.objects.get(id=settings.ADMIN_USER_ID)
 
-    user_tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
-    user_tune_titles = {
-        tune.tune.title for tune in user_tunes
-    }  # using title since the user's and the admin's id for the same tune are distinct
+    user_tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
+    user_tune_titles = {tune.tune.title for tune in user_tunes}
 
-    tunes = RepertoireTune.objects.select_related("tune").filter(player=admin)
+    tunes = RepertoireTune.objects.select_related("tune").filter(
+        player=User.objects.get(id=settings.ADMIN_USER_ID)
+    )
     tune_count = len(tunes)
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            results = return_search_results(request, search_terms, tunes, search_form)
-            tunes = results.get("tunes")
-            tune_count = results.get("tune_count", 0)
-
+            tunes = return_search_results(request, search_terms, tunes, search_form)["tunes"]
+            tune_count = len(tunes)
     else:
         search_form = SearchForm()
 
-    request.session["tune_count"] = tune_count
     return render(
         request,
         "tune/browse.html",

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% load allauth i18n %}
-{% block head_title %}
-    {% trans "Signup" %}
-{% endblock head_title %}
+<!-- {% load allauth i18n %} -->
+<!-- {% block head_title %} -->
+    <!-- {% trans "Signup" %} -->
+<!-- {% endblock head_title %} -->
 {% block content %}
 <div class="row my-4">
   <div class="col-6">
@@ -10,10 +10,11 @@
         <div class="card-body">
             <h3 class = "card-title text-info-emphasis">Sign up</h3>
             <p class="card-text">
-                {% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
+                Already have an account? <a href="{{ login_url }}">Sign in here</a>.
             </p>
             {% url 'account_signup' as action_url %}
             {% element form form=form method="post" action=action_url tags="entrance,signup" %}
+    
     {{ form.non_field_errors | safe }}
   <input type="hidden" name="remember" value="true" />
   

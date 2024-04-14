@@ -89,16 +89,14 @@ class Tune(models.Model):
     }
 
     title = models.CharField(max_length=90, help_text="The only required field")
-    composer = models.CharField(max_length=30, blank=True, help_text="Last names only for now")
+    composer = models.CharField(max_length=30, blank=True)
     key = models.CharField(
         max_length=10,
         blank=True,
-        help_text="Letters A-G, one only, add - for minor",
     )
     other_keys = models.CharField(
         max_length=20,
         blank=True,
-        help_text="Letters A-G, as many as you want, separated by a space",
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
     style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
