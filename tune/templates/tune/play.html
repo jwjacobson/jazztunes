@@ -11,42 +11,31 @@
   </div>
 </div>
 
+
 <div class="row d-flex align-items-stretch">
-    <div class ="col-md-6">
-      <div class="card bg-success-subtle border-primary" style="height: 200px; max-width: 18rem; border-radius: 0;">
-        <div class="card-body">
-          <h5 class = "card-title">Tune Search</h5>
-          <div class="col-4 my-1">
-            <input class="ms-0 ps-0"
-            style = "border-radius: 0; width: fit-content;"
-            type="search"
-            name="search"
-            id="searchField"
-            hx-trigger="keyup[keyCode==13]"
-            hx-get="{% url 'tune:get_random_tune' %}"
-            hx-target="#tunes"
-            hx-indicator=".htmx-indicator">
-          </div>
-          <div class="col-12 my-2">
+  <div class="col-md-6">
+    <div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
+      <div class="card-body">
+        <h5 class="card-title">Tune Search</h5>
+        <div>
+          <form method="post" hx-post="{% url 'tune:get_random_tune' %}" hx-target="#tunes" hx-trigger="submit" hx-indicator=".htmx-indicator">
+            {% csrf_token %}
+            <label for="searchField"></label>
+            <input type="text" name="search_term" class="ms-0 ps-0" id="searchField">
+        </div>
+        <div class="col-12 my-2">
           <label for="timespan">Haven't played in:</label>
-              <select id="timespan" name="timespan">
-                  <option value="anytime">n/a</option>
-                  <option value="day">a day</option>
-                  <option value="week">a week</option>
-                  <option value="month">a month</option>
-                  <option value="two_months">two months</option>
-                  <option value="three_months">three months</option>
-              </select>
-          </div>
-          <div class="col-1 my-1">
-            <button class="btn btn-primary"
-            hx-trigger="click"
-            hx-get="{% url 'tune:get_random_tune' %}"
-            hx-include="#searchField"
-            hx-target="#tunes"
-            hx-indicator=".htmx-indicator"
-            >Search</button>
-          </div>
+          <select id="timespan" name="timespan">
+            <option value="anytime">n/a</option>
+            <option value="day">a day</option>
+            <option value="week">a week</option>
+            <option value="month">a month</option>
+            <option value="two_months">2 months</option>
+            <option value="three_months">3 months</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+        </form>
       </div>
     </div>
   </div>
