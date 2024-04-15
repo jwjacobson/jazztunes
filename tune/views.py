@@ -9,7 +9,6 @@ from django.db import transaction
 from django.utils import timezone
 from django.conf import settings
 from django.http import HttpResponse
-from django.template.loader import render_to_string
 
 from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
@@ -60,7 +59,7 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
     if len(search_terms) > Tune.MAX_SEARCH_TERMS:
         messages.error(
             request,
-            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}). Consider using advanced search for more granularity.",
+            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}).",
         )
         return render(
             request,
@@ -214,28 +213,32 @@ def get_random_tune(request):
     )
     search_form = SearchForm(request.POST or None)
 
+    # A flatter way to validate the form, rather than indenting everything under it
     if not search_form.is_valid():
-        return HttpResponse("Invalid search", status=400)
+        # This should never trigger
+        messages.error(request, "Invalid search")
+        return render(request, "tune/play.html")
 
     search_terms = search_form.cleaned_data["search_term"].split(" ")
     timespan = search_form.cleaned_data.get("timespan", None)
     result_dict = return_search_results(request, search_terms, tunes, search_form, timespan)
 
     if "error" in result_dict:
-        return render(request, result_dict["template"], result_dict)
+        messages.error(request, result_dict["error"])
+        return render(request, result_dict["template"])
 
     tunes = result_dict.get("tunes")
 
     if not tunes:
-        return HttpResponse("No tunes found", status=404)
+        messages.error(request, "No tunes match your search.")
+        return render(request, "tune/play.html")
 
     selected_tune = choice(tunes)
     remaining_rep_tunes_ids = [tune.id for tune in tunes if tune != selected_tune]
     request.session["rep_tunes"] = remaining_rep_tunes_ids
     request.session.save()
 
-    html = render_to_string("tune/_play_card.html", {"selected_tune": selected_tune}, request)
-    return HttpResponse(html)
+    return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
 
 
 @login_required
