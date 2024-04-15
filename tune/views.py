@@ -229,13 +229,12 @@ def get_random_tune(request):
 
     tunes = result_dict.get("tunes")
 
-    if not tunes:
-        messages.error(request, "No tunes match your search.")
-        return render(request, "tune/play.html")
-
-    selected_tune = choice(tunes)
-    remaining_rep_tunes_ids = [tune.id for tune in tunes if tune != selected_tune]
-    request.session["rep_tunes"] = remaining_rep_tunes_ids
+    if tunes:
+        selected_tune = choice(tunes)
+        remaining_rep_tunes_ids = [tune.id for tune in tunes if tune != selected_tune]
+        request.session["rep_tunes"] = remaining_rep_tunes_ids
+    else:
+        selected_tune = None
     request.session.save()
 
     return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
