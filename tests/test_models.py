@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 
 @pytest.fixture()
-def tune_object():
+def basic_tune():
     tune = Tune(
         title="test title",
         composer="test composer",
@@ -31,8 +31,8 @@ def basic_user(client):
 
 
 @pytest.fixture()
-def basic_reptune(tune_object, basic_user):
-    tune = tune_object
+def basic_reptune(basic_tune, basic_user):
+    tune = basic_tune
     user = basic_user
     rep_tune = RepertoireTune(
         tune=tune,
@@ -44,8 +44,8 @@ def basic_reptune(tune_object, basic_user):
     return rep_tune, tune, user
 
 
-def test_tune_field_access(tune_object):
-    tune = tune_object
+def test_tune_field_access(basic_tune):
+    tune = basic_tune
     assert tune.title == "test title"
     assert tune.composer == "test composer"
     assert tune.key == "C"
