@@ -1,6 +1,7 @@
 import pytest  # noqa
 
 from tune.models import Tune
+from django.contrib.auth import get_user_model
 
 
 @pytest.fixture()
@@ -15,7 +16,17 @@ def tune_object():
         meter=4,
         year=2023,
     )
+
     return tune
+
+
+@pytest.fixture()
+def basic_user(client):
+    user_model = get_user_model()
+    user = user_model.objects.create_user(username="testuser", password="12345")
+    client.force_login(user)
+
+    return user
 
 
 def test_tune_field_access(tune_object):
