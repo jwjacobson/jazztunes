@@ -3,7 +3,8 @@ import pytest  # noqa
 from tune.models import Tune
 
 
-def test_tune_field_access():
+@pytest.fixture()
+def tune_object():
     tune = Tune(
         title="test title",
         composer="test composer",
@@ -14,7 +15,11 @@ def test_tune_field_access():
         meter=4,
         year=2023,
     )
+    return tune
 
+
+def test_tune_field_access(tune_object):
+    tune = tune_object
     assert tune.title == "test title"
     assert tune.composer == "test composer"
     assert tune.key == "C"
