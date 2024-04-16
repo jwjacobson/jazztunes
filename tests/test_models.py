@@ -41,7 +41,7 @@ def basic_reptune(tune_object, basic_user):
         last_played=date(2024, 2, 1),
     )
 
-    return rep_tune
+    return rep_tune, tune, user
 
 
 def test_tune_field_access(tune_object):
@@ -70,15 +70,8 @@ def test_tune_defaults():
 
 
 @pytest.mark.django_db
-def test_reptune_field_access(tune_object, basic_user):
-    tune = tune_object
-    user = basic_user
-    rep_tune = RepertoireTune(
-        tune=tune,
-        player=user,
-        knowledge="know",
-        last_played=date(2024, 2, 1),
-    )
+def test_reptune_field_access(basic_reptune):
+    rep_tune, tune, user = basic_reptune
 
     assert rep_tune.tune == tune
     assert rep_tune.player == user
