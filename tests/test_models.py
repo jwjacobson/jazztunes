@@ -1,3 +1,5 @@
+# Tests for the models, as far as possible removed from app context
+
 import pytest
 from datetime import date
 
@@ -7,6 +9,9 @@ from django.contrib.auth import get_user_model
 
 @pytest.fixture()
 def basic_tune():
+    """
+    Create a Tune.
+    """
     tune = Tune(
         title="test title",
         composer="test composer",
@@ -23,6 +28,9 @@ def basic_tune():
 
 @pytest.fixture()
 def basic_user(client):
+    """
+    Create a user and log them in.
+    """
     user_model = get_user_model()
     user = user_model.objects.create_user(username="testuser", password="12345")
     client.force_login(user)
@@ -32,6 +40,9 @@ def basic_user(client):
 
 @pytest.fixture()
 def basic_reptune(basic_tune, basic_user):
+    """
+    Create a RepertoireTune associated with the tune and user above.
+    """
     tune = basic_tune
     user = basic_user
     rep_tune = RepertoireTune(

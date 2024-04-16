@@ -1,3 +1,5 @@
+# Tests for the helper functions in views.py
+
 import pytest
 from datetime import timedelta
 
@@ -8,11 +10,6 @@ from django.http import HttpRequest
 
 from tune.models import Tune, RepertoireTune
 from tune.views import query_tunes, return_search_results
-
-
-"""
-Tests for non-view functions in views.py
-"""
 
 
 @pytest.fixture
@@ -135,6 +132,9 @@ def tune_set(db, client):
 
 @pytest.fixture
 def request_fixture():
+    """
+    Create an HTTP request.
+    """
     request = HttpRequest()
     setattr(request, "session", "session")
     messages = FallbackStorage(request)
@@ -144,6 +144,9 @@ def request_fixture():
 
 @pytest.fixture
 def search_form_fixture():
+    """
+    Create a search form.
+    """
     from tune.forms import SearchForm
 
     form = SearchForm()
@@ -282,7 +285,7 @@ def test_query_tunes_nickname2(tune_set):
     assert result_title == expected_title
 
 
-# timespan tests
+# Timespan tests
 @pytest.mark.django_db
 def test_query_tunes_no_timespan(tune_set):
     search_terms = [""]
