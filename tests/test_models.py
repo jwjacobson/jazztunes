@@ -30,6 +30,20 @@ def basic_user(client):
     return user
 
 
+@pytest.fixture()
+def basic_reptune(tune_object, basic_user):
+    tune = tune_object
+    user = basic_user
+    rep_tune = RepertoireTune(
+        tune=tune,
+        player=user,
+        knowledge="know",
+        last_played=date(2024, 2, 1),
+    )
+
+    return rep_tune
+
+
 def test_tune_field_access(tune_object):
     tune = tune_object
     assert tune.title == "test title"
