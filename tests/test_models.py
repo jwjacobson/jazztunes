@@ -1,6 +1,7 @@
-import pytest  # noqa
+import pytest
+from datetime import date
 
-from tune.models import Tune
+from tune.models import Tune, RepertoireTune
 from django.contrib.auth import get_user_model
 
 
@@ -52,3 +53,20 @@ def test_tune_defaults():
     assert tune.style == "standard"
     assert tune.meter == 4
     assert tune.year is None
+
+
+@pytest.mark.django_db
+def test_reptune_field_access(tune_object, basic_user):
+    tune = tune_object
+    user = basic_user
+    rep_tune = RepertoireTune(
+        tune=tune,
+        player=user,
+        knowledge="know",
+        last_played=date(2024, 2, 1),
+    )
+
+    assert rep_tune.tune == tune
+    assert rep_tune.player == user
+    assert rep_tune.knowledge == "know"
+    assert rep_tune.last_played == date(2024, 2, 1)
