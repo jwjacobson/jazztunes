@@ -29,7 +29,7 @@ dependencies = [
 "django-debug-toolbar==4.3.0",
 "executing==2.0.1",
 "filelock==3.13.1",
-"gunicorn==21.2.0",
+"gunicorn==22.0.0",
 "identify==2.5.35",
 "idna==3.6",
 "iniconfig==2.0.0",
