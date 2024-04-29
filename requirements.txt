@@ -91,7 +91,7 @@ filelock==3.13.4
     # via
     #   -r requirements.in
     #   virtualenv
-gunicorn==21.2.0
+gunicorn==22.0.0
     # via -r requirements.in
 identify==2.5.35
     # via
