@@ -31,6 +31,25 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
+def exclude_term(tune_set, search_term):
+    excluded_term = search_term[1:]
+
+    term_query = tune_set.exclude(
+        Q(tune__title__icontains=excluded_term)
+        | Q(tune__composer__icontains=excluded_term)
+        | Q(tune__key__icontains=excluded_term)
+        | Q(tune__other_keys__icontains=excluded_term)
+        | Q(tune__song_form__icontains=excluded_term)
+        | Q(tune__style__icontains=excluded_term)
+        | Q(tune__meter__icontains=excluded_term)
+        | Q(tune__year__icontains=excluded_term)
+        | Q(tune__tags__name__icontains=excluded_term)
+        | Q(knowledge__icontains=excluded_term)
+    )
+
+    return term_query
+
+
 def query_tunes(tune_set, search_terms, timespan=None):
     """
     Runs a search of the user's repertoire and return the results.
@@ -39,22 +58,26 @@ def query_tunes(tune_set, search_terms, timespan=None):
     nickname_query = None
 
     for term in search_terms:
-        term_query = tune_set.filter(
-            Q(tune__title__icontains=term)
-            | Q(tune__composer__icontains=term)
-            | Q(tune__key__icontains=term)
-            | Q(tune__other_keys__icontains=term)
-            | Q(tune__song_form__icontains=term)
-            | Q(tune__style__icontains=term)
-            | Q(tune__meter__icontains=term)
-            | Q(tune__year__icontains=term)
-            | Q(tune__tags__name__icontains=term)
-            | Q(knowledge__icontains=term)
-        )
+        if term and term[0] == "-":
+            term_query = exclude_term(tune_set, term)
 
-        if term in Tune.NICKNAMES:
-            nickname_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
-            term_query = term_query | nickname_query
+        else:
+            term_query = tune_set.filter(
+                Q(tune__title__icontains=term)
+                | Q(tune__composer__icontains=term)
+                | Q(tune__key__icontains=term)
+                | Q(tune__other_keys__icontains=term)
+                | Q(tune__song_form__icontains=term)
+                | Q(tune__style__icontains=term)
+                | Q(tune__meter__icontains=term)
+                | Q(tune__year__icontains=term)
+                | Q(tune__tags__name__icontains=term)
+                | Q(knowledge__icontains=term)
+            )
+
+            if term in Tune.NICKNAMES:
+                nickname_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
+                term_query = term_query | nickname_query
 
         if timespan is not None:
             term_query = term_query.exclude(last_played__gte=timespan)
