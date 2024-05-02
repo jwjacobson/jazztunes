@@ -12,7 +12,7 @@ from tune.models import Tune, RepertoireTune
 from tune.views import query_tunes, return_search_results
 
 
-@pytest.fixture
+@pytest.fixture()
 def tune_set(db, client):
     """
     Create a tune set for use in tests that require one.
@@ -248,6 +248,14 @@ def test_query_tunes_form(tune_set):
 
     for title in expected_titles:
         assert title in result_titles
+
+
+@pytest.mark.django_db
+def test_query_tunes_exclude(tune_set):
+    search_terms = ["-kern"]
+    result = query_tunes(tune_set, search_terms)
+
+    assert result.count() == 7
 
 
 # Two term tests
