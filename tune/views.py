@@ -31,7 +31,23 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
-# def exclude_term(search_term)
+def exclude_term(tune_set, search_term):
+    excluded_term = search_term[1:]
+
+    term_query = tune_set.exclude(
+        Q(tune__title__icontains=excluded_term)
+        | Q(tune__composer__icontains=excluded_term)
+        | Q(tune__key__icontains=excluded_term)
+        | Q(tune__other_keys__icontains=excluded_term)
+        | Q(tune__song_form__icontains=excluded_term)
+        | Q(tune__style__icontains=excluded_term)
+        | Q(tune__meter__icontains=excluded_term)
+        | Q(tune__year__icontains=excluded_term)
+        | Q(tune__tags__name__icontains=excluded_term)
+        | Q(knowledge__icontains=excluded_term)
+    )
+
+    return term_query
 
 
 def query_tunes(tune_set, search_terms, timespan=None):
@@ -42,20 +58,8 @@ def query_tunes(tune_set, search_terms, timespan=None):
     nickname_query = None
 
     for term in search_terms:
-        if term[0] == "-":
-            excluded_term = term[1:]
-            term_query = tune_set.exclude(
-                Q(tune__title__icontains=excluded_term)
-                | Q(tune__composer__icontains=excluded_term)
-                | Q(tune__key__icontains=excluded_term)
-                | Q(tune__other_keys__icontains=excluded_term)
-                | Q(tune__song_form__icontains=excluded_term)
-                | Q(tune__style__icontains=excluded_term)
-                | Q(tune__meter__icontains=excluded_term)
-                | Q(tune__year__icontains=excluded_term)
-                | Q(tune__tags__name__icontains=excluded_term)
-                | Q(knowledge__icontains=excluded_term)
-            )
+        if term and term[0] == "-":
+            term_query = exclude_term(tune_set, term)
 
         else:
             term_query = tune_set.filter(
