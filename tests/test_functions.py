@@ -251,7 +251,6 @@ def test_query_tunes_form(tune_set):
 
 
 @pytest.mark.django_db
-@pytest.mark.xfail(reason="Not implemented yet")
 def test_query_tunes_exclude(tune_set):
     search_terms = ["-kern"]
     result = query_tunes(tune_set, search_terms)

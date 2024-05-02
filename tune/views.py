@@ -31,6 +31,9 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
+# def exclude_term(search_term)
+
+
 def query_tunes(tune_set, search_terms, timespan=None):
     """
     Runs a search of the user's repertoire and return the results.
