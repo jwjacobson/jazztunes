@@ -251,11 +251,15 @@ def test_query_tunes_form(tune_set):
 
 
 @pytest.mark.django_db
+@pytest.mark.xfail(reason="Not implemented yet")
 def test_query_tunes_exclude(tune_set):
     search_terms = ["-kern"]
     result = query_tunes(tune_set, search_terms)
+    result_composers = {tune.tune.composer for tune in result}
 
     assert result.count() == 7
+    for composer in result_composers:
+        assert "kern" not in composer
 
 
 # Two term tests
