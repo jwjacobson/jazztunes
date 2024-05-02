@@ -296,6 +296,17 @@ def test_query_tunes_nickname2(tune_set):
     assert result_title == expected_title
 
 
+@pytest.mark.django_db
+def test_query_tunes_exclude2(tune_set):
+    search_terms = ["-kern", "love"]
+    result = query_tunes(tune_set, search_terms)
+    expected_title = "A Flower is a Lovesome Thing"
+    result_title = result.first().tune.title
+
+    assert result.count() == 1
+    assert result_title == expected_title
+
+
 # Timespan tests
 @pytest.mark.django_db
 def test_query_tunes_no_timespan(tune_set):
