@@ -73,6 +73,18 @@ else:
     EMAIL_USE_TLS = True
     DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"),
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
+
+
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
 LOGIN_REDIRECT_URL = "tune:tune_list"
@@ -173,13 +185,13 @@ STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"), BASE_DIR / "static")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-sentry_sdk.init(
-    dsn=os.environ.get("SENTRY_DSN"),
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    traces_sample_rate=1.0,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
-)
+# sentry_sdk.init(
+#     dsn=os.environ.get("SENTRY_DSN"),
+#     # Set traces_sample_rate to 1.0 to capture 100%
+#     # of transactions for performance monitoring.
+#     traces_sample_rate=1.0,
+#     # Set profiles_sample_rate to 1.0 to profile 100%
+#     # of sampled transactions.
+#     # We recommend adjusting this value in production.
+#     profiles_sample_rate=1.0,
+# )

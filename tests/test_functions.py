@@ -9,7 +9,7 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 
 from tune.models import Tune, RepertoireTune
-from tune.views import query_tunes, return_search_results
+from tune.views import query_tunes, return_search_results, exclude_term
 
 
 @pytest.fixture()
@@ -350,3 +350,13 @@ def test_return_search_results_too_many(request_fixture, tune_set, search_form_f
     _ = return_search_results(request_fixture, search_terms, tune_set, search_form_fixture)
 
     assert any("Your query is too long" in msg.message for msg in request_fixture._messages)
+
+
+def test_exclude_term(tune_set):
+    excluded_term = "-kern"
+    result = exclude_term(tune_set, excluded_term)
+    result_composers = {tune.tune.composer for tune in result}
+
+    assert result.count() == 7
+    for composer in result_composers:
+        assert "kern" not in composer
