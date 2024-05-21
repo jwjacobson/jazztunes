@@ -2,6 +2,7 @@
 
 import pytest
 from datetime import date
+
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
