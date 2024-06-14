@@ -31,6 +31,26 @@ from .models import Tune, RepertoireTune
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 
 
+def search_field(tune_set, search_term):
+    split_term = search_term.split(":")
+    field, term = split_term[0], split_term[1]
+
+    if field.lower() == "keys":
+        term_query = tune_set.filter(
+            Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
+        )
+
+    elif field.lower() == "form":
+        if term.lower() == "blues" or term.lower() == "irregular":
+            term_query = tune_set.filter(Q(tune__song_form=term))
+        else:
+            term_query = tune_set.filter(Q(tune__song_form=term.upper()))
+    else:
+        term_query = tune_set.filter(Q(**{f"tune__{field}__icontains": term}))
+
+    return term_query
+
+
 def exclude_term(tune_set, search_term):
     excluded_term = search_term[1:]
 
@@ -43,7 +63,6 @@ def exclude_term(tune_set, search_term):
         | Q(tune__style__icontains=excluded_term)
         | Q(tune__meter__icontains=excluded_term)
         | Q(tune__year__icontains=excluded_term)
-        | Q(tune__tags__name__icontains=excluded_term)
         | Q(knowledge__icontains=excluded_term)
     )
 
@@ -61,6 +80,9 @@ def query_tunes(tune_set, search_terms, timespan=None):
         if term and term[0] == "-":
             term_query = exclude_term(tune_set, term)
 
+        elif term and len(term.split(":")) > 1 and term.split(":")[0].lower() in Tune.field_names:
+            term_query = search_field(tune_set, term)
+
         else:
             term_query = tune_set.filter(
                 Q(tune__title__icontains=term)
@@ -71,7 +93,6 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tune__style__icontains=term)
                 | Q(tune__meter__icontains=term)
                 | Q(tune__year__icontains=term)
-                | Q(tune__tags__name__icontains=term)
                 | Q(knowledge__icontains=term)
             )
 
@@ -197,7 +218,7 @@ def tune_edit(request, pk):
 
     tune_form = TuneForm(request.POST or None, instance=tune)
     rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
-
+    # breakpoint()
     if tune_form.is_valid() and rep_form.is_valid():
         with transaction.atomic():
             updated_tune = tune_form.save()

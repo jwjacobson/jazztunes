@@ -122,4 +122,4 @@ def tune_set(db, client):
         last_played_date = now - timedelta(days=i + 1)
         RepertoireTune.objects.create(tune=tune, player=user, last_played=last_played_date)
 
-    return RepertoireTune.objects.all()
+    return {"user": user, "tunes": RepertoireTune.objects.all()}
