@@ -19,11 +19,11 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=20)
+# class Tag(models.Model):
+#     name = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Tune(models.Model):
@@ -105,6 +105,8 @@ class Tune(models.Model):
         "cedar": "Walton",
     }
 
+    field_names = {"title", "composer", "key", "keys", "form", "style", "meter", "year"}
+
     title = models.CharField(max_length=90, help_text="The only required field")
     composer = models.CharField(max_length=30, blank=True)
     key = models.CharField(
@@ -123,9 +125,6 @@ class Tune(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
-    )
-    tags = models.ManyToManyField(
-        Tag, related_name="tags", blank=True, help_text="(feature under construction)"
     )
 
     @property

@@ -17,7 +17,7 @@
 
 
 from django.contrib import admin
-from tune.models import Tune, RepertoireTune, Tag
+from tune.models import Tune, RepertoireTune
 
 
 @admin.register(Tune)
@@ -34,7 +34,7 @@ class RepertoireTuneAdmin(admin.ModelAdmin):
     autocomplete_fields = ("tune", "player")
 
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ["name"]
-    search_fields = ("name",)
+# @admin.register(Tag)
+# class TagAdmin(admin.ModelAdmin):
+#     list_display = ["name"]
+#     search_fields = ("name",)

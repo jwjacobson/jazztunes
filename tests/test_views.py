@@ -2,6 +2,7 @@
 
 import pytest
 from datetime import date
+
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
@@ -318,3 +319,12 @@ def test_set_rep_fields_invalid_last_played(client, user_tune_rep):
 
     user_tune_rep["rep_tune"].refresh_from_db()
     assert user_tune_rep["rep_tune"].last_played == original_last_played
+
+
+@pytest.mark.django_db
+def test_get_random_tunes(tune_set):
+    user = tune_set["user"]
+    tunes = tune_set["tunes"]
+
+    for tune in tunes:
+        assert tune.player == user
