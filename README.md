@@ -26,17 +26,21 @@ This page will help you if you're not sure what tune you want to play. It select
 This page consists of precreated "public" tunes that you can copy into your repertoire by clicking the Take button. Right now it has 200 tunes but I hope to make it more comprehensive eventually. Let me know if you find any mistakes!
 
 #### Searching tunes
-The Home, Play, and Public pages all have a search box. Terms are searched across all fields. It uses AND logic if you put in more than one term. For example, if you search "monk" you'll get all your Monk tunes, but if you search "monk bud" you'll only get "In Walked Bud" (if it's in your repertoire). Searches are not case sensitive.
+The Home, Play, and Public pages all have a search box. Terms are searched across all fields. It uses AND logic if you put in more than one term. For example, if you search ```monk``` you'll get all your Monk tunes, but if you search ```monk bud``` you'll only get "In Walked Bud" (if it's in your repertoire). Searches are not case sensitive.
 
-Out of respect, all the jazz composers are indexed by last name, but there's also nickname substitution working behind the scenes. This means, for example, that Miles Davis is listed as "Davis" in the Composer column, but if you search "miles" you will still get all his tunes. Other "nicknamed" jazz composers include Duke Ellington ("duke"), Bud Powell ("bud"), Charlie Parker ("bird"), etc., covering at least everyone in the Public database with a standard nickname. Let me know if I've missed any.
+Out of respect, all the jazz composers are indexed by last name, but there's also nickname substitution working behind the scenes. This means, for example, that Miles Davis is listed as "Davis" in the Composer column, but if you search ```miles``` you will still get all his tunes. Other "nicknamed" jazz composers include Duke Ellington ("duke"), Bud Powell ("bud"), Charlie Parker ("bird"), etc., covering at least everyone in the Public database with a standard nickname. Let me know if I've missed any.
 
 The "Haven't played in" dropdown on the Home and Play pages lets you filter by how recently you've played tunes. So if you select "a day," you'll get back all the tunes you haven't played in the last day (which should be most of your repertoire). The more you keep your plays updated, the more useful this feature is.
+
+You can exclude a term from your search by using a minus sign just before the term. So the search ```-blues``` will exclude tunes  containing "blues" in any field from your search.
+
+You can now search specific fields using the format ```field:term```. This is especially useful when searching for keys and forms. Currently supported fields are title, composer, key (just the "Key" column, the tune's main key), *keys* (both "Key" and "Other Keys"), form, style, meter, and year. Most fields have relatively exclusive content types, which means you can do a lot with just basic search (e.g., if you search "love," that term will only be relevant to the Title field.) Keys are more difficult, since they have a lot of overlap with other fields. Before, if you searched "Ab" for the key Ab, you would also get any titles or composers containing "ab" as well as most of the standard song forms (AABA etc.) Now you can just search for the key or keys.
 
 ### App focus, or what this app is *not*
 Inspired by the Unix philosophy of "do one thing and do it well", the focus of this app is repertoire management. It is not a general practice app, and it is not a tune *learning* app. There are plenty of other apps and resources that fulfill those functions. The app assumes the user has access to the materials they need to learn a tune (recordings, sheet music, etc.) outside of the app itself. What the app offers is easy and intuitive access to all tunes known by the user based on any desired criteria.
 
 ### Tech stack
-Jazztunes uses [Django](https://www.djangoproject.com/) on the back end and [htmx](https://htmx.org/) on the front end with [Bootstrap](https://getbootstrap.com/) for styling. It uses [DataTables](https://datatables.net/) for column sorting.
+Jazztunes uses [Django](https://www.djangoproject.com/) on the back end and [htmx](https://htmx.org/) on the front end with [Bootstrap](https://getbootstrap.com/) for styling. The database is [PostgreSQL](https://www.postgresql.org/). It uses [DataTables](https://datatables.net/) for column sorting.
 
 ### Local installation
 If you want to run jazztunes locally, you'll need at least Python 3.11. Follow the following steps:

@@ -163,3 +163,6 @@ class RepertoireTune(models.Model):
 
     def __str__(self):
         return f"{self.tune} | {self.player}"
+
+
+# class Plays(models.Model):
