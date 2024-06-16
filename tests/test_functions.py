@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 
-from tune.views import query_tunes, return_search_results, exclude_term
+from tune.views import query_tunes, return_search_results, exclude_term, search_field
 
 
 @pytest.fixture
@@ -240,3 +240,23 @@ def test_exclude_term(tune_set):
     assert result.count() == 7
     for composer in result_composers:
         assert "kern" not in composer
+
+
+def test_search_field_title(tune_set):
+    search_term = "title:you"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_titles = {"All the Things You Are", "I Remember You"}
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_composer(tune_set):
+    search_term = "composer:parker"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_composer = "Parker"
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.composer == expected_composer
