@@ -18,7 +18,7 @@
                 <form method="post" action="{% url 'tune:tune_list' %}">
                     {% csrf_token %}
                     <label for="basic_search"></label>
-                    <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
+                    <input id="search_term" type="text" name="search_term" value="{{ search_term_string }}" class="ms-0 ps-0">
             </div>
         <div class="col-12 my-2">
         <label for="timespan">Haven't played in:</label>
