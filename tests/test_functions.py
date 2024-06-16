@@ -47,6 +47,9 @@ def test_query_tunes_kern(tune_set):
     for title in expected_titles:
         assert title in result_titles
 
+    for title in result_titles:
+        assert title in expected_titles
+
 
 @pytest.mark.django_db
 def test_query_tunes_no_term(tune_set):
@@ -68,7 +71,6 @@ def test_query_tunes_no_results(tune_set):
 def test_query_tunes_nickname(tune_set):
     search_terms = ["bird"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    # result_titles = {tune.tune.title for tune in result}
     expected_titles = {"Confirmation", "Dewey Square"}
 
     assert result.count() == 2
@@ -81,12 +83,11 @@ def test_query_tunes_nickname(tune_set):
 def test_query_tunes_common_fragment(tune_set):
     search_terms = ["love"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    result_titles = {tune.tune.title for tune in result}
     expected_titles = {"Dearly Beloved", "A Flower is a Lovesome Thing"}
 
     assert result.count() == 2
-    for title in expected_titles:
-        assert title in result_titles
+    for tune in result:
+        assert tune.tune.title in expected_titles
 
 
 @pytest.mark.django_db
@@ -256,7 +257,99 @@ def test_search_field_composer(tune_set):
     search_term = "composer:parker"
     result = search_field(tune_set["tunes"], search_term)
     expected_composer = "Parker"
+    expected_titles = {"Confirmation", "Dewey Square"}
 
     assert result.count() == 2
     for tune in result:
         assert tune.tune.composer == expected_composer
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_key(tune_set):
+    search_term = "key:f"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_key = "F"
+    expected_titles = {"Confirmation", "Long Ago and Far Away", "I Remember You"}
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.key == expected_key
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_keys(tune_set):
+    search_term = "keys:eb"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_key = "Eb"
+    expected_titles = {"Dewey Square", "All the Things You Are", "Someday My Prince Will Come"}
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.key == expected_key or expected_key in tune.tune.other_keys
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_form(tune_set):
+    search_term = "form:abac"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_form = "ABAC"
+    expected_titles = {"Dearly Beloved", "Long Ago and Far Away", "Someday My Prince Will Come"}
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.song_form == expected_form
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_style(tune_set):
+    search_term = "style:jazz"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_style = "jazz"
+    expected_titles = {
+        "Confirmation",
+        "Dewey Square",
+        "Coming on the Hudson",
+        "Kary's Trance",
+        "A Flower is a Lovesome Thing",
+    }
+
+    assert result.count() == 5
+    for tune in result:
+        assert tune.tune.style == expected_style
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_meter(tune_set):
+    search_term = "meter:3"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_meter = 3
+    expected_titles = {"Someday My Prince Will Come"}
+
+    assert result.count() == 1
+    for tune in result:
+        assert tune.tune.meter == expected_meter
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_year(tune_set):
+    search_term = "year:1941"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_year = 1941
+    expected_titles = {"I Remember You", "A Flower is a Lovesome Thing"}
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.year == expected_year
+        assert tune.tune.title in expected_titles
+
+
+def test_search_field_year_partial(tune_set):
+    search_term = "year:195"
+    result = search_field(tune_set["tunes"], search_term)
+    expected_years = {1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959}
+    expected_titles = {"Kary's Trance", "Coming on the Hudson"}
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.year in expected_years
+        assert tune.tune.title in expected_titles
