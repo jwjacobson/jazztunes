@@ -38,17 +38,12 @@ def search_form_fixture():
 def test_query_tunes_kern(tune_set):
     search_terms = ["kern"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    result_titles = {tune.tune.title for tune in result}
     expected_titles = {"All the Things You Are", "Dearly Beloved", "Long Ago and Far Away"}
 
     assert result.count() == 3
-    assert all("Kern" in tune.tune.composer for tune in result)
-
-    for title in expected_titles:
-        assert title in result_titles
-
-    for title in result_titles:
-        assert title in expected_titles
+    assert all("Kern" in tune.tune.composer for tune in result) and (
+        tune.tune.title in expected_titles for tune in result
+    )
 
 
 @pytest.mark.django_db
@@ -94,7 +89,6 @@ def test_query_tunes_common_fragment(tune_set):
 def test_query_tunes_decade(tune_set):
     search_terms = ["194"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    result_titles = {tune.tune.title for tune in result}
     expected_titles = {
         "Dearly Beloved",
         "A Flower is a Lovesome Thing",
@@ -105,15 +99,14 @@ def test_query_tunes_decade(tune_set):
     }
 
     assert result.count() == 6
-    for title in expected_titles:
-        assert title in result_titles
+    for tune in result:
+        assert tune.tune.title in expected_titles
 
 
 @pytest.mark.django_db
 def test_query_tunes_form(tune_set):
     search_terms = ["abac"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    result_titles = {tune.tune.title for tune in result}
     expected_titles = {
         "Dearly Beloved",
         "Someday My Prince Will Come",
@@ -121,19 +114,18 @@ def test_query_tunes_form(tune_set):
     }
 
     assert result.count() == 3
-    for title in expected_titles:
-        assert title in result_titles
+    for tune in result:
+        assert tune.tune.title in expected_titles
 
 
 @pytest.mark.django_db
 def test_query_tunes_exclude(tune_set):
     search_terms = ["-kern"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    result_composers = {tune.tune.composer for tune in result}
 
     assert result.count() == 7
-    for composer in result_composers:
-        assert "kern" not in composer
+    for tune in result:
+        assert tune.tune.composer != "Kern"
 
 
 # Two term tests
@@ -187,6 +179,9 @@ def test_query_tunes_exclude2(tune_set):
     result = query_tunes(tune_set["tunes"], search_terms)
 
     assert result.count() == 6
+    for tune in result:
+        assert tune.tune.composer != "Kern"
+        assert "love" not in tune.tune.title.lower()
 
 
 # Timespan tests
@@ -236,11 +231,11 @@ def test_return_search_results_too_many(request_fixture, tune_set, search_form_f
 def test_exclude_term(tune_set):
     excluded_term = "-kern"
     result = exclude_term(tune_set["tunes"], excluded_term)
-    result_composers = {tune.tune.composer for tune in result}
 
     assert result.count() == 7
-    for composer in result_composers:
-        assert "kern" not in composer
+    for tune in result:
+        assert tune.tune.composer != "Kern"
+        assert "kern" not in tune.tune.title.lower()
 
 
 def test_search_field_title(tune_set):
