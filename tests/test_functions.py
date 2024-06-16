@@ -68,13 +68,13 @@ def test_query_tunes_no_results(tune_set):
 def test_query_tunes_nickname(tune_set):
     search_terms = ["bird"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    result_titles = {tune.tune.title for tune in result}
+    # result_titles = {tune.tune.title for tune in result}
     expected_titles = {"Confirmation", "Dewey Square"}
 
     assert result.count() == 2
 
-    for title in expected_titles:
-        assert title in result_titles
+    for tune in result:
+        assert tune.tune.title in expected_titles
 
 
 @pytest.mark.django_db
