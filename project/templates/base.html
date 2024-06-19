@@ -26,7 +26,6 @@
         <!-- Datatables CSS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css">
         <!-- Datatables Button CSS -->
-        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css"> -->
         <!-- Custom CSS -->
         <link rel="stylesheet" href="{% static 'tune/css/styles2.css' %}">
         <!-- JQuery -->
@@ -60,6 +59,9 @@
                   </li>
                   <li class="nav-item">
                     <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_browse' %}">Public</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-info-emphasis" href="https://jwjacobson.github.io/jazztunes/" target="_blank">Manual</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link text-info-emphasis" href="{% url 'account_logout' %}">Log Out</a>
