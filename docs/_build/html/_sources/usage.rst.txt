@@ -1,0 +1,7 @@
+Getting Started
+===============
+
+Adding Tunes
+------------
+
+When you first sign in to jazztunes after making an account, your repertoire will be empty.
