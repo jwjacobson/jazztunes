@@ -3,18 +3,27 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to jazztunes's documentation!
+Jazztunes user manual
 =====================================
+**Jazztunes** is a jazz repertoire management app.
+
+You can use it for free at `jazztunes.org <https://jazztunes.org>`_.
+
+The source code is available on `Github <https://github.com/jwjacobson/jazztunes>`_.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+
+   about/index
+   using/index
 
 
 
-Indices and tables
-==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+
+.. Indices and tables
+.. ==================
+
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
