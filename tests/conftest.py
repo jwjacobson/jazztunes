@@ -10,7 +10,7 @@ from tune.models import Tune, RepertoireTune
 @pytest.fixture()
 def tune_set(db, client):
     """
-    Create a tune set for use in tests that require one.
+    Create a tune set for use in query tests.
     """
     tunes = {
         Tune.objects.create(

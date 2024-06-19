@@ -155,18 +155,25 @@ def tune_list(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
+            search_term_string = " ".join(search_terms)
             timespan = search_form.cleaned_data["timespan"]
             results = return_search_results(request, search_terms, tunes, search_form, timespan)
             tunes = results.get("tunes")
             tune_count = results.get("tune_count", 0)
     else:
         search_form = SearchForm()
+        search_term_string = " "
 
     request.session["tune_count"] = tune_count
     return render(
         request,
         "tune/list.html",
-        {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
+        {
+            "tunes": tunes,
+            "search_form": search_form,
+            "tune_count": tune_count,
+            "search_term_string": search_term_string,
+        },
     )
 
 
