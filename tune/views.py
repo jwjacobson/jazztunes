@@ -150,6 +150,7 @@ def tune_list(request):
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
     tune_count = len(tunes)
+    search_term_string = " "
 
     if request.method == "POST":
         search_form = SearchForm(request.POST)
@@ -162,7 +163,6 @@ def tune_list(request):
             tune_count = results.get("tune_count", 0)
     else:
         search_form = SearchForm()
-        search_term_string = " "
 
     request.session["tune_count"] = tune_count
     return render(
