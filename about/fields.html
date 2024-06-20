@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Tune fields &#8212; jazztunes  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css?v=0f882399" />
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Planned features" href="future.html" />
+    <link rel="prev" title="App focus, or what jazztunes is not" href="appfocus.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="future.html" title="Planned features"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="appfocus.html" title="App focus, or what jazztunes is not"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jazztunes  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">About jazztunes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tune fields</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tune-fields">
+<h1>Tune fields<a class="headerlink" href="#tune-fields" title="Link to this heading">¶</a></h1>
+<p>In defining the fields I’ve tried to balance between making the app useful and giving freedom to the user. Here I describe my thinking behind each. In some cases my descriptions only apply to the Public repertoire, as the user can do what they want with their own tunes.</p>
+<p>In general I’m open to revising the prescriptive aspects of any of these in dialogue with users, so reach out if you’d like to see any changes or additions.</p>
+<section id="title">
+<h2>Title<a class="headerlink" href="#title" title="Link to this heading">¶</a></h2>
+<p>A tune’s unique identifier, Title is the only required field.</p>
+</section>
+<section id="composer">
+<h2>Composer<a class="headerlink" href="#composer" title="Link to this heading">¶</a></h2>
+<p>I index all composers by last name as a way of showing equal respect to jazz and popular tune composers. At the same time, jazz first names and nicknames (Bird, Miles, etc.) are recognized “behind the scenes” when searching and will be appropriately converted and retrieved.</p>
+</section>
+<section id="key">
+<h2>Key<a class="headerlink" href="#key" title="Link to this heading">¶</a></h2>
+<p>Key can be left blank, or you can fill it with ‘none’ or ‘atonal’. There can only be one Key; in tonal tunes without an obvious “main” key I leave this blank and put all the keys in Other Keys. A ‘-’ after the letter denotes minor; unadorned is major.</p>
+</section>
+<section id="other-keys">
+<h2>Other Keys<a class="headerlink" href="#other-keys" title="Link to this heading">¶</a></h2>
+<p>Any keys a tune modulates to besides the main key go here.</p>
+</section>
+<section id="form">
+<h2>Form<a class="headerlink" href="#form" title="Link to this heading">¶</a></h2>
+<p>I’ve opted not to include primes etc. to make the form categories as broadly applicable as possible. For example, “I Remember You” is classified as AABA, not AABA’.</p>
+</section>
+<section id="style">
+<h2>Style<a class="headerlink" href="#style" title="Link to this heading">¶</a></h2>
+<p>‘Standard’ is for pop or Broadway tunes played by jazz musicians, while ‘jazz’ is for tunes written by jazz musicians. Other stylistic descriptors can be added as tags (eventually).</p>
+</section>
+<section id="meter">
+<h2>Meter<a class="headerlink" href="#meter" title="Link to this heading">¶</a></h2>
+<p>This has a default value of 4 for convenience since almost every standard is in 4.</p>
+</section>
+<section id="year">
+<h2>Year<a class="headerlink" href="#year" title="Link to this heading">¶</a></h2>
+<p>For a lot of the jazz tunes the year is when the first album featuring the tune came out. Let me know if you have more accurate knowledge!</p>
+</section>
+<section id="last-played">
+<h2>Last Played<a class="headerlink" href="#last-played" title="Link to this heading">¶</a></h2>
+<p>The date you last played a tune. I try to keep as many out of the “haven’t played in 3 months” category as I can.</p>
+</section>
+<section id="knowledge">
+<h2>Knowledge<a class="headerlink" href="#knowledge" title="Link to this heading">¶</a></h2>
+<p>The broad delineation between “know”, “learning”, and “don’t know” seems most useful to me. As I use it, “know” means you can play the tune at the drop of a hat with no hesitation and no chart. Otherwise it’s “learning”. “Don’t know” is a placeholder for tunes you want to learn.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">About jazztunes</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="whyjazztunes.html">Why jazztunes?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="appfocus.html">App focus, or what jazztunes is <em>not</em></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tune fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="future.html">Planned features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../using/index.html">Using jazztunes</a></li>
+</ul>
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="future.html" title="Planned features"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="appfocus.html" title="App focus, or what jazztunes is not"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">jazztunes  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >About jazztunes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tune fields</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Jeff Jacobson.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>
