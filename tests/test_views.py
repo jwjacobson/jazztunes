@@ -322,9 +322,28 @@ def test_set_rep_fields_invalid_last_played(client, user_tune_rep):
 
 
 @pytest.mark.django_db
-def test_get_random_tunes(tune_set):
-    user = tune_set["user"]
-    tunes = tune_set["tunes"]
+def test_get_random_tune_single_tune(user_tune_rep, client):
+    tune = user_tune_rep["tune"]
+    response = client.post(reverse("tune:get_random_tune"), {"search_terms": [""]})
 
-    for tune in tunes:
-        assert tune.player == user
+    assert response.status_code == 200
+    assert "selected_tune" in response.context
+    assert response.context["selected_tune"].id == tune.id
+
+
+@pytest.mark.django_db
+def test_get_random_tune_multiple(tune_set, client):
+    tunes = tune_set["tunes"]
+    response = client.post(reverse("tune:get_random_tune"), {"search_terms": [""]})
+
+    assert response.status_code == 200
+    assert response.context["selected_tune"] in tunes
+
+
+@pytest.mark.django_db
+def test_get_random_tune_no_tunes(tune_set, client):
+    _ = tune_set["tunes"]
+    response = client.post(reverse("tune:get_random_tune"), {"search_term": ["xx"]})
+
+    assert response.status_code == 200
+    assert response.context["selected_tune"] is None
