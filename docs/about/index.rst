@@ -8,4 +8,5 @@ Here you'll find information about the origin and goals of jazztunes.
 
    whyjazztunes
    appfocus
+   fields
    future
