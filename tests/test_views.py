@@ -347,3 +347,34 @@ def test_get_random_tune_no_tunes(tune_set, client):
 
     assert response.status_code == 200
     assert response.context["selected_tune"] is None
+
+
+@pytest.mark.django_db
+def test_change_tune(tune_set, client):
+    tunes = tune_set["tunes"]
+    session = client.session
+    session["rep_tunes"] = [tune.id for tune in tunes]
+    session.save()
+
+    response = client.get(reverse("tune:change_tune"))
+    assert response.status_code == 200
+    assert "selected_tune" in response.context
+
+    selected_tune = response.context["selected_tune"]
+
+    assert selected_tune.id not in client.session["rep_tunes"]
+    assert len(client.session["rep_tunes"]) == len(tunes) - 1
+
+
+@pytest.mark.django_db
+def test_change_tune_no_tunes(user_tune_rep, client):
+    _ = user_tune_rep["user"]
+    session = client.session
+    session["rep_tunes"] = []
+    session.save()
+
+    response = client.get(reverse("tune:change_tune"))
+
+    assert response.status_code == 200
+    assert "selected_tune" in response.context
+    assert response.context["selected_tune"] is None
