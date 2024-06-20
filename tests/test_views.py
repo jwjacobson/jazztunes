@@ -392,3 +392,33 @@ def test_play_list(user_tune_rep, client):
     assert response.status_code == 200
     assert tune.last_played > initial_last_played
     assert tune.play_count == initial_play_count + 1
+    assert "last_played" in response.context
+    assert "selected_tune" in response.context
+    assert response.context["selected_tune"].last_played == tune.last_played
+
+
+@pytest.mark.django_db
+def test_play_play(user_tune_rep, client):
+    tune = user_tune_rep["rep_tune"]
+    initial_last_played = tune.last_played
+    initial_play_count = tune.play_count
+
+    response = client.get(reverse("tune:play_play", kwargs={"pk": tune.pk}))
+    tune.refresh_from_db()
+
+    assert response.status_code == 200
+    assert tune.last_played > initial_last_played
+    assert tune.play_count == initial_play_count + 1
+    assert "last_played" in response.context
+    assert "selected_tune" in response.context
+    assert response.context["selected_tune"].last_played == tune.last_played
+
+
+@pytest.mark.django_db
+def test_play_invalid_pk(user_tune_rep, client):
+    tune = user_tune_rep["rep_tune"]
+    wrong_pk = tune.pk * 7000
+
+    response = client.get(reverse("tune:play_list", kwargs={"pk": wrong_pk}))
+
+    assert response.status_code == 404
