@@ -118,8 +118,8 @@ class Tune(models.Model):
         blank=True,
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
-    style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
-    meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True, default=4)
+    style = models.CharField(choices=STYLES, max_length=15, blank=True)
+    meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
     is_contrafact = models.BooleanField(blank=True, null=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
