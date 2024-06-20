@@ -378,3 +378,14 @@ def test_change_tune_no_tunes(user_tune_rep, client):
     assert response.status_code == 200
     assert "selected_tune" in response.context
     assert response.context["selected_tune"] is None
+
+
+@pytest.mark.django_db
+def test_play_list(user_tune_rep, client):
+    tune = user_tune_rep["rep_tune"]
+    initial_last_played = tune.last_played
+    # initial_play_count = tune.play_count
+
+    response = client.get(reverse("tune:play_list", kwargs={"pk": tune.pk}))
+    assert response.status_code == 200
+    assert tune.last_played > initial_last_played
