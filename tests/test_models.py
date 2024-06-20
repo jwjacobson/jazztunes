@@ -75,7 +75,7 @@ def test_tune_defaults():
     assert tune.key == ""
     assert tune.other_keys == ""
     assert tune.song_form == ""
-    assert tune.style == "standard"
+    assert tune.style == ""
     assert tune.meter == 4
     assert tune.year is None
 

@@ -1,7 +1,7 @@
 # Tests for the views in views.py
 
 import pytest
-from datetime import date
+from datetime import datetime, timezone
 
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -36,7 +36,7 @@ def user_tune_rep(client):
         tune=tune,
         player=user,
         knowledge="know",
-        last_played=date(2024, 2, 1),
+        last_played=datetime(2024, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "user": user}
@@ -68,7 +68,7 @@ def admin_tune_rep(client):
         tune=tune,
         player=admin,
         knowledge="know",
-        last_played=date(2024, 2, 1),
+        last_played=datetime(2024, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "admin": admin}
@@ -87,7 +87,7 @@ def test_tune_new_success(user_tune_rep, client):
         "meter": 3,
         "year": 2024,
         "knowledge": "learning",
-        "last_played": date(2024, 3, 1),
+        "last_played": datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc),
     }
 
     response = client.post(url, post_data)
@@ -128,7 +128,7 @@ def test_tune_edit_success(user_tune_rep, client):
         "style": "jazz",
         "year": 1939,
         "knowledge": "learning",
-        "last_played": date(2024, 3, 1),
+        "last_played": datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc),
     }
 
     url = reverse("tune:tune_edit", kwargs={"pk": tune.pk})
@@ -149,7 +149,7 @@ def test_tune_edit_success(user_tune_rep, client):
     assert tune.style == "jazz"
     assert tune.year == 1939
     assert rep_tune.knowledge == "learning"
-    assert rep_tune.last_played == date(2024, 3, 1)
+    assert rep_tune.last_played == datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc)
 
 
 @pytest.mark.django_db
@@ -275,7 +275,7 @@ def test_tune_take_nonpublic(client, user_tune_rep):
 def test_set_rep_fields_success(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
     knowledge = "learning"
-    last_played = date(2024, 3, 1)
+    last_played = datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc)
 
     response = client.post(
         reverse("tune:set_rep_fields", args=[tune_pk]),
@@ -384,8 +384,11 @@ def test_change_tune_no_tunes(user_tune_rep, client):
 def test_play_list(user_tune_rep, client):
     tune = user_tune_rep["rep_tune"]
     initial_last_played = tune.last_played
-    # initial_play_count = tune.play_count
+    initial_play_count = tune.play_count
 
     response = client.get(reverse("tune:play_list", kwargs={"pk": tune.pk}))
+    tune.refresh_from_db()
+
     assert response.status_code == 200
     assert tune.last_played > initial_last_played
+    assert tune.play_count == initial_play_count + 1

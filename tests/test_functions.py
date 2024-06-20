@@ -200,7 +200,7 @@ def test_query_tunes_timespan_day(tune_set):
     timespan = timezone.now() - timedelta(days=1)
     result = query_tunes(tune_set["tunes"], search_terms, timespan)
 
-    assert result.count() == 9
+    assert result.count() == 10
 
 
 @pytest.mark.django_db
@@ -209,7 +209,7 @@ def test_query_tunes_timespan_week(tune_set):
     timespan = timezone.now() - timedelta(days=7)
     result = query_tunes(tune_set["tunes"], search_terms, timespan)
 
-    assert result.count() == 3
+    assert result.count() == 4
 
 
 @pytest.mark.django_db
