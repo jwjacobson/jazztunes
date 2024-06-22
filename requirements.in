@@ -79,3 +79,4 @@ sendgrid
 python-dotenv
 pytest-env
 sphinx==7.3.7
+tox

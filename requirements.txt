@@ -4,6 +4,8 @@
 #
 #    pip-compile
 #
+alabaster==0.7.16
+    # via sphinx
 asgiref==3.8.1
     # via
     #   -r requirements.in
@@ -14,10 +16,14 @@ asttokens==2.4.1
     #   stack-data
 attrs==23.2.0
     # via -r requirements.in
+babel==2.15.0
+    # via sphinx
 build==1.2.1
     # via
     #   -r requirements.in
     #   pip-tools
+cachetools==5.3.3
+    # via tox
 certifi==2024.2.2
     # via
     #   -r requirements.in
@@ -31,6 +37,8 @@ cfgv==3.4.0
     # via
     #   -r requirements.in
     #   pre-commit
+chardet==5.2.0
+    # via tox
 charset-normalizer==3.3.2
     # via
     #   -r requirements.in
@@ -43,6 +51,8 @@ click==8.1.7
     #   pgspecial
     #   pip-tools
     #   typer
+colorama==0.4.6
+    # via tox
 configobj==5.0.8
     # via
     #   -r requirements.in
@@ -83,6 +93,8 @@ django-bootstrap5==24.1
     # via -r requirements.in
 django-debug-toolbar==4.3.0
     # via -r requirements.in
+docutils==0.21.2
+    # via sphinx
 executing==2.0.1
     # via
     #   -r requirements.in
@@ -90,6 +102,7 @@ executing==2.0.1
 filelock==3.13.4
     # via
     #   -r requirements.in
+    #   tox
     #   virtualenv
 gunicorn==22.0.0
     # via -r requirements.in
@@ -101,6 +114,8 @@ idna==3.7
     # via
     #   -r requirements.in
     #   requests
+imagesize==1.4.1
+    # via sphinx
 iniconfig==2.0.0
     # via pytest
 ipdb==0.13.13
@@ -113,10 +128,14 @@ jedi==0.19.1
     # via
     #   -r requirements.in
     #   ipython
+jinja2==3.1.4
+    # via sphinx
 markdown-it-py==3.0.0
     # via
     #   -r requirements.in
     #   rich
+markupsafe==2.1.5
+    # via jinja2
 matplotlib-inline==0.1.7
     # via
     #   -r requirements.in
@@ -138,7 +157,10 @@ packaging==24.0
     #   -r requirements.in
     #   build
     #   gunicorn
+    #   pyproject-api
     #   pytest
+    #   sphinx
+    #   tox
 parso==0.8.4
     # via
     #   -r requirements.in
@@ -154,11 +176,13 @@ pip-tools==7.4.1
 platformdirs==4.2.0
     # via
     #   -r requirements.in
+    #   tox
     #   virtualenv
 pluggy==1.4.0
     # via
     #   -r requirements.in
     #   pytest
+    #   tox
 pre-commit==3.7.0
     # via -r requirements.in
 prompt-toolkit==3.0.43
@@ -186,10 +210,13 @@ pygments==2.17.2
     #   -r requirements.in
     #   ipython
     #   rich
+    #   sphinx
 pyjwt[crypto]==2.8.0
     # via
     #   -r requirements.in
     #   django-allauth
+pyproject-api==1.6.1
+    # via tox
 pyproject-hooks==1.0.0
     # via
     #   -r requirements.in
@@ -230,6 +257,7 @@ requests==2.31.0
     #   -r requirements.in
     #   django-allauth
     #   requests-oauthlib
+    #   sphinx
 requests-oauthlib==2.0.0
     # via
     #   -r requirements.in
@@ -257,6 +285,22 @@ six==1.16.0
     #   configobj
     #   python-dateutil
     #   url-normalize
+snowballstemmer==2.2.0
+    # via sphinx
+sphinx==7.3.7
+    # via -r requirements.in
+sphinxcontrib-applehelp==1.0.8
+    # via sphinx
+sphinxcontrib-devhelp==1.0.6
+    # via sphinx
+sphinxcontrib-htmlhelp==2.0.5
+    # via sphinx
+sphinxcontrib-jsmath==1.0.1
+    # via sphinx
+sphinxcontrib-qthelp==1.0.7
+    # via sphinx
+sphinxcontrib-serializinghtml==1.1.10
+    # via sphinx
 sqlparse==0.5.0
     # via
     #   -r requirements.in
@@ -273,6 +317,8 @@ tabulate[widechars]==0.9.0
     # via
     #   -r requirements.in
     #   cli-helpers
+tox==4.15.1
+    # via -r requirements.in
 traitlets==5.14.2
     # via
     #   -r requirements.in
@@ -298,6 +344,7 @@ virtualenv==20.25.1
     # via
     #   -r requirements.in
     #   pre-commit
+    #   tox
 wcwidth==0.2.13
     # via
     #   -r requirements.in
