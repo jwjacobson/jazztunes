@@ -1,12 +1,29 @@
+# jazztunes -- A jazz repertoire management app
+# Copyright (C) 2024 Jeff Jacobson <jeffjacobsonhimself@gmail.com>
+#
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from django.db import models
 from django.contrib.auth import get_user_model
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=20)
+# class Tag(models.Model):
+#     name = models.CharField(max_length=20)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Tune(models.Model):
@@ -70,20 +87,38 @@ class Tune(models.Model):
         "atonal",
     }
 
+    MAX_SEARCH_TERMS = 4
+
+    NICKNAMES = {
+        "bird": "Parker",
+        "bud": "Powell",
+        "miles": "Davis",
+        "wayne": "Shorter",
+        "joe": "Henderson",
+        "lee": "Konitz",
+        "diz": "Gillespie",
+        "dizzy": "Gillespie",
+        "duke": "Ellington",
+        "sonny": "Rollins",
+        "bill": "Evans",
+        "herbie": "Hancock",
+        "cedar": "Walton",
+    }
+
+    field_names = {"title", "composer", "key", "keys", "form", "style", "meter", "year"}
+
     title = models.CharField(max_length=90, help_text="The only required field")
-    composer = models.CharField(max_length=30, blank=True, help_text="Last names only for now")
+    composer = models.CharField(max_length=30, blank=True)
     key = models.CharField(
         max_length=10,
         blank=True,
-        help_text="Letters A-G, one only, add - for minor",
     )
     other_keys = models.CharField(
         max_length=20,
         blank=True,
-        help_text="Letters A-G, as many as you want, separated by a space",
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
-    style = models.CharField(choices=STYLES, max_length=15, blank=True, default="standard")
+    style = models.CharField(choices=STYLES, max_length=15, blank=True)
     meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True, default=4)
     year = models.PositiveSmallIntegerField(blank=True, null=True)
     is_contrafact = models.BooleanField(blank=True, null=True, default=False)
@@ -91,7 +126,6 @@ class Tune(models.Model):
     created_by = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
-    tags = models.ManyToManyField(Tag, related_name="tags", blank=True)
 
     @property
     def decade(self):
@@ -122,9 +156,13 @@ class RepertoireTune(models.Model):
     last_played = models.DateTimeField(blank=True, null=True)
     knowledge = models.CharField(choices=KNOWLEDGES, max_length=15, default="know", blank=True)
     started_learning = models.DateTimeField(blank=True, null=True)
+    play_count = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ("tune", "player")
 
     def __str__(self):
         return f"{self.tune} | {self.player}"
+
+
+# class Plays(models.Model):

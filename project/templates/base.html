@@ -1,11 +1,19 @@
 {% load i18n %}
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token }}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'apple-touch-icon.png' %}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+        <link rel="manifest" href="{% static 'site.webmanifest' %}">
+        <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' color=#5bbad5 %}">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
 
         <title>
             {% block head_title %}
@@ -13,17 +21,30 @@
         </title>
         {% block extra_head %}
         {% endblock extra_head %}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'tune/css/styles.css' %}">
+        <!-- Bootstrap CSS -->
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
+        <!-- Datatables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css">
+        <!-- Datatables Button CSS -->
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{% static 'tune/css/styles2.css' %}">
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <!-- HTMX -->
         <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-
+        <!-- Datatables JS -->
+        <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+        <!-- Datatables Button JS -->
+        <!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script> -->
     </head>
+
     <div class="container my-4">
-    <body class="bg-warning-subtle m-5">
+    <body class="bg-primary-subtle m-5">
         {% block body %}
-        <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary-subtle ">
+        <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary ">
             <div class="container-fluid">
-              <a class="navbar-brand" href="{% url 'tune:tune_list' %}">Tune</a>
+              <a class="navbar-brand text-primary-emphasis" href="{% url 'tune:tune_list' %}"><b><i>jazztunes</i></b></a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -31,46 +52,51 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tune:tune_new' %}">Create</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_new' %}">Create</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tune:tune_play' %}">Play</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_play' %}">Play</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tune:tune_browse' %}">Public</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_browse' %}">Public</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
+                    <a class="nav-link text-info-emphasis" href="https://jwjacobson.github.io/jazztunes/" target="_blank">Manual</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-info-emphasis" href="{% url 'account_logout' %}">Log Out</a>
                   </li>
                 {% else %}
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_login' %}">Log In</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'account_login' %}">Log In</b></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'account_signup' %}">Create an Account</a>
+                    <a class="nav-link text-info-emphasis" href="{% url 'account_signup' %}">Sign Up</a>
                   </li>
                 {% endif %}
                 </ul>
               </div>
             </div>
           </nav>
+          <div id="messages-container">
             {% if messages %}
               {% for message in messages %}
                 {% if message.tags == 'success' %}
-                <div class="alert alert-info border border-top-0 border-primary-subtle" id="alert" role="alert">
+                <div class="alert alert-secondary border border-top-0 border-primary" id="alert" role="alert">
                   {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
                 </div>
                 {% elif message.tags == 'error' %}
-                <div class="alert alert-danger border border-top-0 border-primary-subtle" id="alert"  role="alert">
+                <div class="alert alert-danger border border-top-0 border-primary" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% elif message.tags == 'warning' %}
-                <div class="alert alert-warning border border-top-0 border-primary-subtle" id="alert"  role="alert">
+                <div class="alert alert-warning border border-top-0 border-primary" id="alert"  role="alert">
                   {{ message }}
                 </div>
                 {% endif %}
               {% endfor %}
             {% endif %}
+          </div>
 
             {% block content %}
             {% endblock content %}
@@ -79,5 +105,6 @@
         {% block extra_body %}
         {% endblock extra_body %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+      
       </body>
 </html>

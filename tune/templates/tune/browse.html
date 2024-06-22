@@ -6,22 +6,46 @@
 
 <div class ="mt-4">
     <p>
-        Here you can browse public tunes and copy them into your repertoire, where you can also edit them.
+        Here you can browse public tunes and copy them into your repertoire.
     </p>
   </div>
-<div class="my-4">
-<form method="post" action="{% url 'tune:tune_browse' %}">
-    {% csrf_token %}
-    <label for="basic_search">Basic search: </label>
-    <input id="search_term" type="text" name="search_term">
-    <input class="btn btn-primary" type="submit" value="Search">
+  <div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
+    <div class="card-body">
+        <h5 class = "card-title">Tune Search</h5>
+            <div>
+                <form method="post" action="{% url 'tune:tune_browse' %}">
+                    {% csrf_token %}
+                    <label for="basic_search"></label>
+                    <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
+            </div>
+        <div class="col-1 my-3">
+            <input class="btn btn-primary" type="submit" value="Search">
+        </div>
+        </form>
+    </div>
 </div>
-</form>
-<h1 class="text-info-emphasis">Public Tunes</h1>
-<div class="tune">
-    <table class="table table-info table-striped table-hover border border-success-subtle">
-        <tr>
-            <thead>
+
+<div class="row mt-4 align-items-end justify-content-evenly">
+    <div class="col-10">
+        <h1
+            class="text-info-emphasis">Public Tunes
+        </h1>
+    </div>
+    <div class="col-2" style="text-align: right;" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
+        <h4>
+            {% if tune_count == 1 %}
+            {{ tune_count }} tune
+            {% else %}
+            {{ tune_count }} tunes
+            {% endif %}
+        </h4>
+    </div>
+</div>
+
+<div>
+    <table class="table table-success table-striped table-hover border border-primary" id="public-table">
+        <thead>
+            <tr>
                 <th scope="col">Title</th>
                 <th scope="col">Composer</th>
                 <th scope="col">Key</th>
@@ -32,8 +56,9 @@
                 <th scope="col">Year</th>
                 <!-- <th>Tags</th> -->
                 <th scope="col">Actions</th>
-            </thead>
-        </tr>
+            </tr>
+        </thead>
+    <tbody>
     {% for tune in tunes %}
     <tr>
         <td class="w-auto">{{ tune.tune.title }}</td>
@@ -47,7 +72,7 @@
         <!-- <td>{{ tune.tune.tags }}</td> -->
         <td class="w-auto">
           {% if tune.tune.title in user_tune_titles %}
-            <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Take</button>
+            <button type="button" class="btn btn-outline-dark btn-sm" disabled>Take</button>
           {% else %}
           <button type="button"
                     class="btn btn-success btn-sm"
@@ -59,6 +84,18 @@
         </td>
     </tr>
     {% endfor %}
+    </tbody>
     </table>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#public-table').DataTable({
+                "searching": false,
+                "info": false,
+                "lengthChange": false,
+                "paging": false,
+                "language": { "emptyTable": "No data available" }
+            });
+        });
+    </script>
 {% endblock %}
