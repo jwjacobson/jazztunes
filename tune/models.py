@@ -19,13 +19,6 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
-# class Tag(models.Model):
-#     name = models.CharField(max_length=20)
-
-#     def __str__(self):
-#         return self.name
-
-
 class Tune(models.Model):
     """
     The Tune is the heart of this app; each tune is one song that can be added to a user's repertoire and should contain all relevant musical information.
@@ -146,6 +139,9 @@ class Tune(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class RepertoireTune(models.Model):
