@@ -86,7 +86,11 @@
     <td>{{ tune.tune.style }}</td>
     <td>{{ tune.tune.meter }}</td>
     <td>{{ tune.tune.year }}</td>
-    <td>{{ tune.tags.name }}</td>
+    <td>
+        {% for tag in tune.tags.all %}
+        <div>{{ tag.name }}</div>
+        {% endfor %}
+    </td>
     <td>{{ tune.knowledge }}</td>
     <td id="last-played-{{ tune.id }}">{{ tune.last_played|date:"MONTH_DAY_FORMAT"}}</td>
 
