@@ -80,7 +80,11 @@ def query_tunes(tune_set, search_terms, timespan=None):
         if term and term[0] == "-":
             term_query = exclude_term(tune_set, term)
 
-        elif term and len(term.split(":")) > 1 and term.split(":")[0].lower() in Tune.field_names:
+        elif (
+            term
+            and len(term.split(":")) > 1
+            and term.split(":")[0].lower() in Tune.field_names
+        ):
             term_query = search_field(tune_set, term)
 
         else:
@@ -97,7 +101,9 @@ def query_tunes(tune_set, search_terms, timespan=None):
             )
 
             if term in Tune.NICKNAMES:
-                nickname_query = tune_set.filter(Q(tune__composer__icontains=Tune.NICKNAMES[term]))
+                nickname_query = tune_set.filter(
+                    Q(tune__composer__icontains=Tune.NICKNAMES[term])
+                )
                 term_query = term_query | nickname_query
 
         if timespan is not None:
@@ -158,7 +164,9 @@ def tune_list(request):
             search_terms = search_form.cleaned_data["search_term"].split(" ")
             search_term_string = " ".join(search_terms)
             timespan = search_form.cleaned_data["timespan"]
-            results = return_search_results(request, search_terms, tunes, search_form, timespan)
+            results = return_search_results(
+                request, search_terms, tunes, search_form, timespan
+            )
             tunes = results.get("tunes")
             tune_count = results.get("tune_count", 0)
     else:
@@ -185,13 +193,17 @@ def tune_new(request):
     if request.method != "POST":
         tune_form = TuneForm()
         rep_form = RepertoireTuneForm()
-        return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
+        return render(
+            request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form}
+        )
 
     tune_form = TuneForm(request.POST)
     rep_form = RepertoireTuneForm(request.POST)
 
     if not tune_form.is_valid() or not rep_form.is_valid():
-        return render(request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form})
+        return render(
+            request, "tune/form.html", {"tune_form": tune_form, "rep_form": rep_form}
+        )
 
     with transaction.atomic():
         new_tune = tune_form.save(commit=False)
@@ -225,21 +237,28 @@ def tune_edit(request, pk):
 
     tune_form = TuneForm(request.POST or None, instance=tune)
     rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
-    # breakpoint()
+
     if tune_form.is_valid() and rep_form.is_valid():
         with transaction.atomic():
             updated_tune = tune_form.save()
-            rep_form.save()
+            updated_rep_tune = rep_form.save()
+            print(f"Before: {updated_rep_tune.tags.all()}")
             messages.success(
                 request,
                 f"{updated_tune.title} has been updated.",
             )
+        print(f"After: {updated_rep_tune.tags.all()}")
         return redirect("tune:tune_list")
 
     return render(
         request,
         "tune/form.html",
-        {"tune": tune, "rep_tune": rep_tune, "tune_form": tune_form, "rep_form": rep_form},
+        {
+            "tune": tune,
+            "rep_tune": rep_tune,
+            "tune_form": tune_form,
+            "rep_form": rep_form,
+        },
     )
 
 
@@ -289,7 +308,9 @@ def get_random_tune(request):
 
     search_terms = search_form.cleaned_data["search_term"].split(" ")
     timespan = search_form.cleaned_data.get("timespan", None)
-    result_dict = return_search_results(request, search_terms, tunes, search_form, timespan)
+    result_dict = return_search_results(
+        request, search_terms, tunes, search_form, timespan
+    )
 
     if "error" in result_dict:
         messages.error(request, result_dict["error"])
@@ -368,7 +389,9 @@ def tune_browse(request):
     View for loading the public page, where users can browse public tunes and take them into their repertoire
     """
 
-    user_tunes = RepertoireTune.objects.select_related("tune").filter(player=request.user)
+    user_tunes = RepertoireTune.objects.select_related("tune").filter(
+        player=request.user
+    )
     user_tune_titles = {tune.tune.title for tune in user_tunes}
 
     tunes = RepertoireTune.objects.select_related("tune").filter(
@@ -380,7 +403,9 @@ def tune_browse(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            tunes = return_search_results(request, search_terms, tunes, search_form)["tunes"]
+            tunes = return_search_results(request, search_terms, tunes, search_form)[
+                "tunes"
+            ]
             tune_count = len(tunes)
     else:
         search_form = SearchForm()

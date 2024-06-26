@@ -19,13 +19,6 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
-# class Tag(models.Model):
-#     name = models.CharField(max_length=20)
-
-#     def __str__(self):
-#         return self.name
-
-
 class Tune(models.Model):
     """
     The Tune is the heart of this app; each tune is one song that can be added to a user's repertoire and should contain all relevant musical information.
@@ -119,7 +112,9 @@ class Tune(models.Model):
     )
     song_form = models.CharField(choices=FORMS, max_length=15, blank=True)
     style = models.CharField(choices=STYLES, max_length=15, blank=True)
-    meter = models.PositiveSmallIntegerField(choices=METERS, blank=True, null=True, default=4)
+    meter = models.PositiveSmallIntegerField(
+        choices=METERS, blank=True, null=True, default=4
+    )
     year = models.PositiveSmallIntegerField(blank=True, null=True)
     is_contrafact = models.BooleanField(blank=True, null=True, default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -142,6 +137,13 @@ class Tune(models.Model):
         return f"Tune {self.id} | {self.title}"
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class RepertoireTune(models.Model):
     """
     RepertoireTune is the ManyToMany table connecting tunes to users ("players").
@@ -149,14 +151,26 @@ class RepertoireTune(models.Model):
     such as when it was last played or how well they know it.
     """
 
-    KNOWLEDGES = [("know", "know"), ("learning", "learning"), ("don't know", "don't know")]
+    KNOWLEDGES = [
+        ("know", "know"),
+        ("learning", "learning"),
+        ("don't know", "don't know"),
+    ]
 
     tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
     player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     last_played = models.DateTimeField(blank=True, null=True)
-    knowledge = models.CharField(choices=KNOWLEDGES, max_length=15, default="know", blank=True)
+    knowledge = models.CharField(
+        choices=KNOWLEDGES, max_length=15, default="know", blank=True
+    )
     started_learning = models.DateTimeField(blank=True, null=True)
     play_count = models.IntegerField(default=0)
+    tags = models.ManyToManyField(
+        Tag,
+        related_name="repertoire_tunes",
+        blank=True,
+        help_text="ctrl-click to select more than one",
+    )
 
     class Meta:
         unique_together = ("tune", "player")
