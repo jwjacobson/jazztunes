@@ -1,8 +1,15 @@
-DATABASE_URL=
-ADMIN_USER_ID=
-SECRET_KEY=
-DEBUG=
-ALLOWED_HOSTS=
+"""
+This file contains the environment variables you'll need to set in .env for the app to run.
+I've supplied some default values that might work well.
+"""
+# The following are required:
+DATABASE_URL=sqlite:///db.sqlite3
+ADMIN_USER_ID=1
+SECRET_KEY='whatever'
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1
+
+# These are optional:
 SENTRY_DSN=
 SENDGRID_API_KEY=
 DEFAULT_FROM_EMAIL=

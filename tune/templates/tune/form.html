@@ -13,7 +13,7 @@
   <!-- </div>
 </div> -->
 </div>
-<div class="col-md-6"></div>
+<!-- <div class="col-md-6"></div> -->
 </div>
   <form method="post">
   <div class="row">
@@ -42,6 +42,9 @@
             {{ field.errors }}
         </p>
       </div>
+      {% if forloop.counter|divisibleby:2 %}
+      <div class="col-md-6"></div>
+      {% endif %}
       {% endfor %}
     <div class="col-md-6"></div>
     <div class="col-md-6 my-3">
