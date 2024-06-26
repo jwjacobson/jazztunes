@@ -15,7 +15,7 @@ If you want to run jazztunes locally, take the following steps:
 4. Activate the virtual environment ```.\venv\Scripts\activate``` (Windows) or ```source venv/bin/activate```
 5. Install the necessary packages: ```pip install -r requirements.txt```
 6. Create a .env file in the root directory with the variables (I've supplied a file, env-template, that shows what you need and has some default values)
-7. If you want to use the Public tune feature, you'll need to create a superuser: ```python manage.py createsuperuser```, then set that user's ID to ADMIN_USER_ID in .env (it will be 1 if it's the first user created). Then tunes you create as that user will also show up on the Public page. Creating a superuser is also a good idea because it gives you access to the [Django admin](https://docs.djangoproject.com/en/5.0/ref/contrib/admin/) interface.
+7. If you want to use the Public tune feature, you'll need to create a superuser: ```python manage.py createsuperuser```, then set that user's ID to ADMIN_USER_ID in .env (it will be 1 if it's the first user created, otherwise 2, etc.). Then tunes you create as that user will also show up on the Public page. Creating a superuser is also a good idea because it gives you access to the [Django admin](https://docs.djangoproject.com/en/5.0/ref/contrib/admin/) interface.
 8. Run the program: ```python manage.py runserver ```
 9. Ctrl-click on ```http://127.0.0.1:8000``` — This will open jazztunes in your default browser.
 10. You can close the program by closing your browser and pressing Ctrl-C in the terminal running it.

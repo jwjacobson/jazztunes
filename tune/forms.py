@@ -72,16 +72,6 @@ class TuneForm(ModelForm):
         data = " ".join(formatted_data)
         return data
 
-    # def clean_tags(self):
-    #     data = self.cleaned_data["tags"]
-    #     if data is None:
-    #         return data
-    #     formatted_data = []
-    #     for tag in data.split():
-    #         formatted_data.append(tag.lower())
-    #     data = " ".join(formatted_data)
-    #     return data
-
 
 class DateInput(forms.DateInput):
     input_type = "date"

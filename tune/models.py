@@ -165,7 +165,7 @@ class RepertoireTune(models.Model):
     )
     started_learning = models.DateTimeField(blank=True, null=True)
     play_count = models.IntegerField(default=0)
-    tags = models.ManyToManyField(Tag, related_name="repertoire_tunes")
+    tags = models.ManyToManyField(Tag, related_name="repertoire_tunes", blank=True)
 
     class Meta:
         unique_together = ("tune", "player")
