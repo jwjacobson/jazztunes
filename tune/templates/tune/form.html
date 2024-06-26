@@ -40,6 +40,9 @@
             <p>{{ field.label_tag }}</p>
             {{ field }}
             {{ field.errors }}
+            {% if field.help_text %}
+              <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
         </p>
       </div>
       {% if forloop.counter|divisibleby:2 %}
