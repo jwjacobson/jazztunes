@@ -169,7 +169,6 @@ class RepertoireTune(models.Model):
         Tag,
         related_name="repertoire_tunes",
         blank=True,
-        help_text="ctrl-click to select more than one",
     )
 
     class Meta:
