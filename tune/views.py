@@ -98,6 +98,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tune__meter__icontains=term)
                 | Q(tune__year__icontains=term)
                 | Q(knowledge__icontains=term)
+                | Q(tags__name__icontains=term)
             )
 
             if term in Tune.NICKNAMES:
