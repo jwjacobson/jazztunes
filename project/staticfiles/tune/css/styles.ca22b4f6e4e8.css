@@ -1,0 +1,11 @@
+:root {
+    --bs-primary: orange !important;
+}
+
+#alert {
+    border-radius: 0;
+}
+
+#public-table {
+    table-layout: fixed;
+}

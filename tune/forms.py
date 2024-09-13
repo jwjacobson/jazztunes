@@ -1,3 +1,20 @@
+# jazztunes -- A jazz repertoire management app
+# Copyright (C) 2024 Jeff Jacobson <jeffjacobsonhimself@gmail.com>
+#
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 from django.forms import ModelForm
 from django import forms
 from .models import Tune, RepertoireTune
@@ -19,8 +36,13 @@ class TuneForm(ModelForm):
             "style",
             "meter",
             "year",
-            "tags",
+            # "tags",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(TuneForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
 
     def clean_key(self):
         """
@@ -30,7 +52,7 @@ class TuneForm(ModelForm):
         data = self.cleaned_data["key"]
         if data and data.lower() not in Tune.KEYS:
             raise ValidationError(
-                {_('Invalid key (all normal keys accepted plus "none" and "atonal").')}
+                'Invalid key (all normal keys accepted plus "none" and "atonal").'
             )
         return data.title()
 
@@ -61,10 +83,20 @@ class TuneForm(ModelForm):
     #     return data
 
 
+class DateInput(forms.DateInput):
+    input_type = "date"
+
+
 class RepertoireTuneForm(ModelForm):
     class Meta:
         model = RepertoireTune
-        exclude = ["tune", "player", "last_played", "started_learning"]
+        exclude = ["tune", "player", "started_learning", "play_count"]
+        widgets = {"last_played": DateInput()}
+
+    def __init__(self, *args, **kwargs):
+        super(RepertoireTuneForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs["class"] = "form-control"
 
 
 class SearchForm(forms.Form):
@@ -73,6 +105,8 @@ class SearchForm(forms.Form):
         ("day", "a day"),
         ("week", "a week"),
         ("month", "a month"),
+        ("two_months", "2 months"),
+        ("three_months", "3 months"),
     ]
 
     search_term = forms.CharField(label="search_term", max_length=200, required=False)
@@ -86,5 +120,9 @@ class SearchForm(forms.Form):
             return timezone.now() - timedelta(days=7)
         elif timespan == "month":
             return timezone.now() - timedelta(days=30)
+        elif timespan == "two_months":
+            return timezone.now() - timedelta(days=60)
+        elif timespan == "three_months":
+            return timezone.now() - timedelta(days=90)
         else:
             return None

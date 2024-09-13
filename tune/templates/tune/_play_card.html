@@ -1,0 +1,35 @@
+<div id="playTuneWrapper">
+  <div class="card bg-danger border-primary" style="height: 200px; max-width: 22rem; border-radius: 0;">
+    <div class="card-body">
+      {% if selected_tune %}
+      <h5 class = "card-title">You should play</h5>
+        <div class="my-1">
+          <p class="h4 text-info-emphasis my-4"><strong>{{selected_tune.tune.title}}</strong></p>
+        </div>
+        <div class="btn-group my-1">
+          <button type="button"
+          class="btn btn-outline-info"
+          hx-put="{% url 'tune:play_play' pk=selected_tune.id %}"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          hx-swap="outerHTML"
+          hx-target="#playTuneWrapper">
+          Play
+          </button>
+        <div id="second-button">
+         <button type="button"
+          class="btn btn-outline-dark"
+          hx-get="{% url 'tune:change_tune' %}"
+          hx-target="#playTuneWrapper">
+          No thanks...
+        </button>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+  {% else %}
+    <h5 class="card-title">No tunes to play</h5>
+    <p class="h5 text-info-emphasis my-5"><strong>Try another search?</strong></p>
+  {% endif %}
+</div>
