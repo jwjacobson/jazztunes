@@ -167,3 +167,4 @@ cython_debug/
 !.elasticbeanstalk/*.global.yml
 tune/scratch*.py
 vars.sh
+latest.dump
