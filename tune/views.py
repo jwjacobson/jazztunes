@@ -210,16 +210,21 @@ def tune_new(request):
         new_tune.created_by = request.user
         new_tune.save()
         tune_form.save_m2m()
+
         if rep_form.is_valid():
             last_played_cleaned = rep_form.cleaned_data.get("last_played")
             if not last_played_cleaned:
                 last_played_cleaned = None
-            RepertoireTune.objects.create(
+
+            rep_tune = RepertoireTune.objects.create(
                 tune=new_tune,
                 player=request.user,
                 knowledge=rep_form.data["knowledge"],
                 last_played=last_played_cleaned,
             )
+
+            rep_tune.tags.set(rep_form.cleaned_data["tags"])
+
             messages.success(
                 request,
                 f"{new_tune.title} has been added to your repertoire.",
