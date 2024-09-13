@@ -80,7 +80,7 @@ distlib==0.3.8
     #   virtualenv
 dj-database-url==2.1.0
     # via -r requirements.in
-django==5.0.4
+django==5.0.8
     # via
     #   -r requirements.in
     #   dj-database-url
