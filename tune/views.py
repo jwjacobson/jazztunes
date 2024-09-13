@@ -64,6 +64,7 @@ def exclude_term(tune_set, search_term):
         | Q(tune__meter__icontains=excluded_term)
         | Q(tune__year__icontains=excluded_term)
         | Q(knowledge__icontains=excluded_term)
+        | Q(tags__name__icontains=excluded_term)
     )
 
     return term_query
