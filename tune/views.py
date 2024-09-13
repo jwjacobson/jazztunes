@@ -45,8 +45,12 @@ def search_field(tune_set, search_term):
             term_query = tune_set.filter(Q(tune__song_form=term))
         else:
             term_query = tune_set.filter(Q(tune__song_form=term.upper()))
+
+    elif field.lower() == "tags":
+        term_query = tune_set.filter(Q(tags__name__icontains=term))
+
     else:
-        term_query = tune_set.filter(Q(**{f"tune__{field}__icontains": term}))
+        term_query = tune_set.filter(Q(**{f"{field}__name__icontains": term}))
 
     return term_query
 
@@ -64,6 +68,7 @@ def exclude_term(tune_set, search_term):
         | Q(tune__meter__icontains=excluded_term)
         | Q(tune__year__icontains=excluded_term)
         | Q(knowledge__icontains=excluded_term)
+        | Q(tags__name__icontains=excluded_term)
     )
 
     return term_query
@@ -98,6 +103,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tune__meter__icontains=term)
                 | Q(tune__year__icontains=term)
                 | Q(knowledge__icontains=term)
+                | Q(tags__name__icontains=term)
             )
 
             if term in Tune.NICKNAMES:
@@ -210,16 +216,21 @@ def tune_new(request):
         new_tune.created_by = request.user
         new_tune.save()
         tune_form.save_m2m()
+
         if rep_form.is_valid():
             last_played_cleaned = rep_form.cleaned_data.get("last_played")
             if not last_played_cleaned:
                 last_played_cleaned = None
-            RepertoireTune.objects.create(
+
+            rep_tune = RepertoireTune.objects.create(
                 tune=new_tune,
                 player=request.user,
                 knowledge=rep_form.data["knowledge"],
                 last_played=last_played_cleaned,
             )
+
+            rep_tune.tags.set(rep_form.cleaned_data["tags"])
+
             messages.success(
                 request,
                 f"{new_tune.title} has been added to your repertoire.",

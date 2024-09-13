@@ -98,7 +98,17 @@ class Tune(models.Model):
         "cedar": "Walton",
     }
 
-    field_names = {"title", "composer", "key", "keys", "form", "style", "meter", "year"}
+    field_names = {
+        "title",
+        "composer",
+        "key",
+        "keys",
+        "form",
+        "style",
+        "meter",
+        "year",
+        "tags",
+    }
 
     title = models.CharField(max_length=90, help_text="The only required field")
     composer = models.CharField(max_length=30, blank=True)
