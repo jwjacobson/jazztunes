@@ -45,8 +45,12 @@ def search_field(tune_set, search_term):
             term_query = tune_set.filter(Q(tune__song_form=term))
         else:
             term_query = tune_set.filter(Q(tune__song_form=term.upper()))
+
+    elif field.lower() == "tags":
+        term_query = tune_set.filter(Q(tags__name__icontains=term))
+
     else:
-        term_query = tune_set.filter(Q(**{f"tune__{field}__icontains": term}))
+        term_query = tune_set.filter(Q(**{f"{field}__name__icontains": term}))
 
     return term_query
 
