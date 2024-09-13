@@ -69,7 +69,7 @@
             <th>Style</th>
             <th>Meter</th>
             <th>Year</th>
-            <!-- <th>Tags</th> -->
+            <th>Tags</th>
             <th>Knowledge</th>
             <th>Last played</th>
             <th>Actions</th>
@@ -84,9 +84,13 @@
     <td>{{ tune.tune.other_keys }}</td>
     <td>{{ tune.tune.song_form }}</td>
     <td>{{ tune.tune.style }}</td>
-    <td>{{ tune.tune.meter }}</td>
-    <td>{{ tune.tune.year }}</td>
-    <!-- <td>{{ tune.tune.tags.name }}</td> -->
+    <td>{{ tune.tune.meter|default_if_none:"" }}</td>
+    <td>{{ tune.tune.year|default_if_none:"" }}</td>
+    <td>
+        {% for tag in tune.tags.all %}
+        <div>{{ tag.name }}</div>
+        {% endfor %}
+    </td>
     <td>{{ tune.knowledge }}</td>
     <td id="last-played-{{ tune.id }}">{{ tune.last_played|date:"MONTH_DAY_FORMAT"}}</td>
 

@@ -72,16 +72,6 @@ class TuneForm(ModelForm):
         data = " ".join(formatted_data)
         return data
 
-    # def clean_tags(self):
-    #     data = self.cleaned_data["tags"]
-    #     if data is None:
-    #         return data
-    #     formatted_data = []
-    #     for tag in data.split():
-    #         formatted_data.append(tag.lower())
-    #     data = " ".join(formatted_data)
-    #     return data
-
 
 class DateInput(forms.DateInput):
     input_type = "date"
@@ -91,12 +81,20 @@ class RepertoireTuneForm(ModelForm):
     class Meta:
         model = RepertoireTune
         exclude = ["tune", "player", "started_learning", "play_count"]
-        widgets = {"last_played": DateInput()}
+        widgets = {"last_played": DateInput(), "tags": forms.SelectMultiple()}
 
     def __init__(self, *args, **kwargs):
         super(RepertoireTuneForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs["class"] = "form-control"
+
+    def save(self, commit=True):
+        instance = super(RepertoireTuneForm, self).save(commit=False)
+        if commit:
+            instance.save()
+            self.save_m2m()
+            # breakpoint()
+        return instance
 
 
 class SearchForm(forms.Form):
