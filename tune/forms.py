@@ -36,7 +36,6 @@ class TuneForm(ModelForm):
             "style",
             "meter",
             "year",
-            # "tags",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -81,19 +80,19 @@ class RepertoireTuneForm(ModelForm):
     class Meta:
         model = RepertoireTune
         exclude = ["tune", "player", "started_learning", "play_count"]
-        widgets = {"last_played": DateInput(), "tags": forms.SelectMultiple()}
+        widgets = {"last_played": DateInput(), "tags": forms.CheckboxSelectMultiple()}
 
     def __init__(self, *args, **kwargs):
         super(RepertoireTuneForm, self).__init__(*args, **kwargs)
         for field in self.fields:
-            self.fields[field].widget.attrs["class"] = "form-control"
+            if field != "tags":
+                self.fields[field].widget.attrs["class"] = "form-control"
 
     def save(self, commit=True):
         instance = super(RepertoireTuneForm, self).save(commit=False)
         if commit:
             instance.save()
             self.save_m2m()
-            # breakpoint()
         return instance
 
 
