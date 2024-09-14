@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 
-from tune.views import query_tunes, return_search_results, exclude_term, search_field
+from tune.search import query_tunes, return_search_results, exclude_term, search_field
 
 
 @pytest.fixture
@@ -38,7 +38,11 @@ def search_form_fixture():
 def test_query_tunes_kern(tune_set):
     search_terms = ["kern"]
     result = query_tunes(tune_set["tunes"], search_terms)
-    expected_titles = {"All the Things You Are", "Dearly Beloved", "Long Ago and Far Away"}
+    expected_titles = {
+        "All the Things You Are",
+        "Dearly Beloved",
+        "Long Ago and Far Away",
+    }
 
     assert result.count() == 3
     assert all("Kern" in tune.tune.composer for tune in result) and (
@@ -223,9 +227,13 @@ def test_query_tunes_timespan_month(tune_set):
 
 def test_return_search_results_too_many(request_fixture, tune_set, search_form_fixture):
     search_terms = ["a", "b", "c", "d", "e"]
-    _ = return_search_results(request_fixture, search_terms, tune_set["tunes"], search_form_fixture)
+    _ = return_search_results(
+        request_fixture, search_terms, tune_set["tunes"], search_form_fixture
+    )
 
-    assert any("Your query is too long" in msg.message for msg in request_fixture._messages)
+    assert any(
+        "Your query is too long" in msg.message for msg in request_fixture._messages
+    )
 
 
 def test_exclude_term(tune_set):
@@ -276,7 +284,11 @@ def test_search_field_keys(tune_set):
     search_term = "keys:eb"
     result = search_field(tune_set["tunes"], search_term)
     expected_key = "Eb"
-    expected_titles = {"Dewey Square", "All the Things You Are", "Someday My Prince Will Come"}
+    expected_titles = {
+        "Dewey Square",
+        "All the Things You Are",
+        "Someday My Prince Will Come",
+    }
 
     assert result.count() == 3
     for tune in result:
@@ -288,7 +300,11 @@ def test_search_field_form(tune_set):
     search_term = "form:abac"
     result = search_field(tune_set["tunes"], search_term)
     expected_form = "ABAC"
-    expected_titles = {"Dearly Beloved", "Long Ago and Far Away", "Someday My Prince Will Come"}
+    expected_titles = {
+        "Dearly Beloved",
+        "Long Ago and Far Away",
+        "Someday My Prince Will Come",
+    }
 
     assert result.count() == 3
     for tune in result:
