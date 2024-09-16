@@ -14,7 +14,7 @@ I index all composers by last name as a way of showing equal respect to jazz and
 
 Key 
 -----
-Key can be left blank, or you can fill it with 'none' or 'atonal'. There can only be one Key; in tonal tunes without an obvious "main" key I leave this blank and put all the keys in Other Keys. A '-' after the letter denotes minor; unadorned is major.
+There can only be one Key; in tonal tunes without an obvious "main" key I leave this blank and put all the keys in Other Keys. A '-' after the letter denotes minor; unadorned is major. Key can be left blank, or you can fill it with 'none' or 'atonal'.
 
 Other Keys
 -----------
@@ -26,7 +26,7 @@ I've opted not to include primes etc. to make the form categories as broadly app
 
 Style
 ------
-'Standard' is for pop or Broadway tunes played by jazz musicians, while 'jazz' is for tunes written by jazz musicians. Other stylistic descriptors can be added as tags (eventually).
+'Standard' is for pop or Broadway tunes played by jazz musicians, while 'jazz' is for tunes written by jazz musicians. Other stylistic descriptors can be added as tags.
 
 Meter
 ------
@@ -35,6 +35,10 @@ This has a default value of 4 for convenience since almost every standard is in 
 Year
 -----
 For a lot of the jazz tunes the year is when the first album featuring the tune came out. Let me know if you have more accurate knowledge! 
+
+Tags
+-----
+These are extra descriptive qualifiers of a tune. None are assigned by default. Currently only tags I've defined are available; contact me if there's any you'd like to see!
 
 Last Played 
 ------------

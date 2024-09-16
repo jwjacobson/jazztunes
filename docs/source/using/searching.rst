@@ -11,6 +11,6 @@ Jazz composer names have built-in substitutions using their nicknames or first n
 
 Use a ``-`` before a term to exclude it from the search results.
 
-You can also use the format ``field:term`` to search a specific field. Currently supported fields are **title**, **composer**, **key** (the key column, a tune's main key), **keys** (both the Key and Other Keys columns), **form**, **style**, **meter**, and **year**. It is most useful for key, keys, meter, and form.
+You can also use the format ``field:term`` to search a specific field. Currently supported fields are **title**, **composer**, **key** (the key column, a tune's main key), **keys** (both the Key and Other Keys columns), **form**, **style**, **meter**, **year**, and **tags**. It is most useful for key, keys, meter, and form.
 
 The **haven't played in** dropdown lets you filter by how long it's been since you've played a tune. This allows you to easily target tunes at the highest risk of being forgotten.
