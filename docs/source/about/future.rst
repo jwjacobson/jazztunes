@@ -6,7 +6,7 @@ There are two major features still to be implemented:
 Custom tags
 ------------
 
-The user can add any tag to they want to any tune, e.g. "ballad".
+Tags now exist, but the user can only choose among predefined tags. They should be able to create their own.
 
 Tune analytics
 ---------------

@@ -349,6 +349,7 @@ def set_rep_fields(request, pk):
     if rep_form.is_valid():
         rep_tune.knowledge = rep_form.cleaned_data["knowledge"]
         rep_tune.last_played = rep_form.cleaned_data["last_played"]
+        rep_tune.tags.set(rep_form.cleaned_data["tags"])
         rep_tune.save()
     else:
         print("invalid")
