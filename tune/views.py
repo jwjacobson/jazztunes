@@ -34,7 +34,7 @@ from .search import return_search_results
 @login_required
 def tune_list(request):
     """
-    View for the app's home page, which shows a user's repertoire and allows searching and tune management.
+    Show the user's home page, which displays a searchable repertoire and allows for tune management.
     """
     user = request.user
     tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
@@ -56,7 +56,10 @@ def tune_list(request):
         search_form = SearchForm()
 
     if request.headers.get("Hx-Request"):
-        return render(request, "tune/_table_list.html", {"tunes": tunes})
+        breakpoint()
+        return render(
+            request, "tune/_table_list.html", {"tunes": tunes, "tune_count": tune_count}
+        )
 
     request.session["tune_count"] = tune_count
     return render(
@@ -74,7 +77,7 @@ def tune_list(request):
 @login_required
 def tune_new(request):
     """
-    View for creating a new tune in a user's repertoire.
+    Create a new tune in a user's repertoire.
     """
     if request.method != "POST":
         tune_form = TuneForm()
@@ -121,7 +124,7 @@ def tune_new(request):
 @login_required
 def tune_edit(request, pk):
     """
-    View for editing a tune in a user's repertoire.
+    Edit a tune in a user's repertoire.
     """
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
@@ -156,7 +159,7 @@ def tune_edit(request, pk):
 @login_required
 def tune_delete(request, pk):
     """
-    View for deleting a tune from a user's repertoire.
+    Delete a tune from a user's repertoire.
     """
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
@@ -175,7 +178,7 @@ def tune_delete(request, pk):
 @login_required
 def recount(request):
     """
-    View for updating the tune count that displays on the home and public pages.
+    Update the tune count that displays on the home and public pages.
     """
     tune_count = request.session["tune_count"]
     return render(request, "tune/_count.html", {"tune_count": tune_count})
@@ -223,7 +226,7 @@ def get_random_tune(request):
 @login_required
 def change_tune(request):
     """
-    Function for selecting a different random tune from the search results on the play page if the previous one is rejected.
+    Select a different tune from the play search results if the previous one is rejected.
     """
     if not request.session.get("rep_tunes"):
         return render(request, "tune/_play_card.html", {"selected_tune": None})
@@ -239,7 +242,7 @@ def change_tune(request):
 @login_required
 def play(request, pk):
     """
-    View for updating a tune's last_played field, functioning differently if called from the home or play pages.
+    Update a tune's last_played field to now.
     """
     url_name = request.resolver_match.url_name
     templates = {
@@ -269,7 +272,7 @@ def play(request, pk):
 @login_required
 def tune_play(request):
     """
-    View for loading the play page.
+    Load the play page.
     """
     return render(request, "tune/play.html")
 
@@ -277,7 +280,7 @@ def tune_play(request):
 @login_required
 def tune_browse(request):
     """
-    View for loading the public page, where users can browse public tunes and take them into their repertoire
+    Show the public page of preloaded publicly available tunes.
     """
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(
@@ -319,7 +322,7 @@ def tune_browse(request):
 @login_required
 def tune_take(request, pk):
     """
-    View for taking a public tune into a user's repertoire.
+    Take a public tune into a user's repertoire.
     """
     user = request.user
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
@@ -347,7 +350,7 @@ def tune_take(request, pk):
 @login_required
 def set_rep_fields(request, pk):
     """
-    View for setting the knowledge and last_played fields when a user takes a public tune into their repertoire.
+    Set the knowledge, last_played, and tags of a public tune when a user takes it into their repertoire.
     """
     rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
