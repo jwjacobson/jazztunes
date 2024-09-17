@@ -1,0 +1,43 @@
+<table class="table table-success table-striped table-hover border border-primary" id="public-table">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Composer</th>
+            <th scope="col">Key</th>
+            <th scope="col">Other Keys</th>
+            <th scope="col">Form</th>
+            <th scope="col">Style</th>
+            <th scope="col">Meter</th>
+            <th scope="col">Year</th>
+            <!-- <th>Tags</th> -->
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+<tbody>
+{% for tune in tunes %}
+<tr>
+    <td class="w-auto">{{ tune.tune.title }}</td>
+    <td class="w-auto">{{ tune.tune.composer }}</td>
+    <td class="w-auto">{{ tune.tune.key }}</td>
+    <td class="w-auto">{{ tune.tune.other_keys }}</td>
+    <td class="w-auto">{{ tune.tune.song_form }}</td>
+    <td class="w-auto">{{ tune.tune.style }}</td>
+    <td class="w-auto">{{ tune.tune.meter }}</td>
+    <td class="w-auto">{{ tune.tune.year }}</td>
+    <!-- <td>{{ tune.tune.tags }}</td> -->
+    <td class="w-auto">
+      {% if tune.tune.title in user_tune_titles %}
+        <button type="button" class="btn btn-outline-dark btn-sm" disabled>Take</button>
+      {% else %}
+      <button type="button"
+                class="btn btn-success btn-sm"
+                hx-put="{% url 'tune:tune_take' pk=tune.id %}"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-swap="outerHTML"
+            >Take</button>
+      {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>

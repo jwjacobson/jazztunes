@@ -1,0 +1,62 @@
+<table class="table table-responsive table-success table-striped table-hover border border-primary" id="rep-table">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Composer</th>
+        <th>Key</th>
+        <th>Other keys</th>
+        <th>Form</th>
+        <th>Style</th>
+        <th>Meter</th>
+        <th>Year</th>
+        <th>Tags</th>
+        <th>Knowledge</th>
+        <th>Last played</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for tune in tunes %}
+    <tr>
+        <td>{{ tune.tune.title }}</td>
+        <td>{{ tune.tune.composer }}</td>
+        <td>{{ tune.tune.key }}</td>
+        <td>{{ tune.tune.other_keys }}</td>
+        <td>{{ tune.tune.song_form }}</td>
+        <td>{{ tune.tune.style }}</td>
+        <td>{{ tune.tune.meter|default_if_none:"" }}</td>
+        <td>{{ tune.tune.year|default_if_none:"" }}</td>
+        <td>
+            {% for tag in tune.tags.all %}
+            <div>{{ tag.name }}</div>
+            {% endfor %}
+        </td>
+        <td>{{ tune.knowledge }}</td>
+        <td id="last-played-{{ tune.id }}">{{ tune.last_played|date:"MONTH_DAY_FORMAT"}}</td>
+
+        <td>
+            <div class="btn-group">
+                <button type="button"
+                class="btn btn-outline-primary btn-sm"
+                hx-put="{% url 'tune:play_list' pk=tune.id %}"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-swap="innerHTML"
+                hx-target="#last-played-{{ tune.id }}"
+            >Play</button>
+
+                <a class="btn btn-outline-success btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+            
+                <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}" 
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-swap="outerHTML"
+                    hx-confirm="Are you sure?"
+                    hx-target="closest tr" 
+                    class="btn btn-outline-info btn-sm">
+                Delete
+            </button>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
