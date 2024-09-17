@@ -56,7 +56,6 @@ def tune_list(request):
         search_form = SearchForm()
 
     if request.headers.get("Hx-Request"):
-        breakpoint()
         return render(
             request, "tune/_table_list.html", {"tunes": tunes, "tune_count": tune_count}
         )

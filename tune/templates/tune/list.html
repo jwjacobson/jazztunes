@@ -17,7 +17,7 @@
         <h5 class="card-title">Tune Search</h5>
         <div>
             <form hx-post="{% url 'tune:tune_list' %}"
-                  hx-target="#rep-table"
+                  hx-target="#test"
                   hx-swap="outerHTML">
                 {% csrf_token %}
                 <label for="basic_search"></label>
@@ -41,6 +41,8 @@
     </div>
 </div>
 
+
+<div id="test">
 <div class="row mt-4 align-items-end justify-content-evenly">
     <div class="col-10">
         <h1
@@ -120,6 +122,7 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
 </div>
 <script>
     // Uncomment this script for column visibility toggling; good but ugly
