@@ -301,6 +301,9 @@ def tune_browse(request):
     else:
         search_form = SearchForm()
 
+    if request.headers.get("Hx-Request"):
+        return render(request, "tune/_table_browse.html", {"tunes": tunes})
+
     return render(
         request,
         "tune/browse.html",
