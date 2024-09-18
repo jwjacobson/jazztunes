@@ -15,7 +15,7 @@
             <div>
                 <form
                     hx-post="{% url 'tune:tune_browse' %}"
-                    hx-target="#public-table"
+                    hx-target="#table_count"
                     hx-swap="outerHTML">
                     {% csrf_token %}
                     <label for="basic_search"></label>
@@ -28,6 +28,7 @@
     </div>
 </div>
 
+<div id="table_count">
 <div class="row mt-4 align-items-end justify-content-evenly">
     <div class="col-10">
         <h1
@@ -89,6 +90,7 @@
     {% endfor %}
     </tbody>
     </table>
+    </div>
     </div>
     <script>
         $(document).ready(function () {

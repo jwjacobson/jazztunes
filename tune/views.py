@@ -285,7 +285,7 @@ def tune_play(request):
 @login_required
 def tune_browse(request):
     """
-    Show the public page of preloaded publicly available tunes.
+    Show the public page of preloaded tunes.
     """
 
     user_tunes = RepertoireTune.objects.select_related("tune").filter(
@@ -310,7 +310,11 @@ def tune_browse(request):
         search_form = SearchForm()
 
     if request.headers.get("Hx-Request"):
-        return render(request, "tune/partials/_table_browse.html", {"tunes": tunes})
+        return render(
+            request,
+            "tune/partials/_table_browse.html",
+            {"tunes": tunes, "tune_count": tune_count},
+        )
 
     return render(
         request,
