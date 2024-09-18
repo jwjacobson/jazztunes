@@ -57,7 +57,9 @@ def tune_list(request):
 
     if request.headers.get("Hx-Request"):
         return render(
-            request, "tune/_table_list.html", {"tunes": tunes, "tune_count": tune_count}
+            request,
+            "tune/partials/_table_list.html",
+            {"tunes": tunes, "tune_count": tune_count},
         )
 
     request.session["tune_count"] = tune_count
@@ -180,7 +182,7 @@ def recount(request):
     Update the tune count that displays on the home and public pages.
     """
     tune_count = request.session["tune_count"]
-    return render(request, "tune/_count.html", {"tune_count": tune_count})
+    return render(request, "tune/partials/_count.html", {"tune_count": tune_count})
 
 
 @login_required
@@ -219,7 +221,9 @@ def get_random_tune(request):
         selected_tune = None
     request.session.save()
 
-    return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
+    return render(
+        request, "tune/partials/_play_card.html", {"selected_tune": selected_tune}
+    )
 
 
 @login_required
@@ -235,7 +239,9 @@ def change_tune(request):
     request.session.save()
 
     selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
-    return render(request, "tune/_play_card.html", {"selected_tune": selected_tune})
+    return render(
+        request, "tune/partials/_play_card.html", {"selected_tune": selected_tune}
+    )
 
 
 @login_required
@@ -245,8 +251,8 @@ def play(request, pk):
     """
     url_name = request.resolver_match.url_name
     templates = {
-        "play_list": "tune/_play_list.html",
-        "play_play": "tune/_play_play.html",
+        "play_list": "tune/partials/_play_list.html",
+        "play_play": "tune/partials/_play_play.html",
     }
 
     rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
@@ -257,7 +263,7 @@ def play(request, pk):
     if url_name == "play_play":
         return render(
             request,
-            "tune/_another_button.html",
+            "tune/partials/_another_button.html",
             {"last_played": rep_tune.last_played, "selected_tune": rep_tune},
         )
 
@@ -304,7 +310,7 @@ def tune_browse(request):
         search_form = SearchForm()
 
     if request.headers.get("Hx-Request"):
-        return render(request, "tune/_table_browse.html", {"tunes": tunes})
+        return render(request, "tune/partials/_table_browse.html", {"tunes": tunes})
 
     return render(
         request,
@@ -341,7 +347,7 @@ def tune_take(request, pk):
 
     return render(
         request,
-        "tune/_take.html",
+        "tune/partials/_take.html",
         {"rep_form": rep_form, "tune": tune, "new_rep_tune": new_rep_tune},
     )
 
@@ -363,4 +369,4 @@ def set_rep_fields(request, pk):
         print("invalid")
         print(rep_form.errors)
 
-    return render(request, "tune/_taken.html", {"rep_form": rep_form})
+    return render(request, "tune/partials/_taken.html", {"rep_form": rep_form})
