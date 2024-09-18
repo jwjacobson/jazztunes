@@ -232,7 +232,7 @@ def change_tune(request):
     Select a different tune from the play search results if the previous one is rejected.
     """
     if not request.session.get("rep_tunes"):
-        return render(request, "tune/_play_card.html", {"selected_tune": None})
+        return render(request, "tune/partials/_play_card.html", {"selected_tune": None})
 
     chosen_tune_id = choice(request.session["rep_tunes"])
     request.session["rep_tunes"].remove(chosen_tune_id)
