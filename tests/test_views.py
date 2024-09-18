@@ -247,7 +247,7 @@ def test_recount(user_tune_rep, client):
     assert response.status_code == 200
     assert "tune_count" in response.context
     assert response.context["tune_count"] == 5
-    assert "tune/_count.html" in [t.name for t in response.templates]
+    assert "tune/partials/_count.html" in [t.name for t in response.templates]
     assert response.context["user"] == user
 
 
@@ -312,7 +312,8 @@ def test_set_rep_fields_invalid_last_played(client, user_tune_rep):
     invalid_last_played = "tomorrow"
 
     response = client.post(
-        reverse("tune:set_rep_fields", args=[tune_pk]), {"last_played": invalid_last_played}
+        reverse("tune:set_rep_fields", args=[tune_pk]),
+        {"last_played": invalid_last_played},
     )
 
     assert response.status_code == 200
