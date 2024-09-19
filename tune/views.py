@@ -302,10 +302,10 @@ def tune_browse(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            tunes = return_search_results(request, search_terms, tunes, search_form)[
-                "tunes"
-            ]
-            tune_count = len(tunes)
+            results = return_search_results(request, search_terms, tunes, search_form)
+            tunes = results.get("tunes")
+            tune_count = results.get("tune_count", 0)
+
     else:
         search_form = SearchForm()
 
