@@ -18,7 +18,8 @@
         <div>
             <form hx-post="{% url 'tune:tune_list' %}"
                   hx-target="#table_count"
-                  hx-swap="outerHTML">
+                  hx-swap="outerHTML"
+                  hx-trigger="submit">
                 {% csrf_token %}
                 <label for="basic_search"></label>
                 <input id="search_term" type="text" name="search_term" value="{{ search_term_string }}" class="ms-0 ps-0">
