@@ -39,11 +39,32 @@
   <section id="searching-your-repertoire">
 <span id="searching"></span><h1>Searching your repertoire<a class="headerlink" href="#searching-your-repertoire" title="Link to this heading">¶</a></h1>
 <p>The <strong>Home</strong>, <strong>Play</strong>, and <strong>Public</strong> pages all contain a search box that uses the same logic.</p>
-<p>By default, every field is searched for your search term. If you enter multiple terms, the search uses AND logic. For example, if you search <code class="docutils literal notranslate"><span class="pre">monk</span></code> you will see all tunes with monk in any fields (usually composer). If you search <code class="docutils literal notranslate"><span class="pre">monk</span> <span class="pre">bud</span></code>, you will only see “In Walked Bud” (assuming it’s in your repertoire).</p>
+<section id="basic-search">
+<h2>Basic search<a class="headerlink" href="#basic-search" title="Link to this heading">¶</a></h2>
+<p>By default, every field is searched for your search term. If you enter multiple terms, the search uses AND logic to combine them. For example, if you search <code class="docutils literal notranslate"><span class="pre">monk</span></code> you will see all tunes with monk in any fields (usually composer). If you search <code class="docutils literal notranslate"><span class="pre">monk</span> <span class="pre">bud</span></code>, you will only see “In Walked Bud” (assuming it’s in your repertoire).</p>
 <p>Jazz composer names have built-in substitutions using their nicknames or first names, so searching <code class="docutils literal notranslate"><span class="pre">miles</span></code> will return Miles Davis tunes, <code class="docutils literal notranslate"><span class="pre">bird</span></code> will return Charlie Parker tunes, etc.</p>
+<p>The default search is often sufficient, since the contents of the fields tend to be discrete: if the search term <code class="docutils literal notranslate"><span class="pre">love</span></code> probably only refers to the contents of the Title field, <code class="docutils literal notranslate"><span class="pre">Golson</span></code> to the composer field, etc. However, some fields are trickier. If you want to search for the key of Ab using the default search, your query <code class="docutils literal notranslate"><span class="pre">Ab</span></code> will also pick up any song forms containing the sequence AB, which is almost all of them. For such cases you can use field-specific search.</p>
+</section>
+<section id="field-specific-search">
+<h2>Field-specific search<a class="headerlink" href="#field-specific-search" title="Link to this heading">¶</a></h2>
+<p>You can use the format <code class="docutils literal notranslate"><span class="pre">field:term</span></code> to search a specific field. Currently supported fields are <strong>title</strong>, <strong>composer</strong>, <strong>key</strong> (the key column, a tune’s main key), <strong>keys</strong> (both the Key and Other Keys columns), <strong>form</strong>, <strong>style</strong>, <strong>meter</strong>, <strong>year</strong>, and <strong>tags</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Field-specific search is most useful for the key, keys, meter, and form fields.</p>
+</div>
+</section>
+<section id="term-exclusion">
+<h2>Term exclusion<a class="headerlink" href="#term-exclusion" title="Link to this heading">¶</a></h2>
 <p>Use a <code class="docutils literal notranslate"><span class="pre">-</span></code> before a term to exclude it from the search results.</p>
-<p>You can also use the format <code class="docutils literal notranslate"><span class="pre">field:term</span></code> to search a specific field. Currently supported fields are <strong>title</strong>, <strong>composer</strong>, <strong>key</strong> (the key column, a tune’s main key), <strong>keys</strong> (both the Key and Other Keys columns), <strong>form</strong>, <strong>style</strong>, <strong>meter</strong>, <strong>year</strong>, and <strong>tags</strong>. It is most useful for key, keys, meter, and form.</p>
+</section>
+<section id="timespan-filtering-haven-t-played-in">
+<h2>Timespan filtering: Haven’t Played In<a class="headerlink" href="#timespan-filtering-haven-t-played-in" title="Link to this heading">¶</a></h2>
 <p>The <strong>haven’t played in</strong> dropdown lets you filter by how long it’s been since you’ve played a tune. This allows you to easily target tunes at the highest risk of being forgotten.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Timespan filtering is one of the most useful parts of the app!</p>
+</div>
+</section>
 </section>
 
 
