@@ -6,13 +6,10 @@ from django.db.models import Q
 from .models import Tune
 
 
-def search_field(tune_set, search_term):
+def search_field(tune_set, field, term):
     """
     Search a specific field for a term.
     """
-    split_term = search_term.split(":")
-    field, term = split_term[0], split_term[1]
-
     if field.lower() == "keys":
         term_query = tune_set.filter(
             Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
@@ -72,16 +69,17 @@ def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
 
     for term in search_terms:
+        # If the term begins with "-", exclude it from the search
         if term.startswith("-"):
             term_query = exclude_term(tune_set, term)
 
-        elif (
-            term
-            and len(term.split(":")) > 1
-            and term.split(":")[0].lower() in Tune.field_names
-        ):
-            term_query = search_field(tune_set, term)
+        # If the term contains a colon, attempt field-specific search
+        elif ":" in term:
+            field, term = term.split(":", 1)
+            if field.lower() in Tune.field_names:
+                term_query = search_field(tune_set, field, term)
 
+        # Default, search all fields for the term
         else:
             term_query = tune_set.filter(
                 Q(tune__title__icontains=term)
