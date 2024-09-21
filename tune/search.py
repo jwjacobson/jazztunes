@@ -72,7 +72,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
     searches = set()
 
     for term in search_terms:
-        if term and term[0] == "-":
+        if term.startswith("-"):
             term_query = exclude_term(tune_set, term)
 
         elif (
