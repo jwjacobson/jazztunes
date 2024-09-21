@@ -7,6 +7,9 @@ from .models import Tune
 
 
 def search_field(tune_set, search_term):
+    """
+    Search a specific field for a term.
+    """
     split_term = search_term.split(":")
     field, term = split_term[0], split_term[1]
 
@@ -31,6 +34,9 @@ def search_field(tune_set, search_term):
 
 
 def exclude_term(tune_set, search_term):
+    """
+    Exclude a term from a search.
+    """
     excluded_term = search_term[1:]
 
     term_query = tune_set.exclude(
@@ -50,6 +56,9 @@ def exclude_term(tune_set, search_term):
 
 
 def nickname_search(tune_set, search_term):
+    """
+    Search for a composer by their nickname.
+    """
     nickname_query = tune_set.filter(
         Q(tune__composer__icontains=Tune.NICKNAMES[search_term])
     )
