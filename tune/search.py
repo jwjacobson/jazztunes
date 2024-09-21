@@ -98,7 +98,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
     search_results = searches.pop()
 
     while searches:
-        search_results = search_results & searches.pop()
+        search_results &= searches.pop()
 
     return search_results
 
