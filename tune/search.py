@@ -27,7 +27,7 @@ def search_field(tune_set, field, term):
     elif field.lower() == "tags":
         return tune_set.filter(Q(tags__name__icontains=term))
 
-    elif field.lower() == "composer":
+    elif field.lower() == "composer" and term in Tune.NICKNAMES:
         return nickname_search(tune_set, term)
 
     else:
