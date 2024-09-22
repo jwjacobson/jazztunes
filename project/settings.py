@@ -64,7 +64,9 @@ else:
 
     from sentry_sdk.integrations.django import DjangoIntegration
 
-    sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()]
+    )
 
     EMAIL_HOST = "smtp.sendgrid.net"
     EMAIL_HOST_USER = "apikey"
@@ -131,20 +133,7 @@ DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa: E501
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",  # noqa: E501
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",  # noqa: E501
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",  # noqa: E501
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 INTERNAL_IPS = [
     "127.0.0.1",

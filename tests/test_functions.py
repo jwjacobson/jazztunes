@@ -285,7 +285,7 @@ def test_search_field_composer_nickname(tune_set):
 
 def test_search_field_key(tune_set):
     field = "key"
-    term = "f"
+    term = "F"
     result = search_field(tune_set["tunes"], field, term)
     expected_key = "F"
     expected_titles = {"Confirmation", "Long Ago and Far Away", "I Remember You"}
