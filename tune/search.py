@@ -11,29 +11,27 @@ def search_field(tune_set, field, term):
     Search a specific field for a term.
     """
     if field.lower() == "key":
-        term_query = tune_set.filter(Q(tune__key__exact=term))
+        return tune_set.filter(Q(tune__key__exact=term))
 
     elif field.lower() == "keys":
-        term_query = tune_set.filter(
+        return tune_set.filter(
             Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
         )
 
     elif field.lower() == "form":
         if term.lower() == "blues" or term.lower() == "irregular":
-            term_query = tune_set.filter(Q(tune__song_form=term))
+            return tune_set.filter(Q(tune__song_form=term))
         else:
-            term_query = tune_set.filter(Q(tune__song_form=term.upper()))
+            return tune_set.filter(Q(tune__song_form=term.upper()))
 
     elif field.lower() == "tags":
-        term_query = tune_set.filter(Q(tags__name__icontains=term))
+        return tune_set.filter(Q(tags__name__icontains=term))
 
     elif field.lower() == "composer":
-        term_query = nickname_search(tune_set, term)
+        return nickname_search(tune_set, term)
 
     else:
-        term_query = tune_set.filter(Q(**{f"tune__{field}__icontains": term}))
-
-    return term_query
+        return tune_set.filter(Q(**{f"tune__{field}__icontains": term}))
 
 
 def exclude_term(tune_set, search_term):
