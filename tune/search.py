@@ -10,7 +10,10 @@ def search_field(tune_set, field, term):
     """
     Search a specific field for a term.
     """
-    if field.lower() == "keys":
+    if field.lower() == "key":
+        term_query = tune_set.filter(Q(tune__key__exact=term))
+
+    elif field.lower() == "keys":
         term_query = tune_set.filter(
             Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
         )
@@ -97,6 +100,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tags__name__icontains=term)
             )
 
+            # If the term is a nickman, add in the nickname search
             if term in Tune.NICKNAMES:
                 term_query |= nickname_search(tune_set, term)
 
