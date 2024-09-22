@@ -270,6 +270,19 @@ def test_search_field_composer(tune_set):
         assert tune.tune.title in expected_titles
 
 
+def test_search_field_composer_nickname(tune_set):
+    field = "composer"
+    term = "bird"
+    result = search_field(tune_set["tunes"], field, term)
+    expected_composer = "Parker"
+    expected_titles = {"Confirmation", "Dewey Square"}
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.composer == expected_composer
+        assert tune.tune.title in expected_titles
+
+
 def test_search_field_key(tune_set):
     field = "key"
     term = "f"
