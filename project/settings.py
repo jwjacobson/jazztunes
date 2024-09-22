@@ -53,8 +53,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "tune.apps.TuneConfig",
     "debug_toolbar",
-    "crispy_forms",
-    "crispy_bootstrap5",
 ]
 
 SITE_ID = 1
@@ -174,11 +172,6 @@ STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"), BASE_DIR / "static")
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-
-CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # sentry_sdk.init(
 #     dsn=os.environ.get("SENTRY_DSN"),
