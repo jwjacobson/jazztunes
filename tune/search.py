@@ -11,7 +11,7 @@ def search_field(tune_set, field, term):
     Search a specific field for a term.
     """
     if field.lower() == "key":
-        return tune_set.filter(Q(tune__key__exact=term))
+        return Q(tune__key__exact=term)
 
     elif field.lower() == "keys":
         return tune_set.filter(
@@ -25,13 +25,13 @@ def search_field(tune_set, field, term):
             return tune_set.filter(Q(tune__song_form=term.upper()))
 
     elif field.lower() == "tags":
-        return tune_set.filter(Q(tags__name__icontains=term))
+        return Q(tags__name__icontains=term)
 
     elif field.lower() == "composer" and term in Tune.NICKNAMES:
         return nickname_search(tune_set, term)
 
     else:
-        return tune_set.filter(Q(**{f"tune__{field}__icontains": term}))
+        return Q(**{f"tune__{field}__icontains": term})
 
 
 def exclude_term(tune_set, search_term):
@@ -60,9 +60,7 @@ def nickname_search(tune_set, search_term):
     """
     Search for a composer by their nickname.
     """
-    nickname_query = tune_set.filter(
-        Q(tune__composer__icontains=Tune.NICKNAMES[search_term])
-    )
+    nickname_query = Q(tune__composer__icontains=Tune.NICKNAMES[search_term])
     return nickname_query
 
 
@@ -70,22 +68,24 @@ def query_tunes(tune_set, search_terms, timespan=None):
     """
     Run a search of the user's repertoire and return the results.
     """
-    searches = set()
+    combined_query = Q()
 
     for term in search_terms:
-        # If the term begins with "-", exclude it from the search
+        negate = False
+
         if term.startswith("-"):
-            term_query = exclude_term(tune_set, term)
+            negate = True
+            term = term[1:]
 
-        # If the term contains a colon, attempt field-specific search
-        elif ":" in term:
-            field, term = term.split(":", 1)
+        # If the term contains a colon, attempt a field-specific search
+        if ":" in term:
+            field, search_value = term.split(":", 1)
             if field.lower() in Tune.field_names:
-                term_query = search_field(tune_set, field, term)
+                term_query = search_field(tune_set, field, search_value)
 
-        # Default, search all fields for the term
+        # Default, search across all fields
         else:
-            term_query = tune_set.filter(
+            term_query = (
                 Q(tune__title__icontains=term)
                 | Q(tune__composer__icontains=term)
                 | Q(tune__key__icontains=term)
@@ -98,21 +98,21 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tags__name__icontains=term)
             )
 
-            # If the term is a nickman, add in the nickname search
+            # If the term is a nickname, add in the nickname search
             if term in Tune.NICKNAMES:
                 term_query |= nickname_search(tune_set, term)
 
-        if timespan is not None:
-            term_query = term_query.exclude(last_played__gte=timespan)
+        if negate:
+            term_query = ~term_query
 
-        searches.add(term_query)
+        combined_query &= term_query
 
-    search_results = searches.pop()
+    tune_set = tune_set.filter(combined_query)
 
-    while searches:
-        search_results &= searches.pop()
+    if timespan is not None:
+        tune_set = tune_set.exclude(last_played__gte=timespan)
 
-    return search_results
+    return tune_set
 
 
 def return_search_results(request, search_terms, tunes, search_form, timespan=None):
