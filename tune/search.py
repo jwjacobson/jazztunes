@@ -14,15 +14,13 @@ def search_field(tune_set, field, term):
         return Q(tune__key__exact=term)
 
     elif field.lower() == "keys":
-        return tune_set.filter(
-            Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
-        )
+        return Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
 
     elif field.lower() == "form":
         if term.lower() == "blues" or term.lower() == "irregular":
-            return tune_set.filter(Q(tune__song_form=term))
+            return Q(tune__song_form=term)
         else:
-            return tune_set.filter(Q(tune__song_form=term.upper()))
+            return Q(tune__song_form=term.upper())
 
     elif field.lower() == "tags":
         return Q(tags__name__icontains=term)

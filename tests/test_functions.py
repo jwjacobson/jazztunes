@@ -249,7 +249,8 @@ def test_exclude_term(tune_set):
 def test_search_field_title(tune_set):
     field = "title"
     term = "you"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_titles = {"All the Things You Are", "I Remember You"}
 
     assert result.count() == 2
@@ -260,7 +261,8 @@ def test_search_field_title(tune_set):
 def test_search_field_composer(tune_set):
     field = "composer"
     term = "parker"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_composer = "Parker"
     expected_titles = {"Confirmation", "Dewey Square"}
 
@@ -273,7 +275,8 @@ def test_search_field_composer(tune_set):
 def test_search_field_composer_nickname(tune_set):
     field = "composer"
     term = "bird"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_composer = "Parker"
     expected_titles = {"Confirmation", "Dewey Square"}
 
@@ -286,7 +289,8 @@ def test_search_field_composer_nickname(tune_set):
 def test_search_field_key(tune_set):
     field = "key"
     term = "F"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_key = "F"
     expected_titles = {"Confirmation", "Long Ago and Far Away", "I Remember You"}
 
@@ -299,7 +303,8 @@ def test_search_field_key(tune_set):
 def test_search_field_keys(tune_set):
     field = "keys"
     term = "eb"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_key = "Eb"
     expected_titles = {
         "Dewey Square",
@@ -316,7 +321,8 @@ def test_search_field_keys(tune_set):
 def test_search_field_form(tune_set):
     field = "form"
     term = "abac"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_form = "ABAC"
     expected_titles = {
         "Dearly Beloved",
@@ -333,7 +339,8 @@ def test_search_field_form(tune_set):
 def test_search_field_style(tune_set):
     field = "style"
     term = "jazz"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_style = "jazz"
     expected_titles = {
         "Confirmation",
@@ -352,7 +359,8 @@ def test_search_field_style(tune_set):
 def test_search_field_meter(tune_set):
     field = "meter"
     term = "3"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_meter = 3
     expected_titles = {"Someday My Prince Will Come"}
 
@@ -365,7 +373,8 @@ def test_search_field_meter(tune_set):
 def test_search_field_year(tune_set):
     field = "year"
     term = "1941"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_year = 1941
     expected_titles = {"I Remember You", "A Flower is a Lovesome Thing"}
 
@@ -378,7 +387,8 @@ def test_search_field_year(tune_set):
 def test_search_field_year_partial(tune_set):
     field = "year"
     term = "195"
-    result = search_field(tune_set["tunes"], field, term)
+    query = search_field(tune_set["tunes"], field, term)
+    result = tune_set["tunes"].filter(query)
     expected_years = {1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959}
     expected_titles = {"Kary's Trance", "Coming on the Hudson"}
 
