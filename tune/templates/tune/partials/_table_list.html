@@ -79,3 +79,29 @@
     </tbody>
 </table>
 </div>
+
+<script>
+    // Uncomment this script for column visibility toggling; good but ugly
+    // $(document).ready(function() {
+    //     $('#rep-table').DataTable({
+    //         "searching": false,
+    //         "info": false,
+    //         "lengthChange": false,
+    //         "paging": false,
+    //         dom: 'Bfrtip', // This needs to be included to show buttons
+    //         buttons: [
+    //             'colvis' // This button will allow users to toggle column visibility
+    //         ]
+    //     });
+    // });
+    $(document).ready( function () {
+        $('#rep-table').DataTable({
+            "searching": false,
+            "info": false,
+            "lengthChange": false,
+            "paging": false,
+            "language": {emptyTable: ' '}
+        }
+        );
+    });
+    </script>
