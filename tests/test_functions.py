@@ -35,7 +35,7 @@ def search_form_fixture():
 
 # Single term tests
 @pytest.mark.django_db
-def test_query_tunes_kern(tune_set):
+def test_query_tunes_one_term(tune_set):
     search_terms = ["kern"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {
@@ -67,7 +67,7 @@ def test_query_tunes_no_results(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_nickname(tune_set):
+def test_query_tunes_one_term_nickname(tune_set):
     search_terms = ["bird"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {"Confirmation", "Dewey Square"}
@@ -79,7 +79,7 @@ def test_query_tunes_nickname(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_common_fragment(tune_set):
+def test_query_tunes_one_term_fragment(tune_set):
     search_terms = ["love"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {"Dearly Beloved", "A Flower is a Lovesome Thing"}
@@ -90,7 +90,7 @@ def test_query_tunes_common_fragment(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_decade(tune_set):
+def test_query_tunes_one_term_decade(tune_set):
     search_terms = ["194"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {
@@ -108,7 +108,7 @@ def test_query_tunes_decade(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_form(tune_set):
+def test_query_tunes_one_tune_form(tune_set):
     search_terms = ["abac"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {
@@ -123,7 +123,7 @@ def test_query_tunes_form(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_exclude(tune_set):
+def test_query_tunes_one_term_exclude(tune_set):
     search_terms = ["-kern"]
     result = query_tunes(tune_set["tunes"], search_terms)
 
@@ -134,7 +134,7 @@ def test_query_tunes_exclude(tune_set):
 
 # Two term tests
 @pytest.mark.django_db
-def test_query_tunes_kern2(tune_set):
+def test_query_tunes_two_terms(tune_set):
     search_terms = ["kern", "love"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_title = "Dearly Beloved"
@@ -145,7 +145,7 @@ def test_query_tunes_kern2(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_monk(tune_set):
+def test_query_tunes_two_terms2(tune_set):
     search_terms = ["monk", "hudson"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_title = "Coming on the Hudson"
@@ -156,7 +156,7 @@ def test_query_tunes_monk(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_nickname2(tune_set):
+def test_query_tunes_two_terms_nickname(tune_set):
     search_terms = ["bird", "dewey"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_title = "Dewey Square"
@@ -167,7 +167,7 @@ def test_query_tunes_nickname2(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_exclude2_mixed(tune_set):
+def test_query_tunes_two_terms_exclude_one(tune_set):
     search_terms = ["-kern", "love"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_title = "A Flower is a Lovesome Thing"
@@ -178,7 +178,7 @@ def test_query_tunes_exclude2_mixed(tune_set):
 
 
 @pytest.mark.django_db
-def test_query_tunes_exclude2(tune_set):
+def test_query_tunes_two_terms_exclude_both(tune_set):
     search_terms = ["-kern", "-love"]
     result = query_tunes(tune_set["tunes"], search_terms)
 
