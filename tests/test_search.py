@@ -133,6 +133,24 @@ def test_query_tunes_one_term_exclude(tune_set):
 
 
 @pytest.mark.django_db
+def test_query_tunes_one_term_exclude_fragment(tune_set):
+    search_terms = ["-ab"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+
+    assert len(result) == 0
+
+
+@pytest.mark.django_db
+def test_query_tunes_one_term_exclude_nickname(tune_set):
+    search_terms = ["-lee"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+
+    assert result.count() == 9
+    for tune in result:
+        assert tune.tune.composer != "Konitz"
+
+
+@pytest.mark.django_db
 def test_query_tunes_one_term_field_key(tune_set):
     search_terms = ["key:F"]
     result = query_tunes(tune_set["tunes"], search_terms)
