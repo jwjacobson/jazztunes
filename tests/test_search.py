@@ -144,10 +144,13 @@ def test_query_tunes_one_term_exclude_fragment(tune_set):
 def test_query_tunes_one_term_exclude_nickname(tune_set):
     search_terms = ["-lee"]
     result = query_tunes(tune_set["tunes"], search_terms)
+    excluded_composer = "Konitz"
+    excluded_title = "Kary's Trance"
 
     assert result.count() == 9
     for tune in result:
-        assert tune.tune.composer != "Konitz"
+        assert tune.tune.composer != excluded_composer
+        assert tune.tune.title != excluded_title
 
 
 @pytest.mark.django_db
@@ -171,6 +174,21 @@ def test_query_tunes_one_term_exclude_field_key(tune_set):
 
     assert result.count() == 7
     for tune in result:
+        assert tune.tune.title not in excluded_titles
+    for title in excluded_titles:
+        assert title not in {tune.tune.title for tune in result}
+
+
+@pytest.mark.django_db
+def test_query_tunes_one_term_exclude_field_nickname(tune_set):
+    search_terms = ["-composer:bird"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    excluded_titles = {"Confirmation", "Dewey Square"}
+    excluded_composer = "Parker"
+
+    assert result.count() == 8
+    for tune in result:
+        assert tune.tune.composer != excluded_composer
         assert tune.tune.title not in excluded_titles
     for title in excluded_titles:
         assert title not in {tune.tune.title for tune in result}
