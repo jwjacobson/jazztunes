@@ -158,6 +158,24 @@ def test_query_tunes_one_term_exclude_field_key(tune_set):
         assert title not in {tune.tune.title for tune in result}
 
 
+@pytest.mark.django_db
+def test_query_tunes_one_term_field_keys(tune_set):
+    search_terms = ["keys:Bb"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {
+        "Confirmation",
+        "Long Ago and Far Away",
+        "I Remember You",
+        "Someday My Prince Will Come",
+    }
+
+    assert result.count() == 4
+    for tune in result:
+        assert tune.tune.title in expected_titles
+    for title in expected_titles:
+        assert title in {tune.tune.title for tune in result}
+
+
 # Two term tests
 @pytest.mark.django_db
 def test_query_tunes_two_terms(tune_set):
