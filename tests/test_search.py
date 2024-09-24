@@ -132,6 +132,19 @@ def test_query_tunes_one_term_exclude(tune_set):
         assert tune.tune.composer != "Kern"
 
 
+@pytest.mark.django_db
+def test_query_tunes_one_term_field_key(tune_set):
+    search_terms = ["key:F"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {"Confirmation", "Long Ago and Far Away", "I Remember You"}
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.title in expected_titles
+    for title in expected_titles:
+        assert title in {tune.tune.title for tune in result}
+
+
 # Two term tests
 @pytest.mark.django_db
 def test_query_tunes_two_terms(tune_set):
