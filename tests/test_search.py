@@ -269,6 +269,21 @@ def test_query_tunes_two_terms_exclude_both(tune_set):
 
 
 @pytest.mark.django_db
+def test_query_tunes_two_terms_one_field(tune_set):
+    search_terms = ["style:jazz", "parker"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {"Confirmation", "Dewey Square"}
+    expected_style = "jazz"
+    expected_composer = "Parker"
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style == expected_style
+        assert tune.tune.composer == expected_composer
+
+
+@pytest.mark.django_db
 def test_query_tunes_two_terms_field(tune_set):
     search_terms = ["style:standard", "keys:Eb"]
     result = query_tunes(tune_set["tunes"], search_terms)
@@ -298,6 +313,25 @@ def test_query_tunes_two_terms_field_exclude_one(tune_set):
         assert (
             tune.tune.key != excluded_key and excluded_key not in tune.tune.other_keys
         )
+
+
+@pytest.mark.django_db
+def test_query_tunes_two_terms_one_field_exclude_nickname(tune_set):
+    search_terms = ["style:jazz", "-bird"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {
+        "Coming on the Hudson",
+        "Kary's Trance",
+        "A Flower is a Lovesome Thing",
+    }
+    expected_style = "jazz"
+    excluded_composer = "Parker"
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style == expected_style
+        assert tune.tune.composer != excluded_composer
 
 
 @pytest.mark.django_db
