@@ -300,6 +300,28 @@ def test_query_tunes_two_terms_field_exclude_one(tune_set):
         )
 
 
+@pytest.mark.django_db
+def test_query_tunes_two_terms_field_exclude_both(tune_set):
+    search_terms = ["-style:standard", "-keys:Eb"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {
+        "Coming on the Hudson",
+        "Confirmation",
+        "Kary's Trance",
+        "A Flower is a Lovesome Thing",
+    }
+    excluded_style = "standard"
+    excluded_key = "Eb"
+
+    assert result.count() == 4
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style != excluded_style
+        assert (
+            tune.tune.key != excluded_key and excluded_key not in tune.tune.other_keys
+        )
+
+
 # Timespan tests
 @pytest.mark.django_db
 def test_query_tunes_no_timespan(tune_set):
