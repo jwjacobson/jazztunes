@@ -43,11 +43,12 @@ def test_query_tunes_one_term(tune_set):
         "Dearly Beloved",
         "Long Ago and Far Away",
     }
+    expected_composer = "Kern"
 
     assert result.count() == 3
-    assert all("Kern" in tune.tune.composer for tune in result) and (
-        tune.tune.title in expected_titles for tune in result
-    )
+    for tune in result:
+        assert tune.tune.composer == expected_composer
+        assert tune.tune.title in expected_titles
 
 
 @pytest.mark.django_db
