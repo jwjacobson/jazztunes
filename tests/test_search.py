@@ -72,11 +72,13 @@ def test_query_tunes_one_term_nickname(tune_set):
     search_terms = ["bird"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {"Confirmation", "Dewey Square"}
+    expected_composer = "Parker"
 
     assert result.count() == 2
 
     for tune in result:
         assert tune.tune.title in expected_titles
+        assert tune.tune.composer == expected_composer
 
 
 @pytest.mark.django_db
