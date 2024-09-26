@@ -32,28 +32,6 @@ def search_field(tune_set, field, term):
         return Q(**{f"tune__{field}__icontains": term})
 
 
-# def exclude_term(tune_set, search_term):
-#     """
-#     Exclude a term from a search.
-#     """
-#     excluded_term = search_term[1:]
-
-#     term_query = tune_set.exclude(
-#         Q(tune__title__icontains=excluded_term)
-#         | Q(tune__composer__icontains=excluded_term)
-#         | Q(tune__key__icontains=excluded_term)
-#         | Q(tune__other_keys__icontains=excluded_term)
-#         | Q(tune__song_form__icontains=excluded_term)
-#         | Q(tune__style__icontains=excluded_term)
-#         | Q(tune__meter__icontains=excluded_term)
-#         | Q(tune__year__icontains=excluded_term)
-#         | Q(knowledge__icontains=excluded_term)
-#         | Q(tags__name__icontains=excluded_term)
-#     )
-
-#     return term_query
-
-
 def nickname_search(tune_set, search_term):
     """
     Search for a composer by their nickname.
