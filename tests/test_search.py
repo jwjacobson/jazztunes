@@ -43,11 +43,12 @@ def test_query_tunes_one_term(tune_set):
         "Dearly Beloved",
         "Long Ago and Far Away",
     }
+    expected_composer = "Kern"
 
     assert result.count() == 3
-    assert all("Kern" in tune.tune.composer for tune in result) and (
-        tune.tune.title in expected_titles for tune in result
-    )
+    for tune in result:
+        assert tune.tune.composer == expected_composer
+        assert tune.tune.title in expected_titles
 
 
 @pytest.mark.django_db
@@ -71,11 +72,13 @@ def test_query_tunes_one_term_nickname(tune_set):
     search_terms = ["bird"]
     result = query_tunes(tune_set["tunes"], search_terms)
     expected_titles = {"Confirmation", "Dewey Square"}
+    expected_composer = "Parker"
 
     assert result.count() == 2
 
     for tune in result:
         assert tune.tune.title in expected_titles
+        assert tune.tune.composer == expected_composer
 
 
 @pytest.mark.django_db
@@ -266,6 +269,94 @@ def test_query_tunes_two_terms_exclude_both(tune_set):
     for tune in result:
         assert tune.tune.composer != "Kern"
         assert "love" not in tune.tune.title.lower()
+
+
+@pytest.mark.django_db
+def test_query_tunes_two_terms_one_field(tune_set):
+    search_terms = ["style:jazz", "parker"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {"Confirmation", "Dewey Square"}
+    expected_style = "jazz"
+    expected_composer = "Parker"
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style == expected_style
+        assert tune.tune.composer == expected_composer
+
+
+@pytest.mark.django_db
+def test_query_tunes_two_terms_field(tune_set):
+    search_terms = ["style:standard", "keys:Eb"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {"Someday My Prince Will Come", "All the Things You Are"}
+    expected_style = "standard"
+    expected_key = "Eb"
+
+    assert result.count() == 2
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style == expected_style
+        assert tune.tune.key == expected_key or expected_key in tune.tune.other_keys
+
+
+@pytest.mark.django_db
+def test_query_tunes_two_terms_field_exclude_one(tune_set):
+    search_terms = ["style:standard", "-keys:Eb"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {"Long Ago and Far Away", "I Remember You", "Dearly Beloved"}
+    expected_style = "standard"
+    excluded_key = "Eb"
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style == expected_style
+        assert (
+            tune.tune.key != excluded_key and excluded_key not in tune.tune.other_keys
+        )
+
+
+@pytest.mark.django_db
+def test_query_tunes_two_terms_one_field_exclude_nickname(tune_set):
+    search_terms = ["style:jazz", "-bird"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {
+        "Coming on the Hudson",
+        "Kary's Trance",
+        "A Flower is a Lovesome Thing",
+    }
+    expected_style = "jazz"
+    excluded_composer = "Parker"
+
+    assert result.count() == 3
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style == expected_style
+        assert tune.tune.composer != excluded_composer
+
+
+@pytest.mark.django_db
+def test_query_tunes_two_terms_field_exclude_both(tune_set):
+    search_terms = ["-style:standard", "-keys:Eb"]
+    result = query_tunes(tune_set["tunes"], search_terms)
+    expected_titles = {
+        "Coming on the Hudson",
+        "Confirmation",
+        "Kary's Trance",
+        "A Flower is a Lovesome Thing",
+    }
+    excluded_style = "standard"
+    excluded_key = "Eb"
+
+    assert result.count() == 4
+    for tune in result:
+        assert tune.tune.title in expected_titles
+        assert tune.tune.style != excluded_style
+        assert (
+            tune.tune.key != excluded_key and excluded_key not in tune.tune.other_keys
+        )
 
 
 # Timespan tests

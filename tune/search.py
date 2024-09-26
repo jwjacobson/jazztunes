@@ -71,6 +71,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
     for term in search_terms:
         negate = False
 
+        # If the term starts with -, the query will be negated
         if term.startswith("-"):
             negate = True
             term = term[1:]
@@ -100,6 +101,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
             if term in Tune.NICKNAMES:
                 term_query |= nickname_search(tune_set, term)
 
+        # Negate the query
         if negate:
             term_query = ~term_query
 
