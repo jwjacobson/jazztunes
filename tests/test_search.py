@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 
-from tune.search import query_tunes, return_search_results, exclude_term, search_field
+from tune.search import query_tunes, return_search_results, search_field
 
 
 @pytest.fixture
@@ -405,16 +405,6 @@ def test_return_search_results_too_many(request_fixture, tune_set, search_form_f
     assert any(
         "Your query is too long" in msg.message for msg in request_fixture._messages
     )
-
-
-def test_exclude_term(tune_set):
-    excluded_term = "-kern"
-    result = exclude_term(tune_set["tunes"], excluded_term)
-
-    assert result.count() == 7
-    for tune in result:
-        assert tune.tune.composer != "Kern"
-        assert "kern" not in tune.tune.title.lower()
 
 
 def test_search_field_title(tune_set):
