@@ -90,7 +90,7 @@ def query_tunes(tune_set, search_terms, timespan=None):
     if timespan is not None:
         tune_set = tune_set.exclude(last_played__gte=timespan)
 
-    return tune_set
+    return tune_set.distinct()
 
 
 def return_search_results(request, search_terms, tunes, search_form, timespan=None):
