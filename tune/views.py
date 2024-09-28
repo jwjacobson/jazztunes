@@ -313,7 +313,11 @@ def tune_browse(request):
         return render(
             request,
             "tune/partials/_table_browse.html",
-            {"tunes": tunes, "tune_count": tune_count},
+            {
+                "tunes": tunes,
+                "tune_count": tune_count,
+                "user_tune_titles": user_tune_titles,
+            },
         )
 
     return render(

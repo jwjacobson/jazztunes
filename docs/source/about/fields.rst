@@ -1,3 +1,5 @@
+.. _tune_fields:
+
 Tune fields
 ==============
 In defining the fields I've tried to balance between making the app useful and giving freedom to the user. Here I describe my thinking behind each. In some cases my descriptions only apply to the Public repertoire, as the user can do what they want with their own tunes.
@@ -10,11 +12,11 @@ A tune's unique identifier, Title is the only required field.
 
 Composer
 --------
-I index all composers by last name as a way of showing equal respect to jazz and popular tune composers. At the same time, jazz first names and nicknames (Bird, Miles, etc.) are recognized "behind the scenes" when searching and will be appropriately converted and retrieved.
+I index all composers by last name as a way of showing equal respect to jazz and popular tune composers. However, the app also recognizes the first names and nicknames of jazz composers (Bird, Miles, etc.) in searches and converts them.
 
 Key 
 -----
-There can only be one Key; in tonal tunes without an obvious "main" key I leave this blank and put all the keys in Other Keys. A '-' after the letter denotes minor; unadorned is major. Key can be left blank, or you can fill it with 'none' or 'atonal'.
+A tune can have only one Key; in tonal tunes without an obvious "main" key I leave this blank and put all the keys in Other Keys. A '-' after the letter denotes minor; unadorned is major. Key can be left blank, or you can fill it with 'none' or 'atonal'.
 
 Other Keys
 -----------
@@ -42,7 +44,7 @@ These are extra descriptive qualifiers of a tune. None are assigned by default. 
 
 Last Played 
 ------------
-The date you last played a tune. I try to keep as many out of the "haven't played in 3 months" category as I can.
+The date you last played a tune. The time is also recorded but is currently not displayed.
 
 Knowledge
 ----------

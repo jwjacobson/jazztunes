@@ -1,14 +1,19 @@
 Planned features
 =================
 
-There are two major features still to be implemented:
+These are not-yet-implemented features of the app.
 
 Custom tags
 ------------
 
-Tags now exist, but the user can only choose among predefined tags. They should be able to create their own.
+The user should be able to create their own tags instead of just selecting from precreated ones.
 
 Tune analytics
 ---------------
 
 Track all plays of a given tune, allowing the user to see what tunes they play most and least often.
+
+Multiple keys
+--------------
+
+There should be a way to track playing a tune in multiple keys.
