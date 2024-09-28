@@ -4,7 +4,7 @@ There are two ways to add tunes to your repertoire: creating them manually or ta
 
 Creating tunes manually
 -----------------------
-To create a tune, click the **create** button on the navbar. The only required field is "title."
+To create a tune, click the **create** button on the navbar. To learn more about the different fields, see :ref:`tune_fields`.
 
 Taking tunes
 -------------
