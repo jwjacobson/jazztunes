@@ -16,6 +16,7 @@ The source code is available on `Github <https://github.com/jwjacobson/jazztunes
 
    about/index
    using/index
+   miscellany/index
 
 
 
