@@ -41,6 +41,11 @@ def tune_list(request):
     tune_count = len(tunes)
     search_term_string = " "
 
+    if user.username.endswith("s"):
+        possessive = f"{user.username}'"
+    else:
+        possessive = f"{user.username}'s"
+
     if request.method == "POST":
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
@@ -71,6 +76,7 @@ def tune_list(request):
             "search_form": search_form,
             "tune_count": tune_count,
             "search_term_string": search_term_string,
+            "possessive": possessive,
         },
     )
 
