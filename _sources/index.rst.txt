@@ -7,9 +7,9 @@ Jazztunes user manual
 =====================================
 **Jazztunes** is a jazz repertoire management app.
 
-You can use it for free at `jazztunes.org <https://jazztunes.org>`_.
+You can use it for free at `jazztunes.org <https://jazztunes.org>`_; The source code is available on `Github <https://github.com/jwjacobson/jazztunes>`_.
 
-The source code is available on `Github <https://github.com/jwjacobson/jazztunes>`_.
+This manual explains why I made Jazztunes and how to use it.
 
 .. toctree::
    :maxdepth: 2
