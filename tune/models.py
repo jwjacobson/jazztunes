@@ -96,6 +96,7 @@ class Tune(models.Model):
         "bill": "Evans",
         "herbie": "Hancock",
         "cedar": "Walton",
+        "ornette": "Coleman",
     }
 
     field_names = {
