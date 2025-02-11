@@ -15,7 +15,6 @@ author = "Jeff Jacobson"
 
 extensions = [
     "sphinx.ext.githubpages",
-    "furo",
 ]
 
 templates_path = ["_templates"]
