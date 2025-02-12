@@ -1,3 +1,4 @@
+[![Documentation Status](https://readthedocs.org/projects/jazztunes/badge/?version=latest)](https://jazztunes.readthedocs.io/en/latest/)
 # jazztunes - a jazz repertoire management app
 
 Jazztunes is an app to help jazz musicians manage their repertoire. To use it, go to [jazztunes.org](https://jazztunes.org/).
