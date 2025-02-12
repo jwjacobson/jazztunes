@@ -1,7 +1,7 @@
 About jazztunes
 ================
 
-Here you'll find information about the origin and goals of jazztunes.
+Here you'll find information about what jazztunes is and why I made it.
 
 .. toctree::
    :maxdepth: 2

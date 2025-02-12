@@ -2,7 +2,7 @@
 
 Tune fields
 ==============
-In defining the fields I've tried to balance between making the app useful and giving freedom to the user. Here I describe my thinking behind each. In some cases my descriptions only apply to the Public repertoire, as the user can do what they want with their own tunes.
+In defining the fields I've tried to balance between making the app useful and giving freedom to the user. Here I describe my thinking behind each field. In some cases my descriptions only apply to the Public repertoire, as the user can fill in their own values on their own tunes.
 
 In general I'm open to revising the prescriptive aspects of any of these in dialogue with users, so reach out if you'd like to see any changes or additions.
 
@@ -16,7 +16,7 @@ I index all composers by last name as a way of showing equal respect to jazz and
 
 Key 
 -----
-A tune can have only one Key; in tonal tunes without an obvious "main" key I leave this blank and put all the keys in Other Keys. A '-' after the letter denotes minor; unadorned is major. Key can be left blank, or you can fill it with 'none' or 'atonal'.
+A tune can have only one Key; in tonal tunes without an obvious main key I leave this blank and put all the keys in Other Keys. A '-' after the letter denotes minor; unadorned is major. Key can be left blank, or you can fill it with 'none' or 'atonal'.
 
 Other Keys
 -----------
@@ -36,7 +36,7 @@ This has a default value of 4 for convenience since almost every standard is in 
 
 Year
 -----
-For a lot of the jazz tunes the year is when the first album featuring the tune came out. Let me know if you have more accurate knowledge! 
+For a lot of the jazz tunes the year is when the first album featuring the tune came out. I'm happy to take corrections on these! 
 
 Tags
 -----
