@@ -3,7 +3,7 @@
 Searching your repertoire
 =========================
 
-The **Home**, **Play**, and **Public** pages all contain a search box that uses the same logic.
+The **Home**, **Play**, and **Public** pages all contain a search box with robust functionality.
 
 Basic search
 ----------------
@@ -16,7 +16,7 @@ The default search is often sufficient, since the contents of the fields tend to
 
 Field-specific search
 ----------------------
-You can use the format ``field:term`` to search a specific field. Currently supported fields are **title**, **composer**, **key** (the key column, a tune's main key), **keys** (both the Key and Other Keys columns), **form**, **style**, **meter**, **year**, and **tags**.
+You can use the format ``field:term`` to search a specific field. Currently supported fields are **title**, **composer**, **key** (the Key column, i.e., a tune's main key), **keys** (both the Key and Other Keys columns), **form**, **style**, **meter**, **year**, and **tags**.
 
 Term exclusion
 ---------------

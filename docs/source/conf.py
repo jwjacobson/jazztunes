@@ -6,6 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+html_title = "Jazztunes Docs"
 project = "jazztunes"
 copyright = "2024–2025, Jeff Jacobson"
 author = "Jeff Jacobson"
@@ -33,7 +34,7 @@ html_theme_options = {
     "light_css_variables": {
         "color-brand-primary": "#A855F7",  # Pastel purple
         "color-brand-content": "#0E7490",  # Turquoise
-        "color-admonition-background": "#FBCFE8",  # Lavender Blush
+        "color-admonition-background": "#BFDBFE",  # Lavender Blush
         "color-background-primary": "#F9FAFB",  # Soft White
         "color-background-secondary": "#E5E7EB",  # Warm Gray
         "color-foreground-primary": "#374151",  # Muted Charcoal
