@@ -104,7 +104,7 @@ filelock==3.13.4
     #   -r requirements.in
     #   tox
     #   virtualenv
-gunicorn==22.0.0
+gunicorn==23.0.0
     # via -r requirements.in
 identify==2.5.35
     # via
