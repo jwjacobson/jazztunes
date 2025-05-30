@@ -22,7 +22,6 @@
         <meta name="msapplication-TileColor" content="#da532c">
         <meta name="theme-color" content="#ffffff">
 
-
         <title>
             {% block head_title %}
             Welcome to Jazztunes!
@@ -30,90 +29,109 @@
         </title>
         {% block extra_head %}
         {% endblock extra_head %}
-        <!-- Bootstrap CSS -->
-        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
         <!-- Datatables CSS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css">
-        <!-- Datatables Button CSS -->
-        <!-- Custom CSS -->
-        <link rel="stylesheet" href="{% static '/css/main.css' %}">
+        <!-- Tailwind CSS -->
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
         <!-- JQuery -->
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <!-- HTMX -->
         <script src="https://unpkg.com/htmx.org@1.9.10"></script>
         <!-- Datatables JS -->
         <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
-        <!-- Datatables Button JS -->
-        <!-- <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script> -->
     </head>
 
-    <div class="container my-4">
-    <body class="bg-primary-subtle m-5">
-        {% block body %}
-        <nav class="navbar navbar-expand-lg bg-success-subtle border border-primary ">
-            <div class="container-fluid">
-              <a class="navbar-brand text-primary-emphasis" href="{% url 'tune:tune_list' %}"><b><i>jazztunes</i></b></a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% if user.is_authenticated %}
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_new' %}">Create</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_play' %}">Play</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="{% url 'tune:tune_browse' %}">Public</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="https://jazztunes.readthedocs.io/en/" target="_blank">Manual</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="{% url 'account_logout' %}">Log Out</a>
-                  </li>
-                {% else %}
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="{% url 'account_login' %}">Log In</b></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link text-info-emphasis" href="{% url 'account_signup' %}">Sign Up</a>
-                  </li>
+    <body class="bg-indigo-200 m-5">
+        <div class="container mx-auto px-4">
+            {% block body %}
+            <nav class="bg-indigo-100 border border-indigo-400">
+                <div class="px-4">
+                    <div class="flex flex-wrap items-center justify-between py-3">
+                        <!-- Brand -->
+                        <a class="text-blue-900 font-bold italic text-xl hover:text-blue-700" href="{% url 'tune:tune_list' %}">jazztunes</a>
+                        
+                        <!-- Mobile menu button -->
+                        <button class="lg:hidden px-3 py-2 border-2 border-gray-600 hover:bg-gray-100" 
+                                onclick="document.getElementById('nav-menu').classList.toggle('hidden')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Navigation items -->
+                        <div id="nav-menu" class="hidden lg:flex lg:items-center lg:space-x-4 w-full lg:w-auto">
+                            <ul class="flex flex-col lg:flex-row lg:space-x-4 mt-4 lg:mt-0">
+                                {% if user.is_authenticated %}
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_new' %}">Create</a>
+                                </li>
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_play' %}">Play</a>
+                                </li>
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_browse' %}">Public</a>
+                                </li>
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-blue-900 hover:text-blue-700" href="https://jazztunes.readthedocs.io/en/" target="_blank">Manual</a>
+                                </li>
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'account_logout' %}">Log Out</a>
+                                </li>
+                                {% else %}
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-teal-700 hover:text-teal-700 font-semibold" href="{% url 'account_login' %}">Log In</a>
+                                </li>
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-teal-700 hover:text-teal-700" href="{% url 'account_signup' %}">Sign Up</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Messages container -->
+            <div id="messages-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                        <div class="bg-sky-100 border border-t-0 border-indigo-400 p-4 mb-4" id="alert" role="alert">
+                            {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                        </div>
+                        {% elif message.tags == 'error' %}
+                        <div class="bg-red-100 border border-t-0 border-indigo-400 text-red-700 p-4 mb-4" id="alert" role="alert">
+                            {{ message }}
+                        </div>
+                        {% elif message.tags == 'warning' %}
+                        <div class="bg-amberblue-900 border border-t-0 border-indigo-400 p-4 mb-4" id="alert" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
-                </ul>
-              </div>
             </div>
-          </nav>
-          <div id="messages-container">
-            {% if messages %}
-              {% for message in messages %}
-                {% if message.tags == 'success' %}
-                <div class="alert alert-secondary border border-top-0 border-primary" id="alert" role="alert">
-                  {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
-                </div>
-                {% elif message.tags == 'error' %}
-                <div class="alert alert-danger border border-top-0 border-primary" id="alert"  role="alert">
-                  {{ message }}
-                </div>
-                {% elif message.tags == 'warning' %}
-                <div class="alert alert-warning border border-top-0 border-primary" id="alert"  role="alert">
-                  {{ message }}
-                </div>
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-          </div>
 
             {% block content %}
             {% endblock content %}
-            </div>
-        {% endblock body %}
+            
+            {% endblock body %}
+        </div>
+        
         {% block extra_body %}
         {% endblock extra_body %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-      
-      </body>
+        
+        <!-- Mobile menu toggle script -->
+        {% comment %} <script>
+            // Auto-hide alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('#alert');
+                alerts.forEach(alert => {
+                    alert.style.transition = 'opacity 0.5s';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }, 5000);
+        </script> {% endcomment %}
+    </body>
 </html>
