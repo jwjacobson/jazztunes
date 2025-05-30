@@ -1,0 +1,34 @@
+{
+  "name": "jazz_repertoire",
+  "version": "1.0.0",
+  "description": "[![Documentation Status](https://readthedocs.org/projects/jazztunes/badge/?version=latest)](https://jazztunes.readthedocs.io/en/latest/) # jazztunes - a jazz repertoire management app",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "postcss ./static/src/input.css -o ./static/css/main.css",
+    "watch-css": "postcss ./static/src/input.css -o ./static/css/main.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jwjacobson/jazztunes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jwjacobson/jazztunes/issues"
+  },
+  "homepage": "https://github.com/jwjacobson/jazztunes#readme",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.8",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4",
+    "postcss-cli": "^11.0.1",
+    "tailwindcss": "^4.1.8"
+  }
+}

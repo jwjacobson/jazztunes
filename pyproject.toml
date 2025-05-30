@@ -3,11 +3,12 @@ name = "jazz-repertoire"
 version = "0.1.0"
 description = "A jazz repertoire management app"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "dj-database-url>=2.3.0",
     "django>=5.2",
     "django-allauth>=65.7.0",
+    "django-tailwind>=4.0.1",
     "psycopg2>=2.9.10",
     "python-dotenv>=1.1.0",
     "sendgrid>=6.11.0",
