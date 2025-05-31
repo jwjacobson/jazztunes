@@ -3,30 +3,34 @@
 {% block head_title %}Home{% endblock %}
 
 {% block content %}
-<div class="row mt-4">
-  <div class ="col">
+<div class="my-4">
     <p>
         Here you can browse and manage your repertoire.
     </p>
-  </div>
 </div>
 
-
-<div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
-    <div class="card-body">
-        <h5 class="card-title">Tune Search</h5>
-        <div>
-            <form hx-post="{% url 'tune:tune_list' %}"
-                  hx-target="#table_count"
-                  hx-swap="outerHTML"
-                  hx-trigger="submit">
-                {% csrf_token %}
-                <label for="basic_search"></label>
-                <input id="search_term" type="text" name="search_term" value="{{ search_term_string }}" class="ms-0 ps-0">
+<!-- Search Card -->
+<div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm">
+    <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
+    <form hx-post="{% url 'tune:tune_list' %}"
+          hx-target="#table_count"
+          hx-swap="outerHTML"
+          hx-trigger="submit">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="search_term" class="sr-only">Search</label>
+            <input id="search_term" 
+                   type="text" 
+                   name="search_term" 
+                   value="{{ search_term_string }}" 
+                   class="w-full px-3 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   placeholder="Search tunes...">
         </div>
-        <div class="col-12 my-2">
-            <label for="timespan">Haven't played in:</label>
-            <select id="timespan" name="timespan">
+        <div class="mb-3">
+            <label for="timespan" class="block mb-1 text-sm font-medium">Haven't played in:</label>
+            <select id="timespan" 
+                    name="timespan"
+                    class="w-full px-3 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <option value="anytime">n/a</option>
                 <option value="day">a day</option>
                 <option value="week">a week</option>
@@ -35,96 +39,104 @@
                 <option value="three_months">3 months</option>
             </select>
         </div>
-        <div class="col-1 my-1">
-            <input class="btn btn-primary" type="submit" value="Search">
+        <div>
+            <input class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer transition-colors" 
+                   type="submit" 
+                   value="Search">
         </div>
-        </form>
-    </div>
+    </form>
 </div>
-
 
 <div id="table_count">
-<div class="row mt-4 align-items-end justify-content-evenly">
-    <div class="col-10">
-        <h1
-            class="text-info-emphasis">{{ possessive }} repertoire
-        </h1>
+    <!-- Header Row -->
+    <div class="flex items-end justify-between mt-4">
+        <div>
+            <h1 class="text-3xl font-bold text-blue-900">{{ possessive }} repertoire</h1>
+        </div>
+        <div class="text-right" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
+            <h4 class="text-xl">
+                {% if tune_count == 1 %}
+                {{ tune_count }} tune
+                {% else %}
+                {{ tune_count }} tunes
+                {% endif %}
+            </h4>
+        </div>
     </div>
-    <div class="col-2" style="text-align: right;" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
-        <h4>
-            {% if tune_count == 1 %}
-            {{ tune_count }} tune
-            {% else %}
-            {{ tune_count }} tunes
-            {% endif %}
-        </h4>
-    </div>
-</div>
 
-<div>
-    <table class="table table-responsive table-success table-striped table-hover border border-primary" id="rep-table">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Composer</th>
-            <th>Key</th>
-            <th>Other keys</th>
-            <th>Form</th>
-            <th>Style</th>
-            <th>Meter</th>
-            <th>Year</th>
-            <th>Tags</th>
-            <th>Knowledge</th>
-            <th>Last played</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for tune in tunes %}
-        <tr>
-            <td>{{ tune.tune.title }}</td>
-            <td>{{ tune.tune.composer }}</td>
-            <td>{{ tune.tune.key }}</td>
-            <td>{{ tune.tune.other_keys }}</td>
-            <td>{{ tune.tune.song_form }}</td>
-            <td>{{ tune.tune.style }}</td>
-            <td>{{ tune.tune.meter|default_if_none:"" }}</td>
-            <td>{{ tune.tune.year|default_if_none:"" }}</td>
-            <td>
-                {% for tag in tune.tags.all %}
-                <div>{{ tag.name }}</div>
+    <!-- Table -->
+    <div class="mt-4 overflow-x-auto">
+        <table class="w-full border border-indigo-600" id="rep-table">
+            <thead class="bg-green-100">
+                <tr>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Title</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Composer</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Key</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Other keys</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Form</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Style</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Meter</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Year</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Tags</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Knowledge</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Last played</th>
+                    <th class="px-4 py-2 text-left border-b border-indigo-600">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tune in tunes %}
+                <tr class="hover:bg-green-50 {% cycle '' 'bg-green-50/30' %}">
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.title }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.other_keys }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.song_form }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200">
+                        {% for tag in tune.tags.all %}
+                        <div class="text-sm">{{ tag.name }}</div>
+                        {% endfor %}
+                    </td>
+                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
+                    <td class="px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
+                        {{ tune.last_played|date:"MONTH_DAY_FORMAT"}}
+                    </td>
+                    <td class="px-4 py-2 border-b border-indigo-200">
+                        <div class="flex gap-1">
+                            <button type="button"
+                                    class="px-3 py-1 text-sm border border-indigo-600 text-indigo-600 rounded hover:bg-indigo-50 transition-colors"
+                                    hx-put="{% url 'tune:play_list' pk=tune.id %}"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-swap="innerHTML"
+                                    hx-target="#last-played-{{ tune.id }}">
+                                Play
+                            </button>
+                            
+                            <a class="px-3 py-1 text-sm border border-green-600 text-green-600 rounded hover:bg-green-50 transition-colors" 
+                               href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" 
+                               role="button">
+                                Edit
+                            </a>
+
+                            <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    hx-swap="outerHTML"
+                                    hx-confirm="Are you sure?"
+                                    hx-target="closest tr"
+                                    class="px-3 py-1 text-sm border border-teal-600 text-teal-600 rounded hover:bg-teal-50 transition-colors">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
                 {% endfor %}
-            </td>
-            <td>{{ tune.knowledge }}</td>
-            <td id="last-played-{{ tune.id }}">{{ tune.last_played|date:"MONTH_DAY_FORMAT"}}</td>
-            <td>
-                <div class="btn-group">
-                    <button type="button"
-                    class="btn btn-outline-primary btn-sm"
-                    hx-put="{% url 'tune:play_list' pk=tune.id %}"
-                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                    hx-swap="innerHTML"
-                    hx-target="#last-played-{{ tune.id }}"
-                    >Play</button>
-                    
-                    <a class="btn btn-outline-success btn-sm" href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" role="button">Edit</a>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                    <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}"
-                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                        hx-swap="outerHTML"
-                        hx-confirm="Are you sure?"
-                        hx-target="closest tr"
-                        class="btn btn-outline-info btn-sm">
-                    Delete
-                </button>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-</div>
 <script>
     // Uncomment this script for column visibility toggling; good but ugly
     // $(document).ready(function() {
@@ -139,6 +151,7 @@
     //         ]
     //     });
     // });
+    // Datables customization, mostly stripping things out
     $(document).ready( function () {
         $('#rep-table').DataTable({
             "searching": false,
@@ -146,9 +159,8 @@
             "lengthChange": false,
             "paging": false,
             "language": {emptyTable: ' '}
-        }
-        );
+        });
     });
-    </script>
+</script>
     
-    {% endblock %}
+{% endblock %}
