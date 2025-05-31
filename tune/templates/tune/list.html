@@ -17,20 +17,20 @@
           hx-swap="outerHTML"
           hx-trigger="submit">
         {% csrf_token %}
-        <div class="mb-3">
+        <div class="mb-3 p-0.5">
             <label for="search_term" class="sr-only">Search</label>
             <input id="search_term" 
                    type="text" 
                    name="search_term" 
                    value="{{ search_term_string }}" 
-                   class="w-full px-3 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   class="w-full px-3 py-2 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
                    placeholder="Search tunes...">
         </div>
         <div class="mb-3">
             <label for="timespan" class="block mb-1 text-sm font-medium">Haven't played in:</label>
             <select id="timespan" 
                     name="timespan"
-                    class="w-full px-3 py-2 border border-black focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    class="w-full px-3 py-2 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400 focus:border-black">
                 <option value="anytime">n/a</option>
                 <option value="day">a day</option>
                 <option value="week">a week</option>
