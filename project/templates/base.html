@@ -63,13 +63,16 @@
                             <ul class="flex flex-col lg:flex-row lg:space-x-4 mt-4 lg:mt-0">
                                 {% if user.is_authenticated %}
                                 <li class="py-2 lg:py-0">
-                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_new' %}">Create</a>
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_list' %}">Home</a>
+                                </li>
+                                <li class="py-2 lg:py-0">
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_new' %}">Add</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
                                     <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_play' %}">Play</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
-                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_browse' %}">Public</a>
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_browse' %}">Browse</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
                                     <a class="text-blue-900 hover:text-blue-700" href="https://jazztunes.readthedocs.io/en/" target="_blank">Manual</a>
