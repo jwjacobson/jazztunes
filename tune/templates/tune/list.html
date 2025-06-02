@@ -13,11 +13,27 @@
         background-color: rgb(224 231 255); /* bg-indigo-100 */
     }
     
-    #rep-table tbody tr:hover {
-        background-color: rgb(255 247 237); /* bg-orange-50 */
-        transition: background-color 150ms;
-    }
-</style>
+    #rep-table td {
+    border-left: none !important;
+    border-right: none !important;
+}
+
+    #rep-table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#rep-table td:first-child {
+    border-left: 1px solid transparent;
+}
+
+#rep-table td:last-child {
+    border-right: 1px solid transparent;
+}
+
+#rep-table tr:last-child td {
+    border-bottom: none;
+}
 </style>
 
 <div class="my-4">
@@ -57,7 +73,7 @@
             </select>
         </div>
         <div>
-            <input class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer transition-colors" 
+            <input class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
                    type="submit" 
                    value="Search">
         </div>
@@ -123,7 +139,7 @@
                     <td class="px-4 py-2 border-b border-indigo-200">
                         <div class="flex gap-1">
                             <button type="button"
-                                    class="px-3 py-1 text-sm border border-blue-900 text-blue-900 hover:bg-blue-50 hover:text"
+                                    class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
                                     hx-put="{% url 'tune:play_list' pk=tune.id %}"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                     hx-swap="innerHTML"
@@ -131,7 +147,7 @@
                                 Play
                             </button>
                             
-                            <a class="px-3 py-1 text-sm border border-teal-700 text-teal-700 hover:bg-teal-50 hover:text-teal-900" 
+                            <a class="px-3 py-1 text-sm bg-emerald-500 text-white hover:bg-emerald-400" 
                                href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" 
                                role="button">
                                 Edit
@@ -142,7 +158,7 @@
                                     hx-swap="outerHTML"
                                     hx-confirm="Are you sure?"
                                     hx-target="closest tr"
-                                    class="px-3 py-1 text-sm border border-rose-800 text-rose-800 hover:bg-rose-50 hover:text-rose-900">
+                                    class="px-3 py-1 text-sm text-white bg-pink-800 hover:bg-pink-600 cursor-pointer">
                                 Delete
                             </button>
                         </div>
@@ -152,7 +168,6 @@
             </tbody>
         </table>
     </div>
-</div>
 
 <script>
     // Uncomment this script for column visibility toggling; good but ugly
