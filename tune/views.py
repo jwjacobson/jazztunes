@@ -178,8 +178,22 @@ def tune_delete(request, pk):
     request.session.modified = True
 
     response = HttpResponse(status=200)
-    response["HX-Trigger"] = "tuneDeleted"
+    response["HX-Trigger"] = "tuneDeleted, clearModal"
     return response
+
+
+@login_required
+def tune_delete_confirm(request, pk):
+    """
+    Return the delete confirmation modal HTML.
+    """
+    tune = get_object_or_404(Tune, pk=pk)
+    row_id = f"tune-row-{pk}"
+    get_object_or_404(RepertoireTune, tune=tune, player=request.user)
+
+    return render(
+        request, "tune/partials/_delete_confirm.html", {"tune": tune, "row_id": row_id}
+    )
 
 
 @login_required

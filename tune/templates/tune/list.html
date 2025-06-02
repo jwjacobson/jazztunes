@@ -26,6 +26,12 @@
     #rep-table tr:last-child td {
         border-bottom: none;
     }
+
+    /* Delete row animation */
+    tr.htmx-swapping td {
+        opacity: 0;
+        transition: opacity 0.25s ease-out;
+}
 </style>
 
 <div class="my-4">
@@ -110,7 +116,7 @@
             </thead>
             <tbody>
                 {% for tune in tunes %}
-                <tr>
+                <tr id="tune-row-{{ tune.tune.pk }}">
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.title }}</td>
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
@@ -145,14 +151,13 @@
                                 Edit
                             </a>
 
-                            <button hx-post="{% url 'tune:tune_delete' pk=tune.tune.pk %}"
-                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                    hx-swap="outerHTML"
-                                    hx-confirm="Are you sure?"
-                                    hx-target="closest tr"
-                                    class="px-3 py-1 text-sm text-white bg-pink-800 hover:bg-pink-600 cursor-pointer">
-                                Delete
+                            <button hx-get="{% url 'tune:tune_delete_confirm' pk=tune.tune.pk %}"
+                                hx-target="#modal-container"
+                                hx-swap="innerHTML"
+                                class="px-3 py-1 text-sm text-white bg-pink-800 hover:bg-pink-600 cursor-pointer">
+                            Delete
                             </button>
+                            <div id="modal-container"></div>
                         </div>
                     </td>
                 </tr>
