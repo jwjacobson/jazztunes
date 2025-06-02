@@ -118,12 +118,12 @@
         <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
         <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
         <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
-        <td class="w-auto">
+        <td class="px-4 py-2 border-b border-indigo-200">
           {% if tune.tune.title in user_tune_titles %}
-            <button type="button" class="btn btn-outline-dark btn-sm" disabled>Take</button>
+            <button disabled class=" disabled: opacity-50 px-3 py-1 text-sm bg-blue-900 text-white">Take</button>
           {% else %}
           <button type="button"
-                    class="btn btn-success btn-sm"
+                    class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
                     hx-put="{% url 'tune:tune_take' pk=tune.id %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
