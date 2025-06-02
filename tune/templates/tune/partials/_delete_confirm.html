@@ -9,7 +9,7 @@
         </p>
         <div class="flex gap-3 justify-end">
             <button onclick="document.getElementById('modal-container').innerHTML = ''"
-                    class="px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 border boder:gray-600">
+                    class="px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-gray-800 border border:gray-600">
                 Cancel
             </button>
             <button hx-post="{% url 'tune:tune_delete' pk=tune.pk %}"
@@ -17,7 +17,7 @@
                     hx-swap="outerHTML swap:.25s"
                     hx-target="#{{ row_id }}"
                     hx-on:htmx:after-request="if(event.detail.successful) { document.getElementById('modal-container').innerHTML = '' }"
-                    class="px-4 py-2 bg-pink-800 text-white hover:bg-pink-600">
+                    class="px-4 py-2 bg-pink-700 text-white hover:bg-pink-600 cursor-pointer">
                 Delete
             </button>
         </div>

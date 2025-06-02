@@ -28,10 +28,10 @@
     }
 
     /* Delete row animation */
-    tr.htmx-swapping td {
+    {% comment %} tr.htmx-swapping td {
         opacity: 0;
         transition: opacity 0.25s ease-out;
-}
+} {% endcomment %}
 </style>
 
 <div class="my-4">
@@ -154,7 +154,7 @@
                             <button hx-get="{% url 'tune:tune_delete_confirm' pk=tune.tune.pk %}"
                                 hx-target="#modal-container"
                                 hx-swap="innerHTML"
-                                class="px-3 py-1 text-sm text-white bg-pink-800 hover:bg-pink-600 cursor-pointer">
+                                class="px-3 py-1 text-sm text-white bg-pink-700 hover:bg-pink-600 cursor-pointer">
                             Delete
                             </button>
                             <div id="modal-container"></div>
