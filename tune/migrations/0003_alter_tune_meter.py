@@ -14,7 +14,14 @@ class Migration(migrations.Migration):
             name="meter",
             field=models.PositiveSmallIntegerField(
                 blank=True,
-                choices=[(3, "3"), (4, "4"), (5, "5"), (6, "6"), (7, "7"), (0, "irregular")],
+                choices=[
+                    (3, "3"),
+                    (4, "4"),
+                    (5, "5"),
+                    (6, "6"),
+                    (7, "7"),
+                    (0, "irregular"),
+                ],
                 default=4,
                 null=True,
             ),
