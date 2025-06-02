@@ -12,28 +12,20 @@
     #rep-table tbody tr:nth-child(even) {
         background-color: rgb(224 231 255); /* bg-indigo-100 */
     }
-    
-    #rep-table td {
-    border-left: none !important;
-    border-right: none !important;
-}
+
+    #rep-table tbody tr:hover {
+        background-color: rgb(255 247 237); /* bg-orange-50 */
+        transition: background-color 150ms;
+    }
 
     #rep-table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
-#rep-table td:first-child {
-    border-left: 1px solid transparent;
-}
-
-#rep-table td:last-child {
-    border-right: 1px solid transparent;
-}
-
-#rep-table tr:last-child td {
-    border-bottom: none;
-}
+    #rep-table tr:last-child td {
+        border-bottom: none;
+    }
 </style>
 
 <div class="my-4">
