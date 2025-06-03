@@ -1,59 +1,81 @@
 {% extends 'base.html' %}
 
 {% block head_title %}
-{% if tune %}Edit{% else %}Create{% endif %}
+{% if tune %}Edit{% else %}Add{% endif %} a tune
 {% endblock %}
 
 {% block content %}
-<div class="row my-3">
-<div class="col md-6">
-<!-- <div class="card bg-info-subtle border-primary" style="border-radius: 0;">
-  <div class="card-body"> -->
-    <h2 class="text-info-emphasis">{% if tune %}Edit{% else %}New{% endif %} Tune</h2>
-  <!-- </div>
-</div> -->
-</div>
-<!-- <div class="col-md-6"></div> -->
-</div>
-  <form method="post">
-  <div class="row">
-  <div class="col-md-6">
+<div class="flex my-6">
+  <div class="w-full md:w-1/2">
+    <h2 class="text-2xl font-semibold text-blue-900">{% if tune %}Edit{% else %}New{% endif %} Tune</h2>
   </div>
-  <div class="col-md-6"></div>
+</div>
+
+<form method="post">
+  <div class="flex flex-wrap -mx-2">
     {% csrf_token %}
     {% for field in tune_form %}
-        <div class="col-md-3">
-            <p>{{ field.label_tag }}</p>
-            {{ field }}
+      <div class="w-full md:w-1/4 px-2 mb-4">
+        <label class="block text-sm font-semibold text-gray-900 mb-1">{{ field.label }}</label>
+        
+        {% if field.field.choices %}
+          <select name="{{ field.html_name }}" 
+                  class="w-full px-3 py-2.5 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
+                  {% if field.field.required %}required{% endif %}>
+            <option value="">---------</option>
+            {% for choice_value, choice_label in field.field.choices %}
+              {% if choice_value %}
+                <option value="{{ choice_value }}" {% if choice_value == field.value %}selected{% endif %}>{{ choice_label }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        {% else %}
+          <input type="{{ field.field.widget.input_type|default:'text' }}" 
+                 name="{{ field.html_name }}" 
+                 value="{{ field.value|default:'' }}"
+                 class="w-full px-3 py-2 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
+                 {% if field.field.required %}required{% endif %}>
+        {% endif %}
+        
+        {% if field.errors %}
+          <div class="text-red-600 text-sm mt-1">
             {{ field.errors }}
-            {% if field.help_text %}
-              <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
           </div>
-            {% if forloop.counter|divisibleby:2 %}
-            <div class="col-md-6"></div>
-            {% endif %}
-    {% endfor %}
-    {% for field in rep_form %}
-    <div class="col-md-3">
-        <p>
-            <p>{{ field.label_tag }}</p>
-            {{ field }}
-            {{ field.errors }}
-            {% if field.help_text %}
-              <p class="help">{{ field.help_text|safe }}</p>
-            {% endif %}
-        </p>
+        {% endif %}
+        {% if field.help_text %}
+          <p class="text-gray-700 text-sm mt-1">{{ field.help_text|safe }}</p>
+        {% endif %}
       </div>
       {% if forloop.counter|divisibleby:2 %}
-      <div class="col-md-6"></div>
+        <div class="w-full md:w-1/2"></div>
       {% endif %}
-      {% endfor %}
-    <div class="col-md-6"></div>
-    <div class="col-md-6 my-3">
-    <input type="submit" class="btn btn-success col-2" value="{% if tune %}Save{% else %}Create{% endif %}" />
+    {% endfor %}
+    
+    {% for field in rep_form %}
+      <div class="w-full md:w-1/4 px-2 mb-4">
+        <p class="block text-sm font-semibold text-gray-900 mb-1">{{ field.label }}</p>
+        {{ field }}
+        {% if field.errors %}
+          <div class="text-red-600 text-sm mt-1">
+            {{ field.errors }}
+          </div>
+        {% endif %}
+        {% if field.help_text %}
+          <p class="text-gray-500 text-sm mt-1">{{ field.help_text|safe }}</p>
+        {% endif %}
+      </div>
+      {% if forloop.counter|divisibleby:2 %}
+        <div class="w-full md:w-1/2"></div>
+      {% endif %}
+    {% endfor %}
+    
+    <div class="w-full md:w-1/2"></div>
+    <div class="w-full md:w-1/2 my-6 px-2">
+      <input type="submit" 
+             class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
+             value="{% if tune %}Save{% else %}Add{% endif %}" />
     </div>
   </div>
-  </form>
+</form>
 
 {% endblock %}

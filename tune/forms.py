@@ -84,9 +84,18 @@ class RepertoireTuneForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RepertoireTuneForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            if field != "tags":
-                self.fields[field].widget.attrs["class"] = "form-control"
+        input_classes = "w-full px-3 py-2 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
+        select_classes = "w-full px-3 py-2.5 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
+
+        for field_name, field in self.fields.items():
+            if field_name != "tags":
+                if (
+                    hasattr(field.widget, "choices")
+                    or "Select" in field.widget.__class__.__name__
+                ):
+                    field.widget.attrs["class"] = select_classes
+                else:
+                    field.widget.attrs["class"] = input_classes
 
     def save(self, commit=True):
         instance = super(RepertoireTuneForm, self).save(commit=False)
