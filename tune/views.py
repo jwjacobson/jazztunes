@@ -64,7 +64,7 @@ def tune_list(request):
         return render(
             request,
             "tune/partials/_table_list.html",
-            {"tunes": tunes, "tune_count": tune_count},
+            {"tunes": tunes, "tune_count": tune_count, "possessive": possessive},
         )
 
     request.session["tune_count"] = tune_count
