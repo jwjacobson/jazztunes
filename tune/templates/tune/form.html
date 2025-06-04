@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block head_title %}
-{% if tune %}Edit{% else %}Add{% endif %} a tune
+{% if tune %}Edit{% else %}New{% endif %} tune
 {% endblock %}
 
 {% block content %}
 <div class="flex my-6">
   <div class="w-full md:w-1/2">
-    <h2 class="text-2xl font-semibold text-blue-900">{% if tune %}Edit{% else %}New{% endif %} Tune</h2>
+    <h2 class="text-2xl font-semibold text-blue-900">{% if tune %}Editing <i>{{ tune.title }}</i>{% else %}New Tune{% endif %}</h2>
   </div>
 </div>
 
