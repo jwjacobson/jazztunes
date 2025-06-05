@@ -1,14 +1,14 @@
 <div id="playTuneWrapper">
-  <div class="card bg-danger border-primary" style="height: 200px; max-width: 22rem; border-radius: 0;">
-    <div class="card-body">
+  <div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm h-full flex flex-col">
+    <div class="flex-1 flex flex-col">
       {% if selected_tune %}
-      <h5 class = "card-title">You should play</h5>
-        <div class="my-1">
-          <p class="h4 text-info-emphasis my-4"><strong>{{selected_tune.tune.title}}</strong></p>
+      <h5 class="text-lg font-semibold mb-3">You should play...</h5>
+        <div class="flex-1 flex flex-col justify-center">
+          <p class="text-2xl text-blue-900 my-4 font-bold text-center">{{selected_tune.tune.title}}</p>
         </div>
-        <div class="btn-group my-1">
+        <div class="flex gap-1 mt-auto">
           <button type="button"
-          class="btn btn-outline-info"
+          class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer"
           hx-put="{% url 'tune:play_play' pk=selected_tune.id %}"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-swap="outerHTML"
@@ -17,8 +17,9 @@
           </button>
         <div id="second-button">
          <button type="button"
-          class="btn btn-outline-dark"
+          class="px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-gray-800 border border-gray-600"
           hx-get="{% url 'tune:change_tune' %}"
+          hx-swap="outerHTML"
           hx-target="#playTuneWrapper">
           No thanks...
         </button>
@@ -29,7 +30,9 @@
 </div>
 
   {% else %}
-    <h5 class="card-title">No tunes to play</h5>
-    <p class="h5 text-info-emphasis my-5"><strong>Try another search?</strong></p>
+    <div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm h-full flex flex-col justify-center">
+      <h5 class="text-lg font-semibold mb-3 text-center">No more matching tunes...</h5>
+      <p class="text-xl text-blue-900 my-5 font-bold text-center">Try another search?</p>
+    </div>
   {% endif %}
 </div>
