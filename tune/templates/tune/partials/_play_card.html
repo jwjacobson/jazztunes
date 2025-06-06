@@ -1,14 +1,14 @@
 <div id="playTuneWrapper">
-  <div class="bg-orange-50 border border-emerald-400 p-4 max-w-sm h-full flex flex-col">
+  <div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm h-full flex flex-col">
     <div class="flex-1 flex flex-col">
       {% if selected_tune %}
       <h5 class="text-lg font-semibold mb-3">You should play...</h5>
         <div class="flex-1 flex flex-col justify-center">
-          <p class="text-2xl text-blue-900 my-4 font-bold text-center">{{selected_tune.tune.title}}</p>
+          <p class="text-2xl text-blue-900 my-4 font-bold">{{selected_tune.tune.title}}</p>
         </div>
         <div class="flex gap-1 mt-auto">
           <button type="button"
-          class="bg-emerald-500 text-white px-4 py-2 hover:bg-emerald-400 cursor-pointer"
+          class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer"
           hx-put="{% url 'tune:play_play' pk=selected_tune.id %}"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-swap="outerHTML"
