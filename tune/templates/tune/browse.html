@@ -44,12 +44,7 @@
         {% csrf_token %}
         <div class="mb-3 p-0.5">
             <label for="search_term" class="sr-only">Search</label>
-            <input id="search_term" 
-                   type="text" 
-                   name="search_term" 
-                   value="{{ search_term_string }}" 
-                   class="w-full px-3 py-2 bg-gray-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
-                   placeholder="Search tunes...">
+            {{ search_form.search_term }}
         </div>
         <div>
             <input class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 

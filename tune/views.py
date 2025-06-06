@@ -299,7 +299,8 @@ def tune_play(request):
     """
     Load the play page.
     """
-    return render(request, "tune/play.html")
+    search_form = SearchForm()
+    return render(request, "tune/play.html", {"search_form": search_form})
 
 
 @login_required
