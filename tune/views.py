@@ -374,6 +374,18 @@ def tune_take(request, pk):
 
     new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
 
+    # Change input backgrounds and accents to indigo because the default is orange-50, which is also the table row hover background
+    for field_name, field in rep_form.fields.items():
+        current_classes = field.widget.attrs.get("class", "")
+        if field_name == "tags":
+            new_classes = current_classes.replace(
+                "accent-orange-100", "accent-indigo-100"
+            )
+            field.widget.attrs["class"] = new_classes
+        else:
+            new_classes = current_classes.replace("bg-orange-50", "bg-indigo-50")
+            field.widget.attrs["class"] = new_classes
+
     return render(
         request,
         "tune/partials/_take.html",
