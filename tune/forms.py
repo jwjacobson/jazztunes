@@ -97,6 +97,11 @@ class DateInput(forms.DateInput):
 class RepertoireTuneForm(BaseForm, ModelForm):
     exclude_styling = ["tags"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "tags" in self.fields:
+            self.fields["tags"].widget.attrs.update({"class": "accent-orange-100"})
+
     class Meta:
         model = RepertoireTune
         exclude = ["tune", "player", "started_learning", "play_count"]
