@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from decouple import config
+from decouple import config, Csv
 from pathlib import Path
 import dj_database_url
 import os
@@ -27,7 +27,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ADMIN_USER_ID = config("ADMIN_USER_ID", cast=int)
-ALLOWED_HOSTS = [config("ALLOWED_HOSTS", "")]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 # ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 # ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
