@@ -154,18 +154,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+# STATIC_HOST = os.getenv("DJANGO_STATIC_HOST", default="")
+# STATIC_URL = STATIC_HOST + "/static/"
+
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
+
+
+# STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"), BASE_DIR / "static")
+
+
 STATIC_HOST = os.getenv("DJANGO_STATIC_HOST", default="")
 STATIC_URL = STATIC_HOST + "/static/"
-
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 
-
-STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"), BASE_DIR / "static")
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 
 # Default primary key field type
