@@ -19,10 +19,18 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.BigAutoField(
-                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
                     ),
                 ),
-                ("title", models.CharField(help_text="The only required field", max_length=90)),
+                (
+                    "title",
+                    models.CharField(
+                        help_text="The only required field", max_length=90
+                    ),
+                ),
                 ("composer", models.CharField(blank=True, max_length=30)),
                 ("key", models.CharField(blank=True, max_length=10)),
                 ("other_keys", models.CharField(blank=True, max_length=20)),
@@ -71,7 +79,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("year", models.PositiveSmallIntegerField(blank=True, null=True)),
-                ("is_contrafact", models.BooleanField(blank=True, default=False, null=True)),
+                (
+                    "is_contrafact",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
                     "created_by",
@@ -93,7 +104,10 @@ class Migration(migrations.Migration):
                 (
                     "id",
                     models.BigAutoField(
-                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
                     ),
                 ),
                 ("last_played", models.DateField(blank=True, null=True)),
@@ -115,12 +129,15 @@ class Migration(migrations.Migration):
                 (
                     "player",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
                     ),
                 ),
                 (
                     "tune",
-                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="tune.tune"),
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="tune.tune"
+                    ),
                 ),
             ],
             options={
