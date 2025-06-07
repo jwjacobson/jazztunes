@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@layer components {
+    form input[type="text"],
+    form input[type="email"], 
+    form input[type="password"],
+    .allauth-form input[type="text"],
+    .allauth-form input[type="email"],
+    .allauth-form input[type="password"] {
+        @apply block w-1/2 px-3 py-2 my-1 bg-orange-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400;
+    }
+
+    /* Style the "Forgot password" link */
+    .allauth-form a,
+    form a {
+        @apply text-blue-700 hover:text-blue-800 underline;
+    }
+    
+    /* Style the "Remember me" checkbox */
+    .allauth-form input[type="checkbox"],
+    form input[type="checkbox"] {
+        @apply accent-orange-100 mr-2 inline;
+    }
+    
+    /* Make the div containing checkbox and label flex horizontally */
+    .allauth-form > div,
+    form > div {
+        @apply flex items-center mb-2;
+    }
+    
+    /* Override for text/email/password input containers to be block */
+    .allauth-form div:has(input[type="text"]),
+    .allauth-form div:has(input[type="email"]),
+    .allauth-form div:has(input[type="password"]),
+    form div:has(input[type="text"]),
+    form div:has(input[type="email"]),
+    form div:has(input[type="password"]) {
+        @apply block;
+    }
+    
+    /* Style labels */
+    .allauth-form label,
+    form label {
+        @apply text-sm text-gray-700;
+    }
+
+/* Fix Chrome autofill override for login forms while preserving focus ring */
+    .allauth-form input:-webkit-autofill,
+    .allauth-form input:-webkit-autofill:hover,
+    form input:-webkit-autofill,
+    form input:-webkit-autofill:hover {
+        -webkit-box-shadow: 0 0 0 30px #fff7ed inset !important; /* orange-50 background */
+        -webkit-text-fill-color: #000 !important;
+    }
+    
+    /* Preserve focus ring for autofilled inputs */
+    .allauth-form input:-webkit-autofill:focus,
+    .allauth-form input:-webkit-autofill:active,
+    form input:-webkit-autofill:focus,
+    form input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important; /* orange background + indigo ring */
+        -webkit-text-fill-color: #000 !important;
+    }
+
+    /* Fix Chromium button rendering */
+    input[type="submit"],
+    button {
+        background-color: #1e3a8a !important; /* bg-blue-900 */
+        border: none;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    
+    input[type="submit"]:hover,
+    button:hover {
+        background-color: #1d4ed8 !important; /* bg-blue-700 */
+    
+}
+}

@@ -5,18 +5,20 @@
     Welcome to Jazztunes!
 {% endblock head_title %}
 {% block content %}
-<div class="row my-4">
-  <div class="col-6">
-    <div class="card bg-success-subtle border-primary"style=" border-radius: 0;">
-        <div class="card-body">
-                <h3 class = "card-title text-info-emphasis">Welcome!</h3>
-                <p class="card-text">Jazztunes is a jazz repertoire management app that runs in your browser.</p>
-                <p class="card-text">It is free to use, modify, and distribute;
-                  see the <a href="https://github.com/jwjacobson/jazz_repertoire/blob/main/LICENSE">license</a> for more info.</p>
-                {% blocktrans %} <a href="{{ signup_url }}">Sign up</a> for an account or log in below.{% endblocktrans %}
-    </p>
+<div class="flex my-4">
+  <div class="w-1/2">
+    <div class="bg-indigo-100 border border-indigo-400">
+        <div class="p-4">
+                <h3 class="text-lg font-semibold mb-3 text-blue-900">Welcome!</h3>
+                <p class="mb-3">Jazztunes is a jazz repertoire management app that runs in your browser.</p>
+                <p class="mb-3">It is free to use, modify, and distribute;
+                  see the <a href="https://github.com/jwjacobson/jazztunes/blob/main/LICENSE" class="text-blue-700 hover:text-blue-800 underline">license</a> for more info.</p>
+                <p class="mb-3">The source code is available <a href="https://github.com/jwjacobson/jazztunes" class="text-blue-700 hover:text-blue-800 underline"> on Github</a>.</p>
+                <p class="mb-4">
+                {% blocktrans %} <a href="{{ signup_url }}" class="text-blue-700 hover:text-blue-800 underline">Sign up</a> for an account or log in below.{% endblocktrans %}
+                </p>
     {% url 'account_login' as login_url %}
-    {% element form form=form method="post" action=login_url tags="entrance,login" %}
+    {% element form form=form method="post" action=login_url tags="entrance,login" class="allauth-form"%}
         {% slot body %}
             {% csrf_token %}
             {% element fields form=form unlabeled=True %}
@@ -28,7 +30,7 @@
             {% endif %}
         {% endslot %}
         {% slot actions %}
-        <input class="btn btn-primary" type="submit" value="Sign in">
+        <input class="bg-blue-900 text-white px-4 py-2 my-2 hover:bg-blue-700 cursor-pointer" type="submit" value="Sign in">
         {% endslot %}
     {% endelement %}
 

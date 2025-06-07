@@ -3,83 +3,106 @@
 {% block head_title %}Public Tunes{% endblock %}
 
 {% block content %}
+<style>
+    /* Override DataTables styling */
+    #public-table tbody {
+        background-color: rgb(239 246 255); /* bg-blue-50 */
+    }
+    
+    #public-table tbody tr:nth-child(even) {
+        background-color: rgb(224 231 255); /* bg-indigo-100 */
+    }
+    
+    #public-table tbody tr:hover {
+        background-color: rgb(255 247 237); /* bg-orange-50 */
+        transition: background-color 150ms;
+    }
 
-<div class ="mt-4">
+    #public-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    #public-table tr:last-child td {
+        border-bottom: none;
+    }
+</style>
+
+<div class ="my-4">
     <p>
         Here you can browse public tunes and copy them into your repertoire.
     </p>
   </div>
-  <div class="card bg-success-subtle border-primary" style="max-width: 18rem; border-radius: 0;">
-    <div class="card-body">
-        <h5 class = "card-title">Tune Search</h5>
-            <div>
-                <form
-                    hx-post="{% url 'tune:tune_browse' %}"
-                    hx-target="#table_count"
-                    hx-swap="outerHTML">
-                    {% csrf_token %}
-                    <label for="basic_search"></label>
-                    <input id="search_term" type="text" name="search_term" class="ms-0 ps-0">
-            </div>
-        <div class="col-1 my-3">
-            <input class="btn btn-primary" type="submit" value="Search">
+
+<!-- Search Card -->
+  <div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm">
+    <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
+    <form hx-post="{% url 'tune:tune_browse' %}"
+          hx-target="#table_count"
+          hx-swap="outerHTML"
+          hx-trigger="submit">
+        {% csrf_token %}
+        <div class="mb-3 p-0.5">
+            <label for="search_term" class="sr-only">Search</label>
+            {{ search_form.search_term }}
         </div>
-        </form>
-    </div>
+        <div>
+            <input class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
+                   type="submit" 
+                   value="Search">
+        </div>
+    </form>
 </div>
+
 
 <div id="table_count">
-<div class="row mt-4 align-items-end justify-content-evenly">
-    <div class="col-10">
-        <h1
-            class="text-info-emphasis">Public Tunes
-        </h1>
+<div class="flex items-end justify-between mt-4">
+        <div>
+            <h1 class="text-3xl font-bold text-blue-900">Public tunes</h1>
+        </div>
+        <div class="text-right" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
+            <h4 class="text-xl">
+                {% if tune_count == 1 %}
+                {{ tune_count }} tune
+                {% else %}
+                {{ tune_count }} tunes
+                {% endif %}
+            </h4>
+        </div>
     </div>
-    <div class="col-2" style="text-align: right;" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
-        <h4>
-            {% if tune_count == 1 %}
-            {{ tune_count }} tune
-            {% else %}
-            {{ tune_count }} tunes
-            {% endif %}
-        </h4>
-    </div>
-</div>
 
-<div>
-    <table class="table table-success table-striped table-hover border border-primary" id="public-table">
-        <thead>
+<div class="mt-4 overflow-x-auto">
+    <table class="w-full border border-indigo-600" id="public-table">
+        <thead class="bg-indigo-100">
             <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Composer</th>
-                <th scope="col">Key</th>
-                <th scope="col">Other Keys</th>
-                <th scope="col">Form</th>
-                <th scope="col">Style</th>
-                <th scope="col">Meter</th>
-                <th scope="col">Year</th>
-                <!-- <th>Tags</th> -->
-                <th scope="col">Actions</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Title</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Composer</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Key</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Other keys</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Form</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Style</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Meter</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Year</th>
+                <th class="px-4 py-2 text-left border-b border-indigo-600">Actions</th>
             </tr>
         </thead>
     <tbody>
     {% for tune in tunes %}
     <tr>
-        <td class="w-auto">{{ tune.tune.title }}</td>
-        <td class="w-auto">{{ tune.tune.composer }}</td>
-        <td class="w-auto">{{ tune.tune.key }}</td>
-        <td class="w-auto">{{ tune.tune.other_keys }}</td>
-        <td class="w-auto">{{ tune.tune.song_form }}</td>
-        <td class="w-auto">{{ tune.tune.style }}</td>
-        <td class="w-auto">{{ tune.tune.meter }}</td>
-        <td class="w-auto">{{ tune.tune.year }}</td>
-        <!-- <td>{{ tune.tune.tags }}</td> -->
-        <td class="w-auto">
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.title }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.other_keys }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.song_form }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
+        <td class="px-4 py-2 border-b border-indigo-200">
           {% if tune.tune.title in user_tune_titles %}
-            <button type="button" class="btn btn-outline-dark btn-sm" disabled>Take</button>
+            <button disabled class=" disabled: opacity-50 px-3 py-1 text-sm bg-blue-900 text-white">Take</button>
           {% else %}
           <button type="button"
-                    class="btn btn-success btn-sm"
+                    class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
                     hx-put="{% url 'tune:tune_take' pk=tune.id %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                     hx-swap="outerHTML"
@@ -99,7 +122,10 @@
                 "info": false,
                 "lengthChange": false,
                 "paging": false,
-                "language": { "emptyTable": "No data available" }
+                "language": { "emptyTable": "" },
+                "columnDefs": [
+                { "orderable": false, "targets": [8] }
+            ]  
             });
         });
     </script>

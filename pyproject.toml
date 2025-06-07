@@ -1,0 +1,28 @@
+[project]
+name = "jazz-repertoire"
+version = "0.1.0"
+description = "A jazz repertoire management app"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dj-database-url>=2.3.0",
+    "django>=5.2",
+    "django-allauth>=65.7.0",
+    "django-tailwind>=4.0.1",
+    "psycopg2>=2.9.10",
+    "python-dotenv>=1.1.0",
+    "sendgrid>=6.11.0",
+    "sentry-sdk>=2.27.0",
+    "sphinx>=8.2.3",
+    "tox>=4.25.0",
+    "whitenoise>=6.9.0",
+]
+
+[dependency-groups]
+dev = [
+    "django-debug-toolbar>=5.2.0",
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+    "pytest-django>=4.11.1",
+]

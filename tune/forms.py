@@ -15,16 +15,39 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from django.forms import ModelForm
-from django import forms
-from .models import Tune, RepertoireTune
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext as _
-from django.utils import timezone
 from datetime import timedelta
 
+from django import forms
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm
+from django.utils import timezone
+from django.utils.translation import gettext as _
 
-class TuneForm(ModelForm):
+from .models import Tune, RepertoireTune
+
+
+class BaseForm:
+    """Base form mixin that applies consistent Tailwind styling to all form fields."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        input_classes = "w-full px-3 py-2 bg-orange-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
+        select_classes = "w-full px-3 py-2.5 bg-orange-50 border border-black focus:outline-none focus:ring focus:ring-indigo-400"
+
+        for field_name, field in self.fields.items():
+            if field_name in getattr(self, "exclude_styling", []):
+                continue
+
+            if (
+                hasattr(field.widget, "choices")
+                or "Select" in field.widget.__class__.__name__
+            ):
+                field.widget.attrs["class"] = select_classes
+            else:
+                field.widget.attrs["class"] = input_classes
+
+
+class TuneForm(BaseForm, ModelForm):
     class Meta:
         model = Tune
         fields = [
@@ -37,11 +60,6 @@ class TuneForm(ModelForm):
             "meter",
             "year",
         ]
-
-    def __init__(self, *args, **kwargs):
-        super(TuneForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs["class"] = "form-control"
 
     def clean_key(self):
         """
@@ -76,17 +94,18 @@ class DateInput(forms.DateInput):
     input_type = "date"
 
 
-class RepertoireTuneForm(ModelForm):
+class RepertoireTuneForm(BaseForm, ModelForm):
+    exclude_styling = ["tags"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if "tags" in self.fields:
+            self.fields["tags"].widget.attrs.update({"class": "accent-orange-100"})
+
     class Meta:
         model = RepertoireTune
         exclude = ["tune", "player", "started_learning", "play_count"]
         widgets = {"last_played": DateInput(), "tags": forms.CheckboxSelectMultiple()}
-
-    def __init__(self, *args, **kwargs):
-        super(RepertoireTuneForm, self).__init__(*args, **kwargs)
-        for field in self.fields:
-            if field != "tags":
-                self.fields[field].widget.attrs["class"] = "form-control"
 
     def save(self, commit=True):
         instance = super(RepertoireTuneForm, self).save(commit=False)
@@ -96,9 +115,9 @@ class RepertoireTuneForm(ModelForm):
         return instance
 
 
-class SearchForm(forms.Form):
+class SearchForm(BaseForm, forms.Form):
     TIMES = [
-        ("anytime", "anytime"),
+        ("anytime", "n/a"),
         ("day", "a day"),
         ("week", "a week"),
         ("month", "a month"),

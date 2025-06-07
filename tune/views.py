@@ -64,7 +64,7 @@ def tune_list(request):
         return render(
             request,
             "tune/partials/_table_list.html",
-            {"tunes": tunes, "tune_count": tune_count},
+            {"tunes": tunes, "tune_count": tune_count, "possessive": possessive},
         )
 
     request.session["tune_count"] = tune_count
@@ -178,8 +178,22 @@ def tune_delete(request, pk):
     request.session.modified = True
 
     response = HttpResponse(status=200)
-    response["HX-Trigger"] = "tuneDeleted"
+    response["HX-Trigger"] = "tuneDeleted, clearModal"
     return response
+
+
+@login_required
+def tune_delete_confirm(request, pk):
+    """
+    Return the delete confirmation modal HTML.
+    """
+    tune = get_object_or_404(Tune, pk=pk)
+    row_id = f"tune-row-{pk}"
+    get_object_or_404(RepertoireTune, tune=tune, player=request.user)
+
+    return render(
+        request, "tune/partials/_delete_confirm.html", {"tune": tune, "row_id": row_id}
+    )
 
 
 @login_required
@@ -285,7 +299,8 @@ def tune_play(request):
     """
     Load the play page.
     """
-    return render(request, "tune/play.html")
+    search_form = SearchForm()
+    return render(request, "tune/play.html", {"search_form": search_form})
 
 
 @login_required
@@ -358,6 +373,18 @@ def tune_take(request, pk):
     tune.save()
 
     new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
+
+    # Change input backgrounds and accents to indigo because the default is orange-50, which is also the table row hover background
+    for field_name, field in rep_form.fields.items():
+        current_classes = field.widget.attrs.get("class", "")
+        if field_name == "tags":
+            new_classes = current_classes.replace(
+                "accent-orange-100", "accent-indigo-100"
+            )
+            field.widget.attrs["class"] = new_classes
+        else:
+            new_classes = current_classes.replace("bg-orange-50", "bg-indigo-50")
+            field.widget.attrs["class"] = new_classes
 
     return render(
         request,

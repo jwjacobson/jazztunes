@@ -4,16 +4,16 @@
     Sign up
 {% endblock head_title %}
 {% block content %}
-<div class="row my-4">
-  <div class="col-6">
-      <div class="card bg-success-subtle border-primary"style=" border-radius: 0;">
-        <div class="card-body">
-            <h3 class = "card-title text-info-emphasis">Sign up</h3>
-            <p class="card-text">
-                Already have an account? <a href="{{ login_url }}">Sign in here</a>.
+<div class="flex my-4">
+  <div class="w-1/2">
+      <div class="bg-indigo-100 border border-indigo-400 rounded-none">
+        <div class="p-4">
+            <h3 class="text-lg font-semibold mb-3 text-blue-900">Sign up</h3>
+            <p class="mb-4">
+                Already have an account? <a href="{{ login_url }}" class="text-blue-700 hover:text-blue-800 underline">Sign in here</a>.
             </p>
             {% url 'account_signup' as action_url %}
-            {% element form form=form method="post" action=action_url tags="entrance,signup" %}
+            {% element form form=form method="post" action=action_url tags="entrance,signup" class="allauth-form" %}
     
     {{ form.non_field_errors | safe }}
   <input type="hidden" name="remember" value="true" />
@@ -29,7 +29,7 @@
             {% endif %}
         {% endslot %}
         {% slot actions %}
-        <input class="btn btn-primary" type="submit" value="Sign up">
+        <input class="bg-blue-900 text-white px-4 py-2 my-2 hover:bg-blue-700 cursor-pointer" type="submit" value="Sign up">
         {% endslot %}
     {% endelement %}
 </div>

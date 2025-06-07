@@ -4,12 +4,12 @@
     {% trans "Sign Out" %}
 {% endblock head_title %}
 {% block content %}
-<div class="row my-3">
-  <div class="col-2">
-    <div class="card bg-success-subtle border-primary" style="border-radius: 0;">
-      <div class="card-body">
-        <h3 class="card-title text-info-emphasis">Sign out</h3>
-        <p class="card-text">Are you sure?</p>
+<div class="flex my-3">
+  <div class="w-1/6">
+    <div class="bg-indigo-100 border border-indigo-400 rounded-none">
+      <div class="p-4">
+        <h3 class="text-lg font-semibold mb-3 text-blue-900">Sign out</h3>
+        <p class="mb-4">Are you sure?</p>
         {% url 'account_logout' as action_url %}
         {% element form method="post" action=action_url no_visible_fields=True %}
         {% slot body %}
@@ -21,7 +21,7 @@
         {% endif %}
         {% endslot %}
         {% slot actions %}
-        <input class="btn btn-primary" type="submit" value="Yes">
+        <input class="bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" type="submit" value="Yes">
         {% endslot %}
     {% endelement %}
       </div>
