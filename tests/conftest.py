@@ -120,6 +120,8 @@ def tune_set(db, client):
     now = timezone.now()
     for i, tune in enumerate(tunes):
         last_played_date = now - timedelta(days=i + 1)
-        RepertoireTune.objects.create(tune=tune, player=user, last_played=last_played_date)
+        RepertoireTune.objects.create(
+            tune=tune, player=user, last_played=last_played_date
+        )
 
     return {"user": user, "tunes": RepertoireTune.objects.all()}
