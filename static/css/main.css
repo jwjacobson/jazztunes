@@ -497,6 +497,9 @@
   .border-indigo-700 {
     border-color: var(--color-indigo-700);
   }
+  .\!bg-pink-700 {
+    background-color: var(--color-pink-700) !important;
+  }
   .bg-blue-50 {
     background-color: var(--color-blue-50);
   }
@@ -922,16 +925,16 @@
     -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important;
     -webkit-text-fill-color: #000 !important;
   }
-  input[type="submit"],
-    button {
+  input[type="submit"].blue-button,
+    button.blue-button {
     background-color: #1e3a8a !important;
     border: none;
     -moz-appearance: none;
          appearance: none;
     -webkit-appearance: none;
   }
-  input[type="submit"]:hover,
-    button:hover {
+  input[type="submit"].blue-button:hover,
+    button.blue-button:hover {
     background-color: #1d4ed8 !important;
   }
 }
