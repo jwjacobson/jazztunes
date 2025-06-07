@@ -44,6 +44,8 @@
         {% endif %}
         {% if field.help_text %}
           <p class="text-gray-700 text-sm mt-1">{{ field.help_text|safe }}</p>
+        {% else %}
+          <div class="h-5"></div>
         {% endif %}
       </div>
       {% if forloop.counter|divisibleby:2 %}
