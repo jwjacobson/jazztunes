@@ -922,6 +922,18 @@
     -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important;
     -webkit-text-fill-color: #000 !important;
   }
+  input[type="submit"],
+    button {
+    background-color: #1e3a8a !important;
+    border: none;
+    -moz-appearance: none;
+         appearance: none;
+    -webkit-appearance: none;
+  }
+  input[type="submit"]:hover,
+    button:hover {
+    background-color: #1d4ed8 !important;
+  }
 }
 @property --tw-rotate-x {
   syntax: "*";

@@ -61,4 +61,19 @@
         -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important; /* orange background + indigo ring */
         -webkit-text-fill-color: #000 !important;
     }
+
+    /* Fix Chromium button rendering */
+    input[type="submit"],
+    button {
+        background-color: #1e3a8a !important; /* bg-blue-900 */
+        border: none;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+    
+    input[type="submit"]:hover,
+    button:hover {
+        background-color: #1d4ed8 !important; /* bg-blue-700 */
+    
+}
 }
