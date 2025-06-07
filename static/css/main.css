@@ -12,7 +12,6 @@
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-orange-50: oklch(98% 0.016 73.684);
     --color-orange-100: oklch(95.4% 0.038 75.164);
-    --color-green-900: oklch(39.3% 0.095 152.535);
     --color-emerald-400: oklch(76.5% 0.177 163.223);
     --color-emerald-500: oklch(69.6% 0.17 162.48);
     --color-teal-900: oklch(38.6% 0.063 188.416);
@@ -54,7 +53,6 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
-    --font-weight-black: 900;
     --blur-xs: 4px;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -325,9 +323,6 @@
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
   }
-  .mb-2 {
-    margin-bottom: calc(var(--spacing) * 2);
-  }
   .mb-3 {
     margin-bottom: calc(var(--spacing) * 3);
   }
@@ -511,9 +506,6 @@
   .bg-emerald-500 {
     background-color: var(--color-emerald-500);
   }
-  .bg-green-900 {
-    background-color: var(--color-green-900);
-  }
   .bg-indigo-50 {
     background-color: var(--color-indigo-50);
   }
@@ -596,10 +588,6 @@
   .text-xl {
     font-size: var(--text-xl);
     line-height: var(--tw-leading, var(--text-xl--line-height));
-  }
-  .font-black {
-    --tw-font-weight: var(--font-weight-black);
-    font-weight: var(--font-weight-black);
   }
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
@@ -919,6 +907,20 @@
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--color-gray-700);
+  }
+  .allauth-form input:-webkit-autofill,
+    .allauth-form input:-webkit-autofill:hover,
+    form input:-webkit-autofill,
+    form input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0 30px #fff7ed inset !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+  .allauth-form input:-webkit-autofill:focus,
+    .allauth-form input:-webkit-autofill:active,
+    form input:-webkit-autofill:focus,
+    form input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important;
+    -webkit-text-fill-color: #000 !important;
   }
 }
 @property --tw-rotate-x {

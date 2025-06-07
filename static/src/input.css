@@ -44,4 +44,21 @@
         @apply text-sm text-gray-700;
     }
 
+/* Fix Chrome autofill override for login forms while preserving focus ring */
+    .allauth-form input:-webkit-autofill,
+    .allauth-form input:-webkit-autofill:hover,
+    form input:-webkit-autofill,
+    form input:-webkit-autofill:hover {
+        -webkit-box-shadow: 0 0 0 30px #fff7ed inset !important; /* orange-50 background */
+        -webkit-text-fill-color: #000 !important;
+    }
+    
+    /* Preserve focus ring for autofilled inputs */
+    .allauth-form input:-webkit-autofill:focus,
+    .allauth-form input:-webkit-autofill:active,
+    form input:-webkit-autofill:focus,
+    form input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important; /* orange background + indigo ring */
+        -webkit-text-fill-color: #000 !important;
+    }
 }
