@@ -19,7 +19,7 @@
     /* Style the "Remember me" checkbox */
     .allauth-form input[type="checkbox"],
     form input[type="checkbox"] {
-        @apply accent-orange-100 mr-2 inline;
+        @apply accent-orange-100 my-2 mr-2 inline;
     }
     
     /* Make the div containing checkbox and label flex horizontally */
@@ -63,16 +63,16 @@
     }
 
     /* Fix Chromium button rendering */
-    input[type="submit"],
-    button {
+    input[type="submit"].blue-button,
+    button.blue-button {
         background-color: #1e3a8a !important; /* bg-blue-900 */
         border: none;
         appearance: none;
         -webkit-appearance: none;
     }
     
-    input[type="submit"]:hover,
-    button:hover {
+    input[type="submit"].blue-button:hover,
+    button.blue-button:hover {
         background-color: #1d4ed8 !important; /* bg-blue-700 */
     
 }
