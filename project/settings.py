@@ -10,14 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-# from decouple import config, Csv
+from decouple import config
 from pathlib import Path
 import dj_database_url
 import os
 import sentry_sdk
-from dotenv import load_dotenv
 
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,11 +24,12 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", default=False)
-ADMIN_USER_ID = int(os.getenv("ADMIN_USER_ID"))
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
+SECRET_KEY = config("SECRET_KEY")
+DEBUG = config("DEBUG", default=False, cast=bool)
+ADMIN_USER_ID = config("ADMIN_USER_ID", cast=int)
+ALLOWED_HOSTS = [config("ALLOWED_HOSTS", "")]
+# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+# ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "allauth",
     "allauth.account",
-    # "allauth.socialaccount",
     "tune.apps.TuneConfig",
     "debug_toolbar",
 ]
@@ -128,7 +126,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "project.wsgi.application"
 
-DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
+DATABASES = {"default": dj_database_url.parse(config("DATABASE_URL"))}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -153,19 +151,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-# STATIC_HOST = os.getenv("DJANGO_STATIC_HOST", default="")
-# STATIC_URL = STATIC_HOST + "/static/"
-
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, "staticfiles")
-# STORAGES = {
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     },
-# }
-
-
-# STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, "static"), BASE_DIR / "static")
 
 
 STATIC_HOST = os.getenv("DJANGO_STATIC_HOST", default="")
