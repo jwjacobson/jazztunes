@@ -887,6 +887,7 @@
   }
   .allauth-form input[type="checkbox"],
     form input[type="checkbox"] {
+    margin-block: calc(var(--spacing) * 2);
     margin-right: calc(var(--spacing) * 2);
     display: inline;
     accent-color: var(--color-orange-100);

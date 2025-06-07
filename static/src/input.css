@@ -19,7 +19,7 @@
     /* Style the "Remember me" checkbox */
     .allauth-form input[type="checkbox"],
     form input[type="checkbox"] {
-        @apply accent-orange-100 mr-2 inline;
+        @apply accent-orange-100 my-2 mr-2 inline;
     }
     
     /* Make the div containing checkbox and label flex horizontally */
