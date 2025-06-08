@@ -37,7 +37,11 @@ def tune_list(request):
     Show the user's home page, which displays a searchable repertoire and allows for tune management.
     """
     user = request.user
-    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
+    tunes = (
+        RepertoireTune.objects.select_related("tune")
+        .prefetch_related("tags")
+        .filter(player=user)
+    )
     tune_count = len(tunes)
     search_term_string = " "
 
