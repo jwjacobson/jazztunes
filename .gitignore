@@ -170,3 +170,4 @@ vars.sh
 latest.dump
 .idea/
 jazztunes/
+node_modules
