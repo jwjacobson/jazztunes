@@ -15,7 +15,6 @@
 
     #rep-table tbody tr:hover {
         background-color: rgb(255 247 237); /* bg-orange-50 */
-        transition: background-color 150ms;
     }
 
     #rep-table {
@@ -140,7 +139,7 @@
                             <button hx-get="{% url 'tune:tune_delete_confirm' pk=tune.tune.pk %}"
                                 hx-target="#modal-container"
                                 hx-swap="innerHTML"
-                                class="px-3 py-1 text-sm text-white !bg-pink-700 hover:bg-pink-600 cursor-pointer">
+                                class="px-3 py-1 text-sm text-white bg-pink-700 hover:bg-pink-600 cursor-pointer">
                             Delete
                             </button>
                             <div id="modal-container"></div>

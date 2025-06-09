@@ -59,6 +59,7 @@ def tune_list(request):
     """
     user = request.user
     search_term_string = " "
+    tune_count = 0
 
     if user.username.endswith("s"):
         possessive = f"{user.username}'"
