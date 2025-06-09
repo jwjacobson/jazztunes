@@ -74,6 +74,5 @@
     input[type="submit"].blue-button:not(.bg-pink-700):hover,
     button.blue-button:not(.bg-pink-700):hover {
         background-color: #1d4ed8 !important; /* bg-blue-700 */
-    
-}
+    }
 }
