@@ -17,18 +17,39 @@
 
 from random import choice
 
+from django.conf import settings
+from django.core.cache import cache
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
 from django.db import transaction
-from django.utils import timezone
-from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
+from django.utils import timezone
 
 from .forms import TuneForm, RepertoireTuneForm, SearchForm
 from .models import Tune, RepertoireTune
 from .search import return_search_results
+
+
+def get_user_repertoire(user):
+    """Retrieves the user's cached repertoire, or stores it in the cache if not yet cached."""
+    cache_key = f"repertoire_{user.id}"
+    tunes = cache.get(cache_key)
+
+    if tunes is None:
+        tunes = list(
+            RepertoireTune.objects.select_related("tune")
+            .prefetch_related("tags")
+            .filter(player=user)
+        )
+        cache.set(cache_key, tunes, 60 * 10)  # 10 minutes
+
+    return tunes
+
+
+def invalidate_user_repertoire(user_id):
+    cache.delete(f"repertoire_{user_id}")
 
 
 @login_required
@@ -37,9 +58,8 @@ def tune_list(request):
     Show the user's home page, which displays a searchable repertoire and allows for tune management.
     """
     user = request.user
-    tunes = RepertoireTune.objects.select_related("tune").filter(player=user)
-    tune_count = len(tunes)
     search_term_string = " "
+    tune_count = 0
 
     if user.username.endswith("s"):
         possessive = f"{user.username}'"
@@ -47,6 +67,11 @@ def tune_list(request):
         possessive = f"{user.username}'s"
 
     if request.method == "POST":
+        tunes = (
+            RepertoireTune.objects.select_related("tune")
+            .prefetch_related("tags")
+            .filter(player=user)
+        )
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
@@ -59,6 +84,8 @@ def tune_list(request):
             tune_count = results.get("tune_count", 0)
     else:
         search_form = SearchForm()
+        tunes = get_user_repertoire(user)
+        tune_count = len(tunes)
 
     if request.headers.get("Hx-Request"):
         return render(
