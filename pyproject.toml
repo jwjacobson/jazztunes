@@ -3,7 +3,7 @@ name = "jazz-repertoire"
 version = "0.1.0"
 description = "A jazz repertoire management app"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "dj-database-url>=2.3.0",
     "django>=5.2",
@@ -13,7 +13,6 @@ dependencies = [
     "sendgrid>=6.11.0",
     "sentry-sdk>=2.27.0",
     "sphinx>=8.2.3",
-    "tox>=4.25.0",
     "whitenoise>=6.9.0",
 ]
 
@@ -24,4 +23,5 @@ dev = [
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
     "pytest-django>=4.11.1",
+    "tox>=4.26.0",
 ]
