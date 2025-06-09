@@ -21,9 +21,9 @@ Note: these instructions assume you are using [uv](https://docs.astral.sh/uv/) f
 4. Run `uv sync` to synchronize the project dependencies with your environment.
 5. Run `uv run python manage.py migrate` to set up the database.
 6. If you want to use the Public tune feature, you'll need to create a superuser: ```uv run python manage.py createsuperuser```, then set that user's ID to ADMIN_USER_ID in .env (it will be 1 if it's the first user created, otherwise 2, etc.). Tunes you create as that user will also show up on the Public page for all other users. Creating a superuser is also a good idea because it gives you access to the [Django admin](https://docs.djangoproject.com/en/5.2/ref/contrib/admin/) interface.
-8. Start the server: ```uv run python manage.py runserver ```
+8. Start the server: ```uv run python manage.py runserver```
 9. Ctrl-click on ```http://127.0.0.1:8000``` — This will open jazztunes in your default browser. You can also just navigate to that address in a browser.
-10. You can close the program by closing your browser and pressing Ctrl-C in the terminal running the server.
+10. You can close the program by closing your browser and pressing `Ctrl-C` in the terminal running the server.
 
 ### License
 Jazztunes is [free software](https://www.fsf.org/about/what-is-free-software), released under version 3.0 of the GPL. Everyone has the right to use, modify, and distribute jazztunes subject to the [stipulations](https://github.com/jwjacobson/jazztunes/blob/main/LICENSE) of that license.
