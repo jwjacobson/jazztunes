@@ -90,7 +90,6 @@ LOGOUT_URL = "account_logout"
 LOGIN_REDIRECT_URL = "tune:tune_list"
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -101,6 +100,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
 
 ROOT_URLCONF = "project.urls"
 
