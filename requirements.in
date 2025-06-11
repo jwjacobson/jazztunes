@@ -1,6 +1,7 @@
 dj-database-url
 django
 django-allauth
+gunicorn
 psycopg2
 python-decouple
 sendgrid
