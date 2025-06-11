@@ -50,13 +50,13 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "tune.apps.TuneConfig",
-    "debug_toolbar",
 ]
 
 SITE_ID = 1
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    INSTALLED_APPS += "debug_toolbar"
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
