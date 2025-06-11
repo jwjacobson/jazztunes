@@ -101,13 +101,4 @@
         color: #374151 !important;
     }
 
-    /* Temporary override for debugging */
-    input[type="submit"]:not(.blue-button),
-    button:not(.blue-button) {
-    background-color: initial !important;
-    border: initial !important;
-    appearance: initial !important;
-    -webkit-appearance: initial !important;
-    -moz-appearance: initial !important;
-    }
 }
