@@ -174,6 +174,7 @@ def tune_edit(request, pk):
                 request,
                 f"{updated_tune.title} has been updated.",
             )
+
         return redirect("tune:tune_list")
 
     return render(

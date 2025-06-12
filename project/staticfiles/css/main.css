@@ -884,6 +884,7 @@
   }
   .allauth-form input[type="checkbox"],
     form input[type="checkbox"] {
+    margin-block: calc(var(--spacing) * 2);
     margin-right: calc(var(--spacing) * 2);
     display: inline;
     accent-color: var(--color-orange-100);
@@ -922,17 +923,39 @@
     -webkit-box-shadow: 0 0 0 30px #fff7ed inset, 0 0 0 1px #8b5cf6 !important;
     -webkit-text-fill-color: #000 !important;
   }
-  input[type="submit"],
-    button {
+  input[type="submit"].blue-button,
+    button.blue-button {
     background-color: #1e3a8a !important;
     border: none;
     -moz-appearance: none;
          appearance: none;
     -webkit-appearance: none;
   }
-  input[type="submit"]:hover,
-    button:hover {
+  input[type="submit"].blue-button:hover,
+    button.blue-button:hover {
     background-color: #1d4ed8 !important;
+  }
+  button.bg-pink-700 {
+    background-color: #be185d !important;
+    border: 1px solid transparent !important;
+    -moz-appearance: initial !important;
+         appearance: initial !important;
+    -webkit-appearance: initial !important;
+  }
+  button.bg-pink-700:hover {
+    background-color: #db2777 !important;
+  }
+  button.text-gray-600 {
+    background-color: transparent !important;
+    color: #4b5563 !important;
+    border: 1px solid #4b5563 !important;
+    -moz-appearance: initial !important;
+         appearance: initial !important;
+    -webkit-appearance: initial !important;
+  }
+  button.text-gray-600:hover {
+    background-color: #eef2ff !important;
+    color: #374151 !important;
   }
 }
 @property --tw-rotate-x {
