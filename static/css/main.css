@@ -957,6 +957,15 @@
     background-color: #eef2ff !important;
     color: #374151 !important;
   }
+  a[role="button"].bg-emerald-500 {
+    -moz-appearance: none !important;
+         appearance: none !important;
+    -webkit-appearance: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid transparent !important;
+  }
 }
 @property --tw-rotate-x {
   syntax: "*";
