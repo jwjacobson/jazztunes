@@ -169,13 +169,12 @@ def tune_edit(request, pk):
     if tune_form.is_valid() and rep_form.is_valid():
         with transaction.atomic():
             updated_tune = tune_form.save()
-            updated_rep_tune = rep_form.save()
-            print(f"Before: {updated_rep_tune.tags.all()}")
+            _ = rep_form.save()
             messages.success(
                 request,
                 f"{updated_tune.title} has been updated.",
             )
-        print(f"After: {updated_rep_tune.tags.all()}")
+
         return redirect("tune:tune_list")
 
     return render(
