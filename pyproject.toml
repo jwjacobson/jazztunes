@@ -1,6 +1,6 @@
 [project]
 name = "jazz-repertoire"
-version = "0.1.0"
+version = "1.0.0"
 description = "A jazz repertoire management app"
 readme = "README.md"
 requires-python = ">=3.13"
