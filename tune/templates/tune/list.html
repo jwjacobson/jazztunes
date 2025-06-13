@@ -116,9 +116,6 @@
                         {% endfor %}
                     </td>
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
-                    {% comment %} <td class="px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
-                        {{ tune.last_played|date:"MONTH_DAY_FORMAT"}}
-                    </td> {% endcomment %}
                     <td data-order="{{ tune.last_played|date:'U' }}" class="px-4 py-2 border-b border-indigo-200">
                         {{ tune.last_played|date:"MONTH_DAY_FORMAT" }}
                     </td>
