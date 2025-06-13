@@ -341,14 +341,12 @@ def tune_browse(request):
     Show the public page of preloaded tunes.
     """
 
-    user_tunes = RepertoireTune.objects.select_related("tune").filter(
-        player=request.user
-    )
+    user = request.user
+    user_tunes = get_user_repertoire(user)
     user_tune_titles = {tune.tune.title for tune in user_tunes}
 
-    tunes = RepertoireTune.objects.select_related("tune").filter(
-        player=User.objects.get(id=settings.ADMIN_USER_ID)
-    )
+    admin_user = User.objects.get(id=settings.ADMIN_USER_ID)
+    tunes = get_user_repertoire(admin_user)
     tune_count = len(tunes)
 
     if request.method == "POST":
@@ -358,6 +356,7 @@ def tune_browse(request):
             results = return_search_results(request, search_terms, tunes, search_form)
             tunes = results.get("tunes")
             tune_count = results.get("tune_count", 0)
+            invalidate_user_repertoire(request.user.id)
 
     else:
         search_form = SearchForm()
