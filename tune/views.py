@@ -200,7 +200,9 @@ def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
-    rep_tune.delete()
+    with transaction.atomic():
+        rep_tune.delete()
+        invalidate_user_repertoire(request.user.id)
 
     tune_count = request.session["tune_count"] - 1
     request.session["tune_count"] = tune_count
