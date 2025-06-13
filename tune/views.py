@@ -439,7 +439,10 @@ def set_rep_fields(request, pk):
         rep_tune.knowledge = rep_form.cleaned_data["knowledge"]
         rep_tune.last_played = rep_form.cleaned_data["last_played"]
         rep_tune.tags.set(rep_form.cleaned_data["tags"])
-        rep_tune.save()
+        with transaction.atomic():
+            rep_tune.save()
+            invalidate_user_repertoire(request.user.id)
+
     else:
         print("invalid")
         print(rep_form.errors)
