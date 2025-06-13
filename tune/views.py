@@ -148,6 +148,7 @@ def tune_new(request):
             )
 
             rep_tune.tags.set(rep_form.cleaned_data["tags"])
+            invalidate_user_repertoire(request.user.id)
 
             messages.success(
                 request,
@@ -176,6 +177,7 @@ def tune_edit(request, pk):
                 f"{updated_tune.title} has been updated.",
             )
 
+            invalidate_user_repertoire(request.user.id)
         return redirect("tune:tune_list")
 
     return render(
