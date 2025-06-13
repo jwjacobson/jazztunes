@@ -82,6 +82,7 @@ def tune_list(request):
             )
             tunes = results.get("tunes")
             tune_count = results.get("tune_count", 0)
+            invalidate_user_repertoire(request.user.id)
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(user)
