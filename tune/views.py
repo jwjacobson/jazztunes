@@ -404,6 +404,7 @@ def tune_take(request, pk):
 
     with transaction.atomic():
         tune.save()
+        invalidate_user_repertoire(request.user.id)
 
     new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
 
