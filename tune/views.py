@@ -310,6 +310,7 @@ def play(request, pk):
     rep_tune.last_played = timezone.now()
     rep_tune.play_count += 1
     rep_tune.save()
+    invalidate_user_repertoire(request.user.id)
 
     if url_name == "play_play":
         return render(
