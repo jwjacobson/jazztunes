@@ -342,14 +342,15 @@ def tune_browse(request):
     """
 
     user = request.user
-    user_tunes = get_user_repertoire(user)
-    user_tune_titles = {tune.tune.title for tune in user_tunes}
+    # user_tunes = get_user_repertoire(user)
+    user_tune_titles = {tune.tune.title for tune in get_user_repertoire(user)}
 
     admin_user = User.objects.get(id=settings.ADMIN_USER_ID)
     tunes = get_user_repertoire(admin_user)
     tune_count = len(tunes)
 
     if request.method == "POST":
+        tunes = RepertoireTune.objects.select_related("tune").filter(player=admin_user)
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
@@ -360,6 +361,8 @@ def tune_browse(request):
 
     else:
         search_form = SearchForm()
+        tunes = get_user_repertoire(admin_user)
+        tune_count = len(tunes)
 
     if request.headers.get("Hx-Request"):
         return render(
