@@ -27,7 +27,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 
-from .forms import TuneForm, RepertoireTuneForm, SearchForm
+from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm
 from .models import Tune, RepertoireTune
 from .search import return_search_results
 
@@ -392,7 +392,7 @@ def tune_take(request, pk):
     """
     user = request.user
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
-    rep_form = RepertoireTuneForm(request.POST)
+    rep_form = TakeForm(request.POST)
 
     if admin_tune.player_id != settings.ADMIN_USER_ID:
         messages.error(request, "You can only take public tunes into your repertoire.")
@@ -407,18 +407,6 @@ def tune_take(request, pk):
         tune.save()
         new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
         invalidate_user_repertoire(request.user.id)
-
-    # Change input backgrounds and accents to indigo because the default is orange-50, which is also the table row hover background
-    for field_name, field in rep_form.fields.items():
-        current_classes = field.widget.attrs.get("class", "")
-        if field_name == "tags":
-            new_classes = current_classes.replace(
-                "accent-orange-100", "accent-indigo-100"
-            )
-            field.widget.attrs["class"] = new_classes
-        else:
-            new_classes = current_classes.replace("bg-orange-50", "bg-indigo-50")
-            field.widget.attrs["class"] = new_classes
 
     return render(
         request,
