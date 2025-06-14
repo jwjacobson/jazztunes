@@ -348,6 +348,7 @@ def tune_browse(request):
 
     if request.method == "POST":
         tunes = RepertoireTune.objects.select_related("tune").filter(player=admin_user)
+        tune_count = len(tunes)
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
