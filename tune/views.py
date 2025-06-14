@@ -241,8 +241,8 @@ def get_random_tune(request):
     user = request.user
     tunes = (
         RepertoireTune.objects.select_related("tune")
+        .prefetch_related("tags")
         .filter(player=user)
-        .exclude(knowledge="don't know")
     )
     search_form = SearchForm(request.POST or None)
 
