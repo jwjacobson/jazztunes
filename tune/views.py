@@ -148,6 +148,7 @@ def tune_new(request):
             )
 
             rep_tune.tags.set(rep_form.cleaned_data["tags"])
+            invalidate_user_repertoire(request.user.id)
 
             messages.success(
                 request,
@@ -176,6 +177,7 @@ def tune_edit(request, pk):
                 f"{updated_tune.title} has been updated.",
             )
 
+            invalidate_user_repertoire(request.user.id)
         return redirect("tune:tune_list")
 
     return render(
@@ -198,7 +200,9 @@ def tune_delete(request, pk):
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
-    rep_tune.delete()
+    with transaction.atomic():
+        rep_tune.delete()
+        invalidate_user_repertoire(request.user.id)
 
     tune_count = request.session["tune_count"] - 1
     request.session["tune_count"] = tune_count
@@ -237,8 +241,8 @@ def get_random_tune(request):
     user = request.user
     tunes = (
         RepertoireTune.objects.select_related("tune")
+        .prefetch_related("tags")
         .filter(player=user)
-        .exclude(knowledge="don't know")
     )
     search_form = SearchForm(request.POST or None)
 
@@ -306,6 +310,7 @@ def play(request, pk):
     rep_tune.last_played = timezone.now()
     rep_tune.play_count += 1
     rep_tune.save()
+    invalidate_user_repertoire(request.user.id)
 
     if url_name == "play_play":
         return render(
@@ -336,26 +341,25 @@ def tune_browse(request):
     Show the public page of preloaded tunes.
     """
 
-    user_tunes = RepertoireTune.objects.select_related("tune").filter(
-        player=request.user
-    )
-    user_tune_titles = {tune.tune.title for tune in user_tunes}
+    user = request.user
+    user_tune_titles = {tune.tune.title for tune in get_user_repertoire(user)}
 
-    tunes = RepertoireTune.objects.select_related("tune").filter(
-        player=User.objects.get(id=settings.ADMIN_USER_ID)
-    )
-    tune_count = len(tunes)
+    admin_user = User.objects.get(id=settings.ADMIN_USER_ID)
 
     if request.method == "POST":
+        tunes = RepertoireTune.objects.select_related("tune").filter(player=admin_user)
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
             results = return_search_results(request, search_terms, tunes, search_form)
             tunes = results.get("tunes")
             tune_count = results.get("tune_count", 0)
+            invalidate_user_repertoire(request.user.id)
 
     else:
         search_form = SearchForm()
+        tunes = get_user_repertoire(admin_user)
+        tune_count = len(tunes)
 
     if request.headers.get("Hx-Request"):
         return render(
@@ -397,9 +401,11 @@ def tune_take(request, pk):
 
     tune.pk = None
     tune.created_by = user
-    tune.save()
 
-    new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
+    with transaction.atomic():
+        tune.save()
+        new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
+        invalidate_user_repertoire(request.user.id)
 
     # Change input backgrounds and accents to indigo because the default is orange-50, which is also the table row hover background
     for field_name, field in rep_form.fields.items():
@@ -432,7 +438,10 @@ def set_rep_fields(request, pk):
         rep_tune.knowledge = rep_form.cleaned_data["knowledge"]
         rep_tune.last_played = rep_form.cleaned_data["last_played"]
         rep_tune.tags.set(rep_form.cleaned_data["tags"])
-        rep_tune.save()
+        with transaction.atomic():
+            rep_tune.save()
+            invalidate_user_repertoire(request.user.id)
+
     else:
         print("invalid")
         print(rep_form.errors)
