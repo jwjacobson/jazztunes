@@ -404,9 +404,8 @@ def tune_take(request, pk):
 
     with transaction.atomic():
         tune.save()
+        new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
         invalidate_user_repertoire(request.user.id)
-
-    new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
 
     # Change input backgrounds and accents to indigo because the default is orange-50, which is also the table row hover background
     for field_name, field in rep_form.fields.items():
