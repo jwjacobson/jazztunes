@@ -115,6 +115,23 @@ class RepertoireTuneForm(BaseForm, ModelForm):
         return instance
 
 
+class TakeForm(RepertoireTuneForm):
+    """The Take form has custom coloration because it appears within a table cell that will have an orange background."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            current_classes = field.widget.attrs.get("class", "")
+            if field_name == "tags":
+                new_classes = current_classes.replace(
+                    "accent-orange-100", "accent-indigo-100"
+                )
+                field.widget.attrs["class"] = new_classes
+            else:
+                new_classes = current_classes.replace("bg-orange-50", "bg-indigo-50")
+                field.widget.attrs["class"] = new_classes
+
+
 class SearchForm(BaseForm, forms.Form):
     TIMES = [
         ("anytime", "n/a"),
