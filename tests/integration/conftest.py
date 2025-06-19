@@ -1,0 +1,30 @@
+import os
+
+from django.contrib.auth.models import User
+import pytest
+
+from .constants import USERNAME, PASSWORD
+
+os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
+
+
+@pytest.fixture
+def test_user(transactional_db):
+    user = User.objects.create_user(
+        username=USERNAME,
+        password=PASSWORD,
+    )
+    return user
+
+
+@pytest.fixture()
+def logged_in_page(page, test_user, live_server):
+    login_url = live_server.url
+    page.goto(login_url)
+    page.get_by_role("textbox", name="Username:").click()
+    page.get_by_role("textbox", name="Username:").fill(test_user.username)
+    page.get_by_role("textbox", name="Password:").click()
+    page.get_by_role("textbox", name="Password:").fill(PASSWORD)
+    page.get_by_role("button", name="Sign in").click()
+
+    yield page
