@@ -1,17 +1,17 @@
 import re
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 import pytest
 
 from .constants import USERNAME, PASSWORD
 
 
-def test_login_title(page: Page, live_server):
+def test_login_title(page, live_server):
     page.goto(live_server.url)
     expect(page).to_have_title(re.compile("Welcome to Jazztunes!"))
 
 
-def test_signup_from_homepage(page: Page, live_server):
+def test_signup_from_homepage(page, live_server):
     page.goto(live_server.url)
     page.get_by_role("link", name="Sign up", exact=True).click()
     expect(page).to_have_title(re.compile("Sign up"))
@@ -24,7 +24,7 @@ def test_signup_from_homepage(page: Page, live_server):
     assert USERNAME in result
 
 
-def test_login_success(page: Page, live_server, test_user):
+def test_login_success(page, live_server, test_user):
     page.goto(live_server.url)
     page.get_by_role("textbox", name="Username:").click()
     page.get_by_role("textbox", name="Username:").fill(test_user.username)
