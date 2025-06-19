@@ -56,7 +56,7 @@ def test_add_tune(logged_in_page):
     page.get_by_role("spinbutton").fill("2024")
     page.locator("#id_last_played").fill("2025-06-17")
     page.locator("#id_knowledge").select_option("learning")
-    # page.get_by_role("checkbox", name="latin").check()
+    # page.get_by_role("checkbox", name="latin").check() TODO: create some tags in the test environment
     page.get_by_role("button", name="Add").click()
 
     result = page.text_content("#rep-table")
