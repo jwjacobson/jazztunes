@@ -22,8 +22,7 @@ def test_user(transactional_db):
 
 @pytest.fixture()
 def logged_in_page(page, test_user, live_server):
-    login_url = live_server.url
-    page.goto(login_url)
+    page.goto(live_server.url)
     page.get_by_role("textbox", name="Username:").click()
     page.get_by_role("textbox", name="Username:").fill(test_user.username)
     page.get_by_role("textbox", name="Password:").click()
