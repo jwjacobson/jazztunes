@@ -62,4 +62,11 @@ def test_add_tune(logged_in_page):
     result = page.text_content("#rep-table")
 
     expect(page).to_have_title(re.compile("Home"))
+    assert "Tomorrows" in result
     assert "Belderbos" in result
+    assert "A-" in result
+    assert "AABA" in result
+    assert "standard" in result
+    assert "2024" in result
+    assert "June 17" in result
+    assert "learning" in result

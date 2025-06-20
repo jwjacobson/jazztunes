@@ -39,7 +39,7 @@ uv run pytest -k unit
 ```
 Note: the `-k` option can be used to match any pattern in directory, file, or test names!
 
-Run the tests in "headed" mode (for integration tests only, a browser will open and you can watch it go through the steps):
+Run the tests in "headed" mode (for integration tests only -- a browser will open and you can watch it go through the steps):
 ```
 uv run pytest -k integration --headed
 ```
