@@ -1,5 +1,6 @@
 import re
 
+from django.utils import timezone
 from playwright.sync_api import expect
 import pytest
 
@@ -70,3 +71,17 @@ def test_add_tune(logged_in_page):
     assert "2024" in result
     assert "June 17" in result
     assert "learning" in result
+
+
+# TODO: figure out how not to hardcode the row id
+@pytest.mark.django_db
+def test_play_single_tune(logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Add").click()
+    page.locator('input[name="title"]').click()
+    page.locator('input[name="title"]').fill("Yesterday's Tomorrows")
+    page.get_by_role("button", name="Add").click()
+    page.locator("#tune-row-2").get_by_role("button", name="Play").click()
+
+    today_string = timezone.now().date().strftime("%B %d")
+    expect(page.locator("#last-played-2")).to_contain_text(today_string)
