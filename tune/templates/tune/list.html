@@ -123,19 +123,20 @@
                         <div class="flex gap-1">
                             <button type="button"
                                     class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
-                                    hx-put="{% url 'tune:play_list' pk=tune.id %}"
+                                    hx-put="{% url 'tune:play_list' pk=tune.pk %}"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                     hx-swap="innerHTML"
                                     hx-target="#last-played-{{ tune.id }}">
                                 Play
                             </button>
-                            
-                            <a class="px-3 py-1 text-sm bg-emerald-500 text-white hover:bg-emerald-400" 
-                               href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" 
-                               role="button">
+                            <button type="button"
+                                    hx-get="{% url 'tune:tune_edit' pk=tune.tune.pk %}"
+                                    hx-target="body"
+                                    hx-swap="outerHTML"
+                                    hx-push-url="true"
+                                    class="px-3 py-1 text-sm bg-emerald-500 text-white hover:bg-emerald-400 cursor-pointer">
                                 Edit
-                            </a>
-
+                            </button>
                             <button hx-get="{% url 'tune:tune_delete_confirm' pk=tune.tune.pk %}"
                                 hx-target="#modal-container"
                                 hx-swap="innerHTML"
