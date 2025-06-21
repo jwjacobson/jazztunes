@@ -104,16 +104,12 @@ def test_play_single_tune(single_tune_page):
 
 
 @pytest.mark.django_db
-def test_edit_single_tune(logged_in_page):
-    page = logged_in_page
-    page.get_by_role("link", name="Add").click()
-    page.locator('input[name="title"]').click()
-    page.locator('input[name="title"]').fill("Yesterday's Tomorrows")
-    page.get_by_role("button", name="Add").click()
-    tune_row = page.locator("tr").filter(has_text="Yesterday's Tomorrows")
-    tune_row.get_by_role("button", name="Edit").click()
-    page.locator('input[name="composer"]').fill("Belderbos")
+def test_edit_single_tune(single_tune_page):
+    page = single_tune_page
+    row_to_edit = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
+    row_to_edit.get_by_role("button", name="Edit").click()
+    page.locator('input[name="composer"]').fill("Sequeira")
     page.get_by_role("button", name="Save").click()
-    tune_row = page.locator("tr").filter(has_text="Yesterday's Tomorrows")
 
-    expect(tune_row.locator("td").nth(1)).to_contain_text("Belderbos")
+    edited_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
+    expect(edited_row.locator("td").nth(1)).to_contain_text("Sequeira")
