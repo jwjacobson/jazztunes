@@ -17,7 +17,8 @@
                     hx-swap="outerHTML swap:.25s"
                     hx-target="#{{ row_id }}"
                     hx-on:htmx:after-request="if(event.detail.successful) { document.getElementById('modal-container').innerHTML = '' }"
-                    class="px-4 py-2 bg-pink-700 text-white hover:bg-pink-600 cursor-pointer">
+                    class="px-4 py-2 bg-pink-700 text-white hover:bg-pink-600 cursor-pointer"
+                    id="confirm-delete-button">
                 Delete
             </button>
         </div>

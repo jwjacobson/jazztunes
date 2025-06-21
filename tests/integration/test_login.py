@@ -96,3 +96,16 @@ def test_edit_single_tune(single_tune_page):
 
     edited_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
     expect(edited_row.locator("td").nth(1)).to_contain_text("Sequeira")
+
+
+@pytest.mark.django_db
+def test_delete_single_tune(single_tune_page):
+    page = single_tune_page
+    row_to_delete = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
+    row_to_delete.get_by_role("button", name="Delete").click()
+
+    expect(page.locator("text=Delete Yesterday's Tomorrows?")).to_be_visible()
+    page.locator("#confirm-delete-button").click()
+
+    result = page.text_content("#rep_id")
+    assert SINGLE_TUNE_TITLE not in result
