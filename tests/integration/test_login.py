@@ -16,7 +16,6 @@ from .constants import (
     SINGLE_TUNE_METER,
     SINGLE_TUNE_YEAR,
     SINGLE_TUNE_KNOWLEDGE,
-    SINGLE_TUNE_LAST_PLAYED,
     SINGLE_TUNE_LAST_PLAYED_DISPLAY,
     DATE_DISPLAY_FORMAT,
 )
@@ -55,27 +54,11 @@ def test_login_success(page, live_server, test_user):
 
 
 @pytest.mark.django_db
-def test_add_tune(logged_in_page):
-    page = logged_in_page
-    page.get_by_role("link", name="Add").click()
-    page.locator('input[name="title"]').click()
-    page.locator('input[name="title"]').fill(SINGLE_TUNE_TITLE)
-    page.locator('input[name="key"]').click()
-    page.locator('input[name="composer"]').fill(SINGLE_TUNE_COMPOSER)
-    page.locator('input[name="key"]').click()
-    page.locator('input[name="key"]').fill(SINGLE_TUNE_KEY)
-    page.locator('input[name="other_keys"]').click()
-    page.locator('input[name="other_keys"]').fill(SINGLE_TUNE_OTHER_KEYS)
-    page.locator('select[name="song_form"]').select_option(SINGLE_TUNE_FORM)
-    page.locator('select[name="style"]').select_option(SINGLE_TUNE_STYLE)
-    page.get_by_role("spinbutton").click()
-    page.get_by_role("spinbutton").fill(SINGLE_TUNE_YEAR)
-    page.locator("#id_last_played").fill(SINGLE_TUNE_LAST_PLAYED)
-    page.locator("#id_knowledge").select_option(SINGLE_TUNE_KNOWLEDGE)
-    # page.get_by_role("checkbox", name="latin").check() TODO: create some tags in the test environment
-    page.get_by_role("button", name="Add").click()
+def test_add_tune(single_tune_page):
+    page = single_tune_page
 
     expect(page).to_have_title(re.compile("Home"))
+
     created_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
     expect(created_row.locator("td").nth(0)).to_contain_text(SINGLE_TUNE_TITLE)
     expect(created_row.locator("td").nth(1)).to_contain_text(SINGLE_TUNE_COMPOSER)
