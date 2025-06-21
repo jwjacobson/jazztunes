@@ -64,3 +64,5 @@ def single_tune_page(logged_in_page, test_user, live_server):
     page.locator("#id_knowledge").select_option(SINGLE_TUNE_KNOWLEDGE)
     # page.get_by_role("checkbox", name="latin").check() TODO: create some tags in the test environment
     page.get_by_role("button", name="Add").click()
+
+    yield page

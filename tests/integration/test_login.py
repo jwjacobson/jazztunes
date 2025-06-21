@@ -18,6 +18,7 @@ from .constants import (
     SINGLE_TUNE_KNOWLEDGE,
     SINGLE_TUNE_LAST_PLAYED,
     SINGLE_TUNE_LAST_PLAYED_DISPLAY,
+    DATE_DISPLAY_FORMAT,
 )
 
 
@@ -92,17 +93,13 @@ def test_add_tune(logged_in_page):
 
 
 @pytest.mark.django_db
-def test_play_single_tune(logged_in_page):
-    page = logged_in_page
-    page.get_by_role("link", name="Add").click()
-    page.locator('input[name="title"]').click()
-    page.locator('input[name="title"]').fill("Yesterday's Tomorrows")
-    page.get_by_role("button", name="Add").click()
+def test_play_single_tune(single_tune_page):
+    page = single_tune_page
 
-    tune_row = page.locator("tr").filter(has_text="Yesterday's Tomorrows")
+    tune_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
     tune_row.get_by_role("button", name="Play").click()
 
-    today_string = timezone.now().date().strftime("%B %d")
+    today_string = timezone.now().date().strftime(DATE_DISPLAY_FORMAT)
     expect(tune_row.locator("td").nth(10)).to_contain_text(today_string)
 
 
