@@ -91,10 +91,11 @@ def test_edit_single_tune(single_tune_page):
     page = single_tune_page
     row_to_edit = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
     row_to_edit.get_by_role("button", name="Edit").click()
+    page.locator('input[name="title"]').fill("Tomorrow's Yesterdays")
     page.locator('input[name="composer"]').fill("Sequeira")
     page.get_by_role("button", name="Save").click()
 
-    edited_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
+    edited_row = page.locator("tr").filter(has_text="Tomorrow's Yesterdays")
     expect(edited_row.locator("td").nth(1)).to_contain_text("Sequeira")
 
 
