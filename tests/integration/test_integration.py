@@ -203,3 +203,27 @@ def test_sort_key_descending(small_rep, logged_in_page):
 
     expect(first_row.locator("td").nth(2)).to_contain_text("F")
     expect(last_row.locator("td").nth(0)).to_contain_text("Coming on the Hudson")
+
+
+def test_sort_other_keys_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Other keys").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    # Coming on the Hudson has no other keys, so targeting by title
+    expect(first_row.locator("td").nth(0)).to_contain_text("Coming on the Hudson")
+    expect(last_row.locator("td").nth(3)).to_contain_text("Db")
+
+
+def test_sort_other_keys_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Other keys", exact=True).click()
+    page.get_by_role("button", name="Other keys", exact=True).click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(3)).to_contain_text("Db")
+    expect(last_row.locator("td").nth(0)).to_contain_text("Coming on the Hudson")
