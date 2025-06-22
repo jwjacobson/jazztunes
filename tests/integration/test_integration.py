@@ -124,8 +124,9 @@ def test_sort_default_title_ascending(small_rep, logged_in_page):
     expect(last_row.locator("td").nth(0)).to_contain_text("Someday My Prince Will Come")
 
 
-def test_sort_title_descending(small_rep, logged_in_page):
+def test_sort_title_descending_click_cell(small_rep, logged_in_page):
     page = logged_in_page
+    # Sort by clicking the header cell
     page.get_by_role("cell", name="Title: Activate to invert").locator("span").nth(
         1
     ).click()
@@ -139,3 +140,42 @@ def test_sort_title_descending(small_rep, logged_in_page):
     expect(last_row.locator("td").nth(0)).to_contain_text(
         "A Flower is a Lovesome Thing"
     )
+
+
+def test_sort_title_descending_click_text(small_rep, logged_in_page):
+    page = logged_in_page
+    # Sort by clicking the header text
+    page.get_by_role("button", name="Title").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(0)).to_contain_text(
+        "Someday My Prince Will Come"
+    )
+    expect(last_row.locator("td").nth(0)).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+
+
+def test_sort_composer_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Composer").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(1)).to_contain_text("Churchill")
+    expect(last_row.locator("td").nth(1)).to_contain_text("Strayhorn")
+
+
+def test_sort_composer_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Composer").click()
+    page.get_by_role("button", name="Composer").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(1)).to_contain_text("Strayhorn")
+    expect(last_row.locator("td").nth(1)).to_contain_text("Churchill")
