@@ -69,7 +69,7 @@ def single_tune_page(logged_in_page, test_user, live_server):
 
 
 @pytest.fixture()
-def user_small_rep(test_user, create_tune_set_for_user):
+def small_rep(test_user, create_tune_set_for_user):
     """Create a user with a repertoire of ten real tunes"""
     create_tune_set_for_user(test_user)
     return test_user

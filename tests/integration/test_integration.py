@@ -110,3 +110,15 @@ def test_delete_single_tune(single_tune_page):
 
     result = page.text_content("#rep_id")
     assert SINGLE_TUNE_TITLE not in result
+
+
+def test_sort_default_title_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(0)).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(last_row.locator("td").nth(0)).to_contain_text("Someday My Prince Will Come")
