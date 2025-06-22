@@ -17,8 +17,8 @@ from .constants import (
     SINGLE_TUNE_LAST_PLAYED,
 )
 
-# Setting this value to avoid a crash: "django.core.exceptions.SynchronousOnlyOperation:
-# You cannot call this from an async context - use a thread or sync_to_async."
+# Setting this value to avoid a crash:
+# "django.core.exceptions.SynchronousOnlyOperation: You cannot call this from an async context - use a thread or sync_to_async."
 # See https://github.com/microsoft/playwright-pytest/issues/29#issuecomment-731515676
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
@@ -66,3 +66,10 @@ def single_tune_page(logged_in_page, test_user, live_server):
     page.get_by_role("button", name="Add").click()
 
     yield page
+
+
+@pytest.fixture()
+def user_small_rep(test_user, create_tune_set_for_user):
+    """Create a user with a repertoire of ten real tunes"""
+    create_tune_set_for_user(test_user)
+    return test_user
