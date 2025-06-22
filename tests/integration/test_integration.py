@@ -227,3 +227,26 @@ def test_sort_other_keys_descending(small_rep, logged_in_page):
 
     expect(first_row.locator("td").nth(3)).to_contain_text("Db")
     expect(last_row.locator("td").nth(0)).to_contain_text("Coming on the Hudson")
+
+
+def test_sort_style_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Style").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(5)).to_contain_text("jazz")
+    expect(last_row.locator("td").nth(5)).to_contain_text("standard")
+
+
+def test_sort_style_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Style").click()
+    page.get_by_role("button", name="Style").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(5)).to_contain_text("standard")
+    expect(last_row.locator("td").nth(5)).to_contain_text("jazz")
