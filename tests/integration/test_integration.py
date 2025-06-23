@@ -273,3 +273,26 @@ def test_sort_style_descending(small_rep, logged_in_page):
 
     expect(first_row.locator("td").nth(5)).to_contain_text("standard")
     expect(last_row.locator("td").nth(5)).to_contain_text("jazz")
+
+
+def test_sort_meter_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Meter").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(6)).to_contain_text("3")
+    expect(last_row.locator("td").nth(6)).to_contain_text("4")
+
+
+def test_sort_meter_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Meter").click()
+    page.get_by_role("button", name="Meter").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(6)).to_contain_text("4")
+    expect(last_row.locator("td").nth(6)).to_contain_text("3")
