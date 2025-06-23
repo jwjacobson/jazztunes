@@ -342,3 +342,30 @@ def test_sort_knowledge_descending(small_rep, logged_in_page):
 
     expect(first_row.locator("td").nth(9)).to_contain_text("learning")
     expect(last_row.locator("td").nth(9)).to_contain_text("don't know")
+
+
+def test_sort_last_played_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Last Played").click()
+
+    date_cells = page.locator("#rep-table tbody tr td[id^='last-played-']")
+    timestamps = [
+        int(date_cells.nth(i).get_attribute("data-order"))
+        for i in range(date_cells.count())
+    ]
+
+    assert timestamps == sorted(timestamps)
+
+
+def test_sort_last_played_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Last Played").click()
+    page.get_by_role("button", name="Last Played").click()
+
+    date_cells = page.locator("#rep-table tbody tr td[id^='last-played-']")
+    timestamps = [
+        int(date_cells.nth(i).get_attribute("data-order"))
+        for i in range(date_cells.count())
+    ]
+
+    assert timestamps == sorted(timestamps, reverse=True)
