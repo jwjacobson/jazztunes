@@ -111,13 +111,20 @@ def create_tune_set_for_user():
         ]
 
         now = timezone.now()
+        knowledges = ("know", "learning", "don't know")
 
         for i, tune_data in enumerate(tunes_data):
             tune = Tune.objects.create(**tune_data)
             # Create a range of last_played dates
             last_played_date = now - timedelta(days=i + 1)
+            # Cycle through the knowledge values for each tune
+            knowledge_value = knowledges[i % 3]
+
             _ = RepertoireTune.objects.create(
-                tune=tune, player=user, last_played=last_played_date
+                tune=tune,
+                player=user,
+                last_played=last_played_date,
+                knowledge=knowledge_value,
             )
 
         rep_tunes = RepertoireTune.objects.filter(player=user)

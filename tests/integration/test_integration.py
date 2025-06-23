@@ -319,3 +319,26 @@ def test_sort_year_descending(small_rep, logged_in_page):
 
     expect(first_row.locator("td").nth(7)).to_contain_text("1958")
     expect(last_row.locator("td").nth(7)).to_contain_text("1937")
+
+
+def test_sort_knowledge_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Knowledge").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(9)).to_contain_text("don't know")
+    expect(last_row.locator("td").nth(9)).to_contain_text("learning")
+
+
+def test_sort_knowledge_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Knowledge").click()
+    page.get_by_role("button", name="Knowledge").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(9)).to_contain_text("learning")
+    expect(last_row.locator("td").nth(9)).to_contain_text("don't know")
