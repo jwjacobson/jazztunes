@@ -296,3 +296,26 @@ def test_sort_meter_descending(small_rep, logged_in_page):
 
     expect(first_row.locator("td").nth(6)).to_contain_text("4")
     expect(last_row.locator("td").nth(6)).to_contain_text("3")
+
+
+def test_sort_year_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Year").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(7)).to_contain_text("1937")
+    expect(last_row.locator("td").nth(7)).to_contain_text("1958")
+
+
+def test_sort_year_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Year").click()
+    page.get_by_role("button", name="Year").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(7)).to_contain_text("1958")
+    expect(last_row.locator("td").nth(7)).to_contain_text("1937")
