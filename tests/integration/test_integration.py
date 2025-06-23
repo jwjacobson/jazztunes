@@ -229,6 +229,29 @@ def test_sort_other_keys_descending(small_rep, logged_in_page):
     expect(last_row.locator("td").nth(0)).to_contain_text("Coming on the Hudson")
 
 
+def test_sort_form_ascending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Form").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(4)).to_contain_text("AABA")
+    expect(last_row.locator("td").nth(4)).to_contain_text("ABAC")
+
+
+def test_sort_form_descending(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("button", name="Form").click()
+    page.get_by_role("button", name="Form").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    last_row = all_rows.nth(-1)
+
+    expect(first_row.locator("td").nth(4)).to_contain_text("ABAC")
+    expect(last_row.locator("td").nth(4)).to_contain_text("AABA")
+
+
 def test_sort_style_ascending(small_rep, logged_in_page):
     page = logged_in_page
     page.get_by_role("button", name="Style").click()
