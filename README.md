@@ -26,7 +26,7 @@ Note: these instructions assume you are using [uv](https://docs.astral.sh/uv/) f
 9. You can close the program by closing your browser and pressing `Ctrl-C` in the terminal running the server.
 
 ### Running the tests
-Jazztunes includes unit tests written in [pytest](https://docs.pytest.org/en/stable/) and integration tests which use [Playwright](https://playwright.dev/python/docs/intro). If you are contributing to Jazztunes, please (1) run the tests, to make sure your contributions don't break anything; and (2) write tests covering your contribution, if applicable. Tests can be found in the `tests` directory at the root of the project.
+Jazztunes includes unit tests written in [pytest](https://docs.pytest.org/en/stable/) and end-to-end tests which use [Playwright](https://playwright.dev/python/docs/intro). If you are contributing to Jazztunes, please (1) run the tests, to make sure your contributions don't break anything; and (2) write tests covering your contribution, if applicable. Or perhaps you'd just like to contribute some tests! Tests can be found in the `tests` directory at the root of the project.
 
 Run all the tests:
 ```
@@ -39,9 +39,9 @@ uv run pytest -k unit
 ```
 Note: the `-k` option can be used to match any pattern in directory, file, or test names!
 
-Run the tests in "headed" mode (for integration tests only -- a browser will open and you can watch it go through the steps):
+Run the tests in "headed" mode (for end-to-end tests only -- a browser will open and you can watch it go through the steps):
 ```
-uv run pytest -k integration --headed
+uv run pytest -k e2e --headed
 ```
 
 See the respective docs for many more options when running tests.

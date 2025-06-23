@@ -112,6 +112,7 @@ def test_delete_single_tune(single_tune_page):
     assert SINGLE_TUNE_TITLE not in result
 
 
+# TODO: parametrize the sorting tests
 def test_sort_default_title_ascending(small_rep, logged_in_page):
     page = logged_in_page
     all_rows = page.locator("#rep-table tbody tr")

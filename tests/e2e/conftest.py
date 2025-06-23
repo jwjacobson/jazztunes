@@ -19,7 +19,7 @@ from .constants import (
 
 # Setting this value to avoid a crash:
 # "django.core.exceptions.SynchronousOnlyOperation: You cannot call this from an async context - use a thread or sync_to_async."
-# See https://github.com/microsoft/playwright-pytest/issues/29#issuecomment-731515676
+# See https://docs.djangoproject.com/en/5.2/topics/async/#async-safety
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 
