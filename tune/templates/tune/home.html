@@ -42,7 +42,7 @@
 <!-- Search Card -->
 <div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm">
     <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
-    <form hx-post="{% url 'tune:tune_list' %}"
+    <form hx-post="{% url 'tune:home' %}"
           hx-target="#table_count"
           hx-swap="outerHTML"
           hx-trigger="submit">
@@ -123,7 +123,7 @@
                         <div class="flex gap-1">
                             <button type="button"
                                     class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
-                                    hx-put="{% url 'tune:play_list' pk=tune.pk %}"
+                                    hx-put="{% url 'tune:play_home' pk=tune.pk %}"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                     hx-swap="innerHTML"
                                     hx-target="#last-played-{{ tune.id }}">

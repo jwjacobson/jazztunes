@@ -22,7 +22,7 @@ from tune import views
 app_name = "tune"
 
 urlpatterns = [
-    path("", views.tune_list, name="tune_list"),
+    path("", views.home, name="home"),
     path("new", views.tune_new, name="tune_new"),
     path("edit/<int:pk>", views.tune_edit, name="tune_edit"),
     path(
@@ -36,7 +36,7 @@ urlpatterns = [
     path("random", views.get_random_tune, name="get_random_tune"),
     path("browse", views.tune_browse, name="tune_browse"),
     path("take/<int:pk>", views.tune_take, name="tune_take"),
-    path("play/list/<int:pk>", views.play, name="play_list"),
+    path("play/home/<int:pk>", views.play, name="play_home"),
     path("play/play/<int:pk>", views.play, name="play_play"),
     path("set/<int:pk>", views.set_rep_fields, name="set_rep_fields"),
     path("count", views.recount, name="recount"),

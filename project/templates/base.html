@@ -48,7 +48,7 @@
                 <div class="px-4">
                     <div class="flex flex-wrap items-center justify-between py-3">
                         <!-- Brand -->
-                        <a class="text-blue-900 font-bold italic text-xl hover:text-blue-700" href="{% url 'tune:tune_list' %}">jazztunes</a>
+                        <a class="text-blue-900 font-bold italic text-xl hover:text-blue-700" href="{% url 'tune:home' %}">jazztunes</a>
                         
                         <!-- Mobile menu button -->
                         <button class="lg:hidden px-3 py-2 border-2 border-gray-600 hover:bg-gray-100" 
@@ -63,7 +63,7 @@
                             <ul class="flex flex-col lg:flex-row lg:space-x-4 mt-4 lg:mt-0">
                                 {% if user.is_authenticated %}
                                 <li class="py-2 lg:py-0">
-                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_list' %}">Home</a>
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:home' %}">Home</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
                                     <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_new' %}">Add</a>
