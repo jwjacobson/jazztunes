@@ -57,7 +57,7 @@
                         <div class="flex gap-1">
                             <button type="button"
                                     class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
-                                    hx-put="{% url 'tune:play_list' pk=tune.id %}"
+                                    hx-put="{% url 'tune:play_home' pk=tune.id %}"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                     hx-swap="innerHTML"
                                     hx-target="#last-played-{{ tune.id }}">
