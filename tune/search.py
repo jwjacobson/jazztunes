@@ -104,7 +104,7 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
         )
         return render(
             request,
-            "tune/list.html",
+            "tune/home.html",
             {"tunes": tunes, "search_form": search_form},
         )
 

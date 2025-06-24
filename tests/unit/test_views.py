@@ -93,7 +93,7 @@ def test_tune_new_success(user_tune_rep, client):
     response = client.post(url, post_data)
 
     assert response.status_code == 302
-    assert response.url == reverse("tune:tune_list")
+    assert response.url == reverse("tune:home")
 
     assert Tune.objects.filter(title="New Tune").exists()
     assert RepertoireTune.objects.filter(knowledge="learning").exists()
@@ -135,7 +135,7 @@ def test_tune_edit_success(user_tune_rep, client):
     response = client.post(url, updated_data)
 
     assert response.status_code == 302
-    assert response.url == reverse("tune:tune_list")
+    assert response.url == reverse("tune:home")
 
     tune.refresh_from_db()
     rep_tune = RepertoireTune.objects.get(tune=tune, player=user)
@@ -170,14 +170,14 @@ def test_tune_delete_success(user_tune_rep, client):
     assert session["tune_count"] == 0
 
 
-def test_tune_list_unauthenticated(client):
-    response = client.get(reverse("tune:tune_list"))
+def test_home_unauthenticated(client):
+    response = client.get(reverse("tune:home"))
     assert response.status_code == 302
 
 
 @pytest.mark.django_db
-def test_tune_list_authenticated(user_tune_rep, client):
-    response = client.get(reverse("tune:tune_list"))
+def test_home_authenticated(user_tune_rep, client):
+    response = client.get(reverse("tune:home"))
 
     assert response.status_code == 200
     assert len(response.context["tunes"]) == 1
@@ -185,8 +185,8 @@ def test_tune_list_authenticated(user_tune_rep, client):
 
 
 @pytest.mark.django_db
-def test_tune_list_invalid_timespan(user_tune_rep, client):
-    response = client.post(reverse("tune:tune_list"), {"timespan": "year"})
+def test_home_invalid_timespan(user_tune_rep, client):
+    response = client.post(reverse("tune:home"), {"timespan": "year"})
 
     assert response.status_code == 200
     assert "search_form" in response.context
@@ -197,8 +197,8 @@ def test_tune_list_invalid_timespan(user_tune_rep, client):
 
 
 @pytest.mark.django_db
-def test_tune_list_valid_form(user_tune_rep, client):
-    response = client.post(reverse("tune:tune_list"), {"search_terms": [""]})
+def test_home_valid_form(user_tune_rep, client):
+    response = client.post(reverse("tune:home"), {"search_terms": [""]})
     assert response.status_code == 200
     assert len(response.context["tunes"]) == 1
 
@@ -382,12 +382,12 @@ def test_change_tune_no_tunes(user_tune_rep, client):
 
 
 @pytest.mark.django_db
-def test_play_list(user_tune_rep, client):
+def test_play_home(user_tune_rep, client):
     tune = user_tune_rep["rep_tune"]
     initial_last_played = tune.last_played
     initial_play_count = tune.play_count
 
-    response = client.get(reverse("tune:play_list", kwargs={"pk": tune.pk}))
+    response = client.get(reverse("tune:play_home", kwargs={"pk": tune.pk}))
     tune.refresh_from_db()
 
     assert response.status_code == 200
@@ -420,6 +420,6 @@ def test_play_invalid_pk(user_tune_rep, client):
     tune = user_tune_rep["rep_tune"]
     wrong_pk = tune.pk * 7000
 
-    response = client.get(reverse("tune:play_list", kwargs={"pk": wrong_pk}))
+    response = client.get(reverse("tune:play_home", kwargs={"pk": wrong_pk}))
 
     assert response.status_code == 404

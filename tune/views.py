@@ -53,7 +53,7 @@ def invalidate_user_repertoire(user_id):
 
 
 @login_required
-def tune_list(request):
+def home(request):
     """
     Show the user's home page, which displays a searchable repertoire and allows for tune management.
     """
@@ -91,14 +91,14 @@ def tune_list(request):
     if request.headers.get("Hx-Request"):
         return render(
             request,
-            "tune/partials/_table_list.html",
+            "tune/partials/_table_home.html",
             {"tunes": tunes, "tune_count": tune_count, "possessive": possessive},
         )
 
     request.session["tune_count"] = tune_count
     return render(
         request,
-        "tune/list.html",
+        "tune/home.html",
         {
             "tunes": tunes,
             "search_form": search_form,
@@ -154,7 +154,7 @@ def tune_new(request):
                 request,
                 f"{new_tune.title} has been added to your repertoire.",
             )
-    return redirect("tune:tune_list")
+    return redirect("tune:home")
 
 
 @login_required
@@ -178,7 +178,7 @@ def tune_edit(request, pk):
             )
 
             invalidate_user_repertoire(request.user.id)
-        return redirect("tune:tune_list")
+        return redirect("tune:home")
 
     return render(
         request,
@@ -302,7 +302,7 @@ def play(request, pk):
     """
     url_name = request.resolver_match.url_name
     templates = {
-        "play_list": "tune/partials/_play_list.html",
+        "play_home": "tune/partials/_play_home.html",
         "play_play": "tune/partials/_play_play.html",
     }
 
