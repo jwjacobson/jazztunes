@@ -17,7 +17,7 @@ from .constants import (
     SINGLE_TUNE_LAST_PLAYED,
 )
 
-# Setting this value to avoid a crash:
+# Setting this value to allow async Playwright to run sync Django:
 # "django.core.exceptions.SynchronousOnlyOperation: You cannot call this from an async context - use a thread or sync_to_async."
 # See https://docs.djangoproject.com/en/5.2/topics/async/#async-safety
 os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
