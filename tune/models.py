@@ -133,14 +133,6 @@ class Tune(models.Model):
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
 
-    @property
-    def decade(self):
-        """
-        Calculate the decade of composition based on the year of composition.
-        """
-        decade = f"{str(self.year)[2]}0s"
-        return decade
-
     class Meta:
         ordering = ["id"]
 
