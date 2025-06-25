@@ -80,7 +80,7 @@ class Tune(models.Model):
         "atonal",
     }
 
-    MAX_SEARCH_TERMS = 4
+    MAX_SEARCH_TERMS = 10
 
     NICKNAMES = {
         "bird": "Parker",

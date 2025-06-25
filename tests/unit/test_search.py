@@ -397,7 +397,7 @@ def test_query_tunes_timespan_month(tune_set):
 
 
 def test_return_search_results_too_many(request_fixture, tune_set, search_form_fixture):
-    search_terms = ["a", "b", "c", "d", "e"]
+    search_terms = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"]
     _ = return_search_results(
         request_fixture, search_terms, tune_set["tunes"], search_form_fixture
     )

@@ -38,6 +38,10 @@ class BaseForm:
             if field_name in getattr(self, "exclude_styling", []):
                 continue
 
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs["class"] = "mx-2"
+                continue
+
             if (
                 hasattr(field.widget, "choices")
                 or "Select" in field.widget.__class__.__name__
@@ -159,3 +163,25 @@ class SearchForm(BaseForm, forms.Form):
             return timezone.now() - timedelta(days=90)
         else:
             return None
+
+
+class PlaySearchForm(SearchForm):
+    NORMAL_KEYS = (
+        "C",
+        "F",
+        "Bb",
+        "Eb",
+        "Ab",
+        "Db",
+        "Gb",
+        "B",
+        "E",
+        "A",
+        "D",
+        "G",
+    )
+
+    suggest_key = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
