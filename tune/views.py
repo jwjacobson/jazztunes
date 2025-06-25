@@ -270,6 +270,7 @@ def get_random_tune(request):
         request.session["rep_tunes"] = remaining_rep_tunes_ids
     else:
         selected_tune = None
+
     request.session.save()
 
     return render(

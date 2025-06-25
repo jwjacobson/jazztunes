@@ -133,6 +133,13 @@ class Tune(models.Model):
         get_user_model(), on_delete=models.CASCADE, blank=True, null=True
     )
 
+    @property
+    def is_minor(self):
+        """
+        Is the tune in a minor key?
+        """
+        return self.key.endswith("-")
+
     class Meta:
         ordering = ["id"]
 
