@@ -15,8 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from random import shuffle
 
-def suggest_key(tune, keys):
+
+def suggest_key(tune, keys, substitutions):
+    shuffle(keys)
     tune_key = tune.tune.key
 
     for key in keys:
