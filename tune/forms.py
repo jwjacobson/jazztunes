@@ -166,7 +166,7 @@ class SearchForm(BaseForm, forms.Form):
 
 
 class PlaySearchForm(SearchForm):
-    NORMAL_KEYS = (
+    NORMAL_KEYS = [
         "C",
         "F",
         "Bb",
@@ -179,7 +179,15 @@ class PlaySearchForm(SearchForm):
         "A",
         "D",
         "G",
-    )
+    ]
+
+    ENHARMONICS = {
+        "C#": "Db",
+        "D#": "Eb",
+        "F#": "Gb",
+        "G#": "Ab",
+        "A#": "Bb",
+    }
 
     suggest_key = forms.BooleanField(required=False)
 

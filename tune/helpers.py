@@ -18,9 +18,11 @@
 from random import shuffle
 
 
-def suggest_key(tune, keys, substitutions):
-    shuffle(keys)
+def suggest_key(tune, keys, enharmonics):
     tune_key = tune.tune.key
+    if tune_key != keys:
+        tune_key = enharmonics[tune_key]
+    shuffle(keys)
 
     for key in keys:
         if key != tune_key:

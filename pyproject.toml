@@ -26,5 +26,6 @@ dev = [
     "pytest-cov>=6.1.1",
     "pytest-django>=4.11.1",
     "pytest-playwright>=0.7.0",
+    "pytest-repeat>=0.9.4",
     "tox>=4.26.0",
 ]
