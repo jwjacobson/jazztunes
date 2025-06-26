@@ -28,6 +28,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm, PlaySearchForm
+from .helpers import suggest_a_key
 from .models import Tune, RepertoireTune
 from .search import return_search_results
 
@@ -271,6 +272,20 @@ def get_random_tune(request):
     else:
         selected_tune = None
 
+    if suggest_key:
+        suggested_key = suggest_a_key(
+            selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
+        )
+        request.session["suggested_key"] = suggested_key
+
+        request.session.save()
+
+        return render(
+            request,
+            "tune/partials/_play_card.html",
+            {"selected_tune": selected_tune, "suggested_key": suggested_key},
+        )
+
     request.session.save()
 
     return render(
@@ -291,6 +306,28 @@ def change_tune(request):
     request.session.save()
 
     selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
+
+    suggested_key = request.session.get("suggested_key")
+
+    if suggested_key and suggested_key == selected_tune.tune.key:
+        suggested_key = suggest_a_key(
+            selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
+        )
+        request.session["suggested_key"] = suggested_key
+        request.session.save()
+        return render(
+            request,
+            "tune/partials/_play_card.html",
+            {"selected_tune": selected_tune, "suggested_key": suggested_key},
+        )
+
+    elif suggested_key:
+        return render(
+            request,
+            "tune/partials/_play_card.html",
+            {"selected_tune": selected_tune, "suggested_key": suggested_key},
+        )
+
     return render(
         request, "tune/partials/_play_card.html", {"selected_tune": selected_tune}
     )

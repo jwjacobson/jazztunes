@@ -18,8 +18,10 @@
 from random import shuffle
 
 
-def suggest_key(tune, keys, enharmonics, minor=False):
+def suggest_a_key(tune, keys, enharmonics, minor=False):
     tune_key = tune.tune.key
+    if not tune_key:
+        return None
 
     if tune_key.endswith("-"):
         minor = True
