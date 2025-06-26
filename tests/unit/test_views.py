@@ -9,7 +9,8 @@ from django.contrib.messages import get_messages
 from django.conf import settings
 
 from tune.models import Tune, RepertoireTune
-from tune.forms import SearchForm
+from tune.forms import SearchForm, PlaySearchForm
+from tune.helpers import suggest_key
 
 
 @pytest.fixture
@@ -423,3 +424,12 @@ def test_play_invalid_pk(user_tune_rep, client):
     response = client.get(reverse("tune:play_home", kwargs={"pk": wrong_pk}))
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_suggest_key(user_tune_rep):
+    tune = user_tune_rep["rep_tune"]
+
+    suggested_key = suggest_key(tune, PlaySearchForm.NORMAL_KEYS)
+
+    assert suggested_key != tune.tune.key
