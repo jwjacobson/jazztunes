@@ -18,12 +18,24 @@
 from random import shuffle
 
 
-def suggest_key(tune, keys, enharmonics):
+def suggest_key(tune, keys, enharmonics, minor=False):
     tune_key = tune.tune.key
-    if tune_key != keys:
+
+    if tune_key.endswith("-"):
+        minor = True
+        tune_key = tune_key.removesuffix("-")
+
+    if tune_key not in keys:
         tune_key = enharmonics[tune_key]
+
     shuffle(keys)
 
     for key in keys:
         if key != tune_key:
-            return key
+            suggested_key = key
+            break
+
+    if minor:
+        suggested_key += "-"
+
+    return suggested_key
