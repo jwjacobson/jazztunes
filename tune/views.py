@@ -277,6 +277,7 @@ def get_random_tune(request):
             selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
         )
         request.session["suggested_key"] = suggested_key
+        request.session["suggest_key_enabled"] = True
 
         request.session.save()
 
@@ -285,6 +286,9 @@ def get_random_tune(request):
             "tune/partials/_play_card.html",
             {"selected_tune": selected_tune, "suggested_key": suggested_key},
         )
+    else:
+        request.session["suggested_key"] = None
+        request.session["suggest_key_enabled"] = False
 
     request.session.save()
 
@@ -309,19 +313,12 @@ def change_tune(request):
 
     suggested_key = request.session.get("suggested_key")
 
-    if suggested_key and suggested_key == selected_tune.tune.key:
+    if request.session.get("suggest_key_enabled"):
         suggested_key = suggest_a_key(
             selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
         )
         request.session["suggested_key"] = suggested_key
         request.session.save()
-        return render(
-            request,
-            "tune/partials/_play_card.html",
-            {"selected_tune": selected_tune, "suggested_key": suggested_key},
-        )
-
-    elif suggested_key:
         return render(
             request,
             "tune/partials/_play_card.html",
