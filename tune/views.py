@@ -27,7 +27,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 
-from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm
+from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm, PlaySearchForm
+from .helpers import suggest_a_key
 from .models import Tune, RepertoireTune
 from .search import return_search_results
 
@@ -244,8 +245,7 @@ def get_random_tune(request):
         .prefetch_related("tags")
         .filter(player=user)
     )
-    search_form = SearchForm(request.POST or None)
-
+    search_form = PlaySearchForm(request.POST or None)
     # A flatter way to validate the form, rather than indenting everything under it
     if not search_form.is_valid():
         # This should never trigger
@@ -253,9 +253,10 @@ def get_random_tune(request):
         return render(request, "tune/play.html")
 
     search_terms = search_form.cleaned_data["search_term"].split(" ")
-    timespan = search_form.cleaned_data.get("timespan", None)
+    timespan = search_form.cleaned_data.get("timespan")
+    suggest_key = search_form.cleaned_data.get("suggest_key")
     result_dict = return_search_results(
-        request, search_terms, tunes, search_form, timespan
+        request, search_terms, tunes, search_form, timespan, suggest_key
     )
 
     if "error" in result_dict:
@@ -270,6 +271,25 @@ def get_random_tune(request):
         request.session["rep_tunes"] = remaining_rep_tunes_ids
     else:
         selected_tune = None
+
+    if suggest_key:
+        suggested_key = suggest_a_key(
+            selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
+        )
+        request.session["suggested_key"] = suggested_key
+        request.session["suggest_key_enabled"] = True
+
+        request.session.save()
+
+        return render(
+            request,
+            "tune/partials/_play_card.html",
+            {"selected_tune": selected_tune, "suggested_key": suggested_key},
+        )
+    else:
+        request.session["suggested_key"] = None
+        request.session["suggest_key_enabled"] = False
+
     request.session.save()
 
     return render(
@@ -290,6 +310,21 @@ def change_tune(request):
     request.session.save()
 
     selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
+
+    suggested_key = request.session.get("suggested_key")
+
+    if request.session.get("suggest_key_enabled"):
+        suggested_key = suggest_a_key(
+            selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
+        )
+        request.session["suggested_key"] = suggested_key
+        request.session.save()
+        return render(
+            request,
+            "tune/partials/_play_card.html",
+            {"selected_tune": selected_tune, "suggested_key": suggested_key},
+        )
+
     return render(
         request, "tune/partials/_play_card.html", {"selected_tune": selected_tune}
     )
@@ -331,7 +366,7 @@ def tune_play(request):
     """
     Load the play page.
     """
-    search_form = SearchForm()
+    search_form = PlaySearchForm()
     return render(request, "tune/play.html", {"search_form": search_form})
 
 

@@ -80,7 +80,7 @@ class Tune(models.Model):
         "atonal",
     }
 
-    MAX_SEARCH_TERMS = 4
+    MAX_SEARCH_TERMS = 10
 
     NICKNAMES = {
         "bird": "Parker",
@@ -134,12 +134,11 @@ class Tune(models.Model):
     )
 
     @property
-    def decade(self):
+    def is_minor(self):
         """
-        Calculate the decade of composition based on the year of composition.
+        Is the tune in a minor key?
         """
-        decade = f"{str(self.year)[2]}0s"
-        return decade
+        return self.key.endswith("-")
 
     class Meta:
         ordering = ["id"]

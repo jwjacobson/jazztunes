@@ -4,74 +4,10 @@ import pytest
 from datetime import datetime, timezone
 
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
-from django.conf import settings
 
 from tune.models import Tune, RepertoireTune
-from tune.forms import SearchForm
-
-
-@pytest.fixture
-def user_tune_rep(client):
-    """
-    Create a user, tune, and associated repertoire tune for use by views that require a single tune
-    """
-    user_model = get_user_model()
-    user = user_model.objects.create_user(username="testuser", password="12345")
-    client.force_login(user)
-
-    tune = Tune.objects.create(
-        title="test title",
-        composer="test composer",
-        key="C",
-        other_keys="D Eb F#",
-        song_form="aaba",
-        style="standard",
-        meter=4,
-        year=2023,
-    )
-
-    rep_tune = RepertoireTune.objects.create(
-        tune=tune,
-        player=user,
-        knowledge="know",
-        last_played=datetime(2024, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
-    )
-
-    return {"tune": tune, "rep_tune": rep_tune, "user": user}
-
-
-@pytest.fixture
-def admin_tune_rep(client):
-    """
-    Create an admin user, tune, and associated repertoire tune for use by tune_browse
-    """
-    user_model = get_user_model()
-    admin = user_model.objects.create_user(username="admin", password="secret")
-    client.force_login(admin)
-
-    settings.ADMIN_USER_ID = admin.id
-
-    tune = Tune.objects.create(
-        title="test title",
-        composer="test composer",
-        key="C",
-        other_keys="D Eb F#",
-        song_form="aaba",
-        style="standard",
-        meter=4,
-        year=2023,
-    )
-
-    rep_tune = RepertoireTune.objects.create(
-        tune=tune,
-        player=admin,
-        knowledge="know",
-        last_played=datetime(2024, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
-    )
-
-    return {"tune": tune, "rep_tune": rep_tune, "admin": admin}
+from tune.forms import SearchForm, PlaySearchForm
 
 
 @pytest.mark.django_db
@@ -342,6 +278,18 @@ def test_get_random_tune_multiple(tune_set, client):
 
 
 @pytest.mark.django_db
+def test_get_random_tune_suggest_key(user_tune_rep, client):
+    tune = user_tune_rep["tune"]
+    response = client.post(
+        reverse("tune:get_random_tune"), {"search_terms": [""], "suggest_key": True}
+    )
+
+    assert response.status_code == 200
+    assert response.context["suggested_key"] in PlaySearchForm.NORMAL_KEYS
+    assert response.context["suggested_key"] != tune.key
+
+
+@pytest.mark.django_db
 def test_get_random_tune_no_tunes(tune_set, client):
     _ = tune_set["tunes"]
     response = client.post(reverse("tune:get_random_tune"), {"search_term": ["xx"]})
@@ -365,6 +313,21 @@ def test_change_tune(tune_set, client):
 
     assert selected_tune.id not in client.session["rep_tunes"]
     assert len(client.session["rep_tunes"]) == len(tunes) - 1
+
+
+@pytest.mark.django_db
+def test_change_tune_suggest_key_enabled(tune_set, client):
+    tunes = tune_set["tunes"]
+    session = client.session
+    session["rep_tunes"] = [tune.id for tune in tunes]
+    session["suggest_key_enabled"] = True
+    session.save()
+
+    response = client.get(reverse("tune:change_tune"))
+    assert response.status_code == 200
+    assert "selected_tune" in response.context
+    if response.context["selected_tune"].tune.key is not None:
+        assert "suggested_key" in response.context
 
 
 @pytest.mark.django_db
