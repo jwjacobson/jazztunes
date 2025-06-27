@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib.messages import get_messages
 
 from tune.models import Tune, RepertoireTune
-from tune.forms import SearchForm
+from tune.forms import SearchForm, PlaySearchForm
 
 
 @pytest.mark.django_db
@@ -275,6 +275,18 @@ def test_get_random_tune_multiple(tune_set, client):
 
     assert response.status_code == 200
     assert response.context["selected_tune"] in tunes
+
+
+@pytest.mark.django_db
+def test_get_random_tune_suggest_key(user_tune_rep, client):
+    tune = user_tune_rep["tune"]
+    response = client.post(
+        reverse("tune:get_random_tune"), {"search_terms": [""], "suggest_key": True}
+    )
+
+    assert response.status_code == 200
+    assert response.context["suggested_key"] in PlaySearchForm.NORMAL_KEYS
+    assert response.context["suggested_key"] != tune.key
 
 
 @pytest.mark.django_db
