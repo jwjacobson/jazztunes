@@ -316,6 +316,21 @@ def test_change_tune(tune_set, client):
 
 
 @pytest.mark.django_db
+def test_change_tune_suggest_key_enabled(tune_set, client):
+    tunes = tune_set["tunes"]
+    session = client.session
+    session["rep_tunes"] = [tune.id for tune in tunes]
+    session["suggest_key_enabled"] = True
+    session.save()
+
+    response = client.get(reverse("tune:change_tune"))
+    assert response.status_code == 200
+    assert "selected_tune" in response.context
+    if response.context["selected_tune"].tune.key is not None:
+        assert "suggested_key" in response.context
+
+
+@pytest.mark.django_db
 def test_change_tune_no_tunes(user_tune_rep, client):
     _ = user_tune_rep["user"]
     session = client.session
