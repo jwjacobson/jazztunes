@@ -21,9 +21,14 @@ from .constants import (
 )
 
 
-def test_login_title(page, live_server):
+def test_login_titles(page, live_server):
     page.goto(live_server.url)
     expect(page).to_have_title(re.compile("Welcome to Jazztunes!"))
+    page.get_by_role("link", name="Sign up", exact=True).click()
+    expect(page).to_have_title(re.compile("Sign up"))
+    page.goto(live_server.url)
+    page.get_by_role("link", name="Forgot your password?").click()
+    expect(page).to_have_title(re.compile("Password Reset"))
 
 
 def test_signup_from_homepage(page, live_server):
