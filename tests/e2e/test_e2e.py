@@ -430,3 +430,15 @@ def test_play_page_search_suggest_key(small_rep, logged_in_page):
     page.wait_for_selector("#playTuneWrapper")
     expect(page.locator("#key-suggestion")).to_be_visible()
     expect(page.locator("#key-suggestion")).to_contain_text("in")
+
+
+def test_play_page_search_accept(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    page.get_by_role("button", name="Play").click()
+    page.wait_for_function("() => document.querySelector('button[disabled]')")
+    expect(page.get_by_role("button", name="Play")).to_be_disabled()
+    expect(page.get_by_role("button", name="No thanks...")).to_have_count(0)
+    expect(page.get_by_role("button", name="One more!")).to_be_visible()
