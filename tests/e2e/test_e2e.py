@@ -406,3 +406,27 @@ def test_play_page_basic(small_rep, logged_in_page):
     expect(page.locator("#playTuneWrapper")).to_contain_text("You should play...")
     expect(page.get_by_role("button", name="Play")).to_be_visible()
     expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
+    expect(page.locator("#key-suggestion")).not_to_be_visible()
+
+
+def test_play_page_search(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("flower")
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    expect(page.locator("#playTuneWrapper")).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(page.locator("#key-suggestion")).not_to_be_visible()
+
+
+def test_play_page_search_suggest_key(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_suggest_key").check()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    expect(page.locator("#key-suggestion")).to_be_visible()
+    expect(page.locator("#key-suggestion")).to_contain_text("in")
