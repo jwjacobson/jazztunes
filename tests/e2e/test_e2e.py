@@ -454,3 +454,16 @@ def test_play_page_search_accept_accept(small_rep, logged_in_page):
     page.get_by_role("button", name="One more!").click()
     expect(page.get_by_role("button", name="Play")).to_be_visible()
     expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
+
+
+def test_play_page_search_reject(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    first_title = page.locator("#selected-tune").text_content()
+    page.get_by_role("button", name="No thanks...").click()
+    expect(page.get_by_role("button", name="Play")).to_be_visible()
+    expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
+    second_title = page.locator("#selected-tune").text_content()
+    assert second_title != first_title
