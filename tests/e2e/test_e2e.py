@@ -31,10 +31,32 @@ def test_login_titles(page, live_server):
     expect(page).to_have_title(re.compile("Password Reset"))
 
 
+def test_authenticated_titles(small_rep, logged_in_page, live_server):
+    page = logged_in_page
+    expect(page).to_have_title(re.compile("Home"))
+    row_to_edit = page.locator("tr").filter(has_text="Flower")
+    row_to_edit.get_by_role("button", name="Edit").click()
+    expect(page).to_have_title(re.compile("Edit tune"))
+    page.get_by_role("link", name="Add").click()
+    expect(page).to_have_title(re.compile("New tune"))
+    page.get_by_role("link", name="Play").click()
+    expect(page).to_have_title(re.compile("Play"))
+    # TODO: create test environment admin user
+    # page.get_by_role("link", name="Browse").click()
+    # expect(page).to_have_title(re.compile("Public Tunes"))
+    page.get_by_role("link", name="Log Out").click()
+    expect(page).to_have_title(re.compile("Sign Out"))
+    page.get_by_role("link", name="jazztunes").click()
+    expect(page).to_have_title(re.compile("Home"))
+    with page.expect_popup() as page1_info:
+        page.get_by_role("link", name="Manual").click()
+    page1 = page1_info.value
+    expect(page1).to_have_title(re.compile("Jazztunes Docs"))
+
+
 def test_signup_from_homepage(page, live_server):
     page.goto(live_server.url)
     page.get_by_role("link", name="Sign up", exact=True).click()
-    expect(page).to_have_title(re.compile("Sign up"))
     page.get_by_role("textbox", name="Username:").fill(USERNAME)
     page.get_by_role("textbox", name="Password:").fill(PASSWORD)
     page.get_by_role("textbox", name="Password (again):").fill(PASSWORD)
@@ -61,8 +83,6 @@ def test_login_success(page, live_server, test_user):
 @pytest.mark.django_db
 def test_add_tune(single_tune_page):
     page = single_tune_page
-
-    expect(page).to_have_title(re.compile("Home"))
 
     created_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
     expect(created_row.locator("td").nth(0)).to_contain_text(SINGLE_TUNE_TITLE)
