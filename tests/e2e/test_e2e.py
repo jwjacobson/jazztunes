@@ -395,3 +395,14 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     ]
 
     assert timestamps == sorted(timestamps, reverse=True)
+
+
+def test_play_page_basic(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    expect(page.locator("#playTuneWrapper")).to_be_visible()
+    expect(page.locator("#playTuneWrapper")).to_contain_text("You should play...")
+    expect(page.get_by_role("button", name="Play")).to_be_visible()
+    expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
