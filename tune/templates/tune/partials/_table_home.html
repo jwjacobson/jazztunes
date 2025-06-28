@@ -1,73 +1,7 @@
-{% extends 'base.html' %}
-
-{% block head_title %}Home{% endblock %}
-
-{% block content %}
-<style>
-    /* Override DataTables styling */
-    #rep-table tbody {
-        background-color: rgb(239 246 255); /* bg-blue-50 */
-    }
-    
-    #rep-table tbody tr:nth-child(even) {
-        background-color: rgb(224 231 255); /* bg-indigo-100 */
-    }
-
-    #rep-table tbody tr:hover {
-        background-color: rgb(255 247 237); /* bg-orange-50 */
-    }
-
-    #rep-table {
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
-    #rep-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Delete row animation */
-    {% comment %} tr.htmx-swapping td {
-        opacity: 0;
-        transition: opacity 0.25s ease-out;
-} {% endcomment %}
-</style>
-
-<div class="my-4">
-    <p>
-        Here you can browse and manage your repertoire.
-    </p>
-</div>
-
-<!-- Search Card -->
-<div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm">
-    <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
-    <form hx-post="{% url 'tune:tune_list' %}"
-          hx-target="#table_count"
-          hx-swap="outerHTML"
-          hx-trigger="submit">
-        {% csrf_token %}
-        <div class="mb-3 p-0.5">
-            <label for="search_term" class="sr-only">Search</label>
-            {{ search_form.search_term }}
-        </div>
-        <div class="mb-3">
-            <label for="timespan" class="block mb-1 text-sm text-black font-medium">Haven't played in:</label>
-            {{ search_form.timespan }}
-        </div>
-        
-        <div>
-            <input class="blue-button bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
-                   type="submit" 
-                   value="Search">
-        </div>
-    </form>
-</div>
-
 <div id="table_count">
-    <div class="flex items-end justify-between mt-4">
+<div class="flex items-end justify-between mt-4">
         <div>
-            <h1 class="text-3xl font-bold text-blue-900" id="rep_id">{{ possessive }} repertoire</h1>
+            <h1 class="text-3xl font-bold text-blue-900">{{ possessive }} repertoire</h1>
         </div>
         <div class="text-right" id="count" hx-get="/count" hx-trigger="tuneDeleted from:body" hx-swap="outerHTML">
             <h4 class="text-xl">
@@ -116,27 +50,26 @@
                         {% endfor %}
                     </td>
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
-                    <td data-order="{{ tune.last_played|date:'U' }}" class="px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
-                        {{ tune.last_played|date:"MONTH_DAY_FORMAT" }}
+                    <td class="px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
+                        {{ tune.last_played|date:"MONTH_DAY_FORMAT"}}
                     </td>
                     <td class="px-4 py-2 border-b border-indigo-200">
                         <div class="flex gap-1">
                             <button type="button"
                                     class="px-3 py-1 text-sm bg-blue-900 text-white hover:bg-blue-700 cursor-pointer"
-                                    hx-put="{% url 'tune:play_list' pk=tune.pk %}"
+                                    hx-put="{% url 'tune:play_home' pk=tune.id %}"
                                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                     hx-swap="innerHTML"
                                     hx-target="#last-played-{{ tune.id }}">
                                 Play
                             </button>
-                            <button type="button"
-                                    hx-get="{% url 'tune:tune_edit' pk=tune.tune.pk %}"
-                                    hx-target="body"
-                                    hx-swap="outerHTML"
-                                    hx-push-url="true"
-                                    class="px-3 py-1 text-sm bg-emerald-500 text-white hover:bg-emerald-400 cursor-pointer">
+                            
+                            <a class="px-3 py-1 text-sm bg-emerald-500 text-white hover:bg-emerald-400" 
+                               href="{% url 'tune:tune_edit' pk=tune.tune.pk %}" 
+                               role="button">
                                 Edit
-                            </button>
+                            </a>
+
                             <button hx-get="{% url 'tune:tune_delete_confirm' pk=tune.tune.pk %}"
                                 hx-target="#modal-container"
                                 hx-swap="innerHTML"
@@ -176,8 +109,7 @@
             "columnDefs": [
             { "orderable": false, "targets": [11] }  
         ]
-        });
+        }
+        );
     });
-</script>
-    
-{% endblock %}
+    </script>

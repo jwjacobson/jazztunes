@@ -93,7 +93,9 @@ def query_tunes(tune_set, search_terms, timespan=None):
     return tune_set.distinct()
 
 
-def return_search_results(request, search_terms, tunes, search_form, timespan=None):
+def return_search_results(
+    request, search_terms, tunes, search_form, timespan=None, suggest_key=False
+):
     """
     Run query_tunes and return the results to the view that called it.
     """
@@ -104,7 +106,7 @@ def return_search_results(request, search_terms, tunes, search_form, timespan=No
         )
         return render(
             request,
-            "tune/list.html",
+            "tune/home.html",
             {"tunes": tunes, "search_form": search_form},
         )
 

@@ -87,7 +87,7 @@ else:
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
-LOGIN_REDIRECT_URL = "tune:tune_list"
+LOGIN_REDIRECT_URL = "tune:home"
 
 MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
