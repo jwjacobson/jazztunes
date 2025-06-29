@@ -21,15 +21,42 @@ from .constants import (
 )
 
 
-def test_login_title(page, live_server):
+def test_login_titles(page, live_server):
     page.goto(live_server.url)
     expect(page).to_have_title(re.compile("Welcome to Jazztunes!"))
+    page.get_by_role("link", name="Sign up", exact=True).click()
+    expect(page).to_have_title(re.compile("Sign up"))
+    page.goto(live_server.url)
+    page.get_by_role("link", name="Forgot your password?").click()
+    expect(page).to_have_title(re.compile("Password Reset"))
+
+
+def test_authenticated_titles(small_rep, logged_in_page, live_server):
+    page = logged_in_page
+    expect(page).to_have_title(re.compile("Home"))
+    row_to_edit = page.locator("tr").filter(has_text="Flower")
+    row_to_edit.get_by_role("button", name="Edit").click()
+    expect(page).to_have_title(re.compile("Edit tune"))
+    page.get_by_role("link", name="Add").click()
+    expect(page).to_have_title(re.compile("New tune"))
+    page.get_by_role("link", name="Play").click()
+    expect(page).to_have_title(re.compile("Play"))
+    # TODO: create test environment admin user
+    # page.get_by_role("link", name="Browse").click()
+    # expect(page).to_have_title(re.compile("Public Tunes"))
+    page.get_by_role("link", name="Log Out").click()
+    expect(page).to_have_title(re.compile("Sign Out"))
+    page.get_by_role("link", name="jazztunes").click()
+    expect(page).to_have_title(re.compile("Home"))
+    with page.expect_popup() as page1_info:
+        page.get_by_role("link", name="Manual").click()
+    page1 = page1_info.value
+    expect(page1).to_have_title(re.compile("Jazztunes Docs"))
 
 
 def test_signup_from_homepage(page, live_server):
     page.goto(live_server.url)
     page.get_by_role("link", name="Sign up", exact=True).click()
-    expect(page).to_have_title(re.compile("Sign up"))
     page.get_by_role("textbox", name="Username:").fill(USERNAME)
     page.get_by_role("textbox", name="Password:").fill(PASSWORD)
     page.get_by_role("textbox", name="Password (again):").fill(PASSWORD)
@@ -56,8 +83,6 @@ def test_login_success(page, live_server, test_user):
 @pytest.mark.django_db
 def test_add_tune(single_tune_page):
     page = single_tune_page
-
-    expect(page).to_have_title(re.compile("Home"))
 
     created_row = page.locator("tr").filter(has_text=SINGLE_TUNE_TITLE)
     expect(created_row.locator("td").nth(0)).to_contain_text(SINGLE_TUNE_TITLE)
@@ -370,3 +395,100 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     ]
 
     assert timestamps == sorted(timestamps, reverse=True)
+
+
+def test_play_page_basic(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    expect(page.locator("#playTuneWrapper")).to_be_visible()
+    expect(page.locator("#playTuneWrapper")).to_contain_text("You should play...")
+    expect(page.get_by_role("button", name="Play")).to_be_visible()
+    expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
+    expect(page.locator("#key-suggestion")).not_to_be_visible()
+
+
+def test_play_page_search(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("flower")
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    expect(page.locator("#playTuneWrapper")).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(page.locator("#key-suggestion")).not_to_be_visible()
+
+
+def test_play_page_search_suggest_key(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_suggest_key").check()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    expect(page.locator("#key-suggestion")).to_be_visible()
+    expect(page.locator("#key-suggestion")).to_contain_text("in")
+
+
+def test_play_page_search_accept(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    page.get_by_role("button", name="Play").click()
+    page.wait_for_function("() => document.querySelector('button[disabled]')")
+    expect(page.get_by_role("button", name="Play")).to_be_disabled()
+    expect(page.get_by_role("button", name="No thanks...")).to_have_count(0)
+    expect(page.get_by_role("button", name="One more!")).to_be_visible()
+
+
+def test_play_page_search_accept_accept(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    page.get_by_role("button", name="Play").click()
+    page.wait_for_function("() => document.querySelector('button[disabled]')")
+    page.get_by_role("button", name="One more!").click()
+    expect(page.get_by_role("button", name="Play")).to_be_visible()
+    expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
+
+
+def test_play_page_search_reject(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+    first_title = page.locator("#selected-tune").text_content()
+    page.get_by_role("button", name="No thanks...").click()
+    expect(page.get_by_role("button", name="Play")).to_be_visible()
+    expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
+    second_title = page.locator("#selected-tune").text_content()
+    assert second_title != first_title
+
+
+def test_play_page_search_no_results(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("xzx")
+    page.get_by_role("button", name="Search").click()
+    expect(page.locator("#playTuneWrapper")).to_contain_text(
+        "No more matching tunes..."
+    )
+    expect(page.locator("#playTuneWrapper")).to_contain_text("Try another search?")
+
+
+def test_play_page_search_reject_no_results(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("flower")
+    page.get_by_role("button", name="Search").click()
+    page.get_by_role("button", name="No thanks...").click()
+    expect(page.locator("#playTuneWrapper")).to_contain_text(
+        "No more matching tunes..."
+    )
+    expect(page.locator("#playTuneWrapper")).to_contain_text("Try another search?")
