@@ -467,3 +467,16 @@ def test_play_page_search_reject(small_rep, logged_in_page):
     expect(page.get_by_role("button", name="No thanks...")).to_be_visible()
     second_title = page.locator("#selected-tune").text_content()
     assert second_title != first_title
+
+
+def test_play_page_search_reject_no_results(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("flower")
+    page.get_by_role("button", name="Search").click()
+    page.get_by_role("button", name="No thanks...").click()
+    expect(page.locator("#playTuneWrapper")).to_contain_text(
+        "No more matching tunes..."
+    )
+    expect(page.locator("#playTuneWrapper")).to_contain_text("Try another search?")
