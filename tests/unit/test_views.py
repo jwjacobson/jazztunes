@@ -30,7 +30,6 @@ def test_tune_new_success(user_tune_rep, client):
 
     assert response.status_code == 302
     assert response.url == reverse("tune:home")
-
     assert Tune.objects.filter(title="New Tune").exists()
     assert RepertoireTune.objects.filter(knowledge="learning").exists()
 
@@ -38,6 +37,7 @@ def test_tune_new_success(user_tune_rep, client):
 @pytest.mark.django_db
 def test_tune_new_get(user_tune_rep, client):
     url = reverse("tune:tune_new")
+
     response = client.get(url)
 
     assert response.status_code == 200
@@ -53,7 +53,6 @@ def test_tune_edit_success(user_tune_rep, client):
     tune = user_tune_rep["tune"]
     user = user_tune_rep["user"]
     rep_tune = user_tune_rep["rep_tune"]
-
     updated_data = {
         "title": "Updated Title",
         "composer": "Updated Composer",
@@ -66,8 +65,8 @@ def test_tune_edit_success(user_tune_rep, client):
         "knowledge": "learning",
         "last_played": datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc),
     }
-
     url = reverse("tune:tune_edit", kwargs={"pk": tune.pk})
+
     response = client.post(url, updated_data)
 
     assert response.status_code == 302
@@ -91,14 +90,12 @@ def test_tune_edit_success(user_tune_rep, client):
 @pytest.mark.django_db
 def test_tune_delete_success(user_tune_rep, client):
     rep_tune = user_tune_rep["rep_tune"]
-
     session = client.session
     session["tune_count"] = 1
     session.save()
-
     url = reverse("tune:tune_delete", kwargs={"pk": rep_tune.pk})
-    response = client.post(url)
 
+    response = client.post(url)
     client.session.save()
     session = client.session
 
@@ -135,12 +132,14 @@ def test_home_invalid_timespan(user_tune_rep, client):
 @pytest.mark.django_db
 def test_home_valid_form(user_tune_rep, client):
     response = client.post(reverse("tune:home"), {"search_terms": [""]})
+
     assert response.status_code == 200
     assert len(response.context["tunes"]) == 1
 
 
 def test_tune_browse_unauthenticated(client):
     response = client.get(reverse("tune:tune_browse"))
+
     assert response.status_code == 302
 
 
@@ -168,6 +167,7 @@ def test_tune_browse_invalid_timespan(admin_tune_rep, client):
 @pytest.mark.django_db
 def test_tune_browse_valid_form(admin_tune_rep, client):
     response = client.post(reverse("tune:tune_browse"), {"search_terms": [""]})
+
     assert response.status_code == 200
     assert len(response.context["tunes"]) == 1
 
@@ -178,6 +178,7 @@ def test_recount(user_tune_rep, client):
     session = client.session
     session["tune_count"] = 5
     session.save()
+
     response = client.get(reverse("tune:recount"))
 
     assert response.status_code == 200
