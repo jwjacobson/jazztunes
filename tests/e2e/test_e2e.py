@@ -33,40 +33,62 @@ def test_login_titles(page, live_server):
 
 def test_authenticated_titles(small_rep, small_rep_admin, logged_in_page, live_server):
     page = logged_in_page
+
     expect(page).to_have_title(re.compile("Home"))
+
     row_to_edit = page.locator("tr").filter(has_text="Flower")
+
     row_to_edit.get_by_role("button", name="Edit").click()
+
     expect(page).to_have_title(re.compile("Edit tune"))
+
     page.get_by_role("link", name="Add").click()
+
     expect(page).to_have_title(re.compile("New tune"))
+
     page.get_by_role("link", name="Play").click()
+
     expect(page).to_have_title(re.compile("Play"))
+
     page.get_by_role("link", name="Browse").click()
+
     expect(page).to_have_title(re.compile("Public Tunes"))
+
     page.get_by_role("link", name="Log Out").click()
+
     expect(page).to_have_title(re.compile("Sign Out"))
+
     page.get_by_role("link", name="jazztunes").click()
+
     expect(page).to_have_title(re.compile("Home"))
+
     with page.expect_popup() as page1_info:
         page.get_by_role("link", name="Manual").click()
+
     page1 = page1_info.value
+
     expect(page1).to_have_title(re.compile("Jazztunes Docs"))
 
 
 def test_signup_from_homepage(page, live_server):
     page.goto(live_server.url)
+
     page.get_by_role("link", name="Sign up", exact=True).click()
     page.get_by_role("textbox", name="Username:").fill(USERNAME)
     page.get_by_role("textbox", name="Password:").fill(PASSWORD)
     page.get_by_role("textbox", name="Password (again):").fill(PASSWORD)
     page.get_by_role("button", name="Sign up").click()
+
     expect(page).to_have_title(re.compile("Home"))
+
     result = page.text_content("#rep_id")
+
     assert USERNAME in result
 
 
 def test_login_success(page, live_server, test_user):
     page.goto(live_server.url)
+
     page.get_by_role("textbox", name="Username:").click()
     page.get_by_role("textbox", name="Username:").fill(test_user.username)
     page.get_by_role("textbox", name="Password:").click()
@@ -396,6 +418,9 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     assert timestamps == sorted(timestamps, reverse=True)
 
 
+# TODO: test doublesorts
+
+
 def test_play_page_basic(small_rep, logged_in_page):
     page = logged_in_page
     page.get_by_role("link", name="Play").click()
@@ -549,3 +574,19 @@ def test_browse_page_take_and_set(small_rep_admin, single_tune_page):
     )
     expect(first_row.locator("td").nth(9)).to_contain_text("learning")
     expect(first_row.locator("td").nth(10)).to_contain_text("July 2")
+
+
+@pytest.mark.skip(reason="Doesn't work yet")
+def test_browse_page_search(small_rep_admin, single_tune_page):
+    page = single_tune_page
+
+    page.get_by_role("link", name="Browse").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("love")
+    page.get_by_role("button", name="Search").click()
+    all_rows = page.locator("#public-table tbody tr")
+    row_count = all_rows.count()
+    breakpoint()
+
+    for i in range(row_count):
+        print(all_rows.nth(i))
