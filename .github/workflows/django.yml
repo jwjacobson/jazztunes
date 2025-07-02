@@ -48,7 +48,7 @@ jobs:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
       run: |
-        uv run pytest tests/unit
+        uv run pytest
     - name: Deploy to Heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
