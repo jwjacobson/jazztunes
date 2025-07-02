@@ -511,8 +511,35 @@ def test_browse_page_take_no_set(small_rep_admin, single_tune_page):
     page.get_by_role("row", name="A Flower is a Lovesome Thing").get_by_role(
         "button"
     ).click()
+
     expect(page.locator("#id_last_played")).to_be_visible()
     expect(page.locator("#id_knowledge")).to_be_visible()
+
+    page.get_by_role("link", name="jazztunes").click()
+
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+
+    expect(first_row.locator("td").nth(0)).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(first_row.locator("td").nth(9)).to_contain_text("know")
+    expect(first_row.locator("td").nth(10)).to_be_empty()
+
+
+def test_browse_page_take_and_set(small_rep_admin, single_tune_page):
+    page = single_tune_page
+
+    page.get_by_role("link", name="Browse").click()
+    page.get_by_role("row", name="A Flower is a Lovesome Thing").get_by_role(
+        "button"
+    ).click()
+    page.locator("#id_last_played").fill("2025-07-02")
+    page.locator("#id_knowledge").select_option("learning")
+    page.get_by_role("button", name="Set").click()
+
+    expect(page.locator("#id_last_played")).to_be_hidden()
+    expect(page.locator("#id_knowledge")).to_be_hidden()
 
     page.get_by_role("link", name="jazztunes").click()
     all_rows = page.locator("#rep-table tbody tr")
@@ -520,5 +547,5 @@ def test_browse_page_take_no_set(small_rep_admin, single_tune_page):
     expect(first_row.locator("td").nth(0)).to_contain_text(
         "A Flower is a Lovesome Thing"
     )
-    expect(first_row.locator("td").nth(9)).to_contain_text("know")
-    expect(first_row.locator("td").nth(10)).to_be_empty()
+    expect(first_row.locator("td").nth(9)).to_contain_text("learning")
+    expect(first_row.locator("td").nth(10)).to_contain_text("July 2")
