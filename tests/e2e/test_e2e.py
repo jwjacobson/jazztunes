@@ -31,7 +31,7 @@ def test_login_titles(page, live_server):
     expect(page).to_have_title(re.compile("Password Reset"))
 
 
-def test_authenticated_titles(small_rep, logged_in_page, live_server):
+def test_authenticated_titles(small_rep, small_rep_admin, logged_in_page, live_server):
     page = logged_in_page
     expect(page).to_have_title(re.compile("Home"))
     row_to_edit = page.locator("tr").filter(has_text="Flower")
@@ -41,9 +41,8 @@ def test_authenticated_titles(small_rep, logged_in_page, live_server):
     expect(page).to_have_title(re.compile("New tune"))
     page.get_by_role("link", name="Play").click()
     expect(page).to_have_title(re.compile("Play"))
-    # TODO: create test environment admin user
-    # page.get_by_role("link", name="Browse").click()
-    # expect(page).to_have_title(re.compile("Public Tunes"))
+    page.get_by_role("link", name="Browse").click()
+    expect(page).to_have_title(re.compile("Public Tunes"))
     page.get_by_role("link", name="Log Out").click()
     expect(page).to_have_title(re.compile("Sign Out"))
     page.get_by_role("link", name="jazztunes").click()
@@ -492,3 +491,14 @@ def test_play_page_search_reject_no_results(small_rep, logged_in_page):
         "No more matching tunes..."
     )
     expect(page.locator("#playTuneWrapper")).to_contain_text("Try another search?")
+
+
+def test_browse_page_basic(small_rep_admin, single_tune_page):
+    page = single_tune_page
+    admin_tunes = small_rep_admin["tunes"]
+
+    page.get_by_role("link", name="Browse").click()
+    titles = {tune.tune.title for tune in admin_tunes}
+    tune_table = page.text_content("#public-table")
+    for title in titles:
+        assert title in tune_table
