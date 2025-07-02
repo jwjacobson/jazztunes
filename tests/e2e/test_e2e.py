@@ -502,3 +502,23 @@ def test_browse_page_basic(small_rep_admin, single_tune_page):
     tune_table = page.text_content("#public-table")
     for title in titles:
         assert title in tune_table
+
+
+def test_browse_page_take_no_set(small_rep_admin, single_tune_page):
+    page = single_tune_page
+
+    page.get_by_role("link", name="Browse").click()
+    page.get_by_role("row", name="A Flower is a Lovesome Thing").get_by_role(
+        "button"
+    ).click()
+    expect(page.locator("#id_last_played")).to_be_visible()
+    expect(page.locator("#id_knowledge")).to_be_visible()
+
+    page.get_by_role("link", name="jazztunes").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    expect(first_row.locator("td").nth(0)).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(first_row.locator("td").nth(9)).to_contain_text("know")
+    expect(first_row.locator("td").nth(10)).to_be_empty()
