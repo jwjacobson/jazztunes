@@ -31,43 +31,64 @@ def test_login_titles(page, live_server):
     expect(page).to_have_title(re.compile("Password Reset"))
 
 
-def test_authenticated_titles(small_rep, logged_in_page, live_server):
+def test_authenticated_titles(small_rep, small_rep_admin, logged_in_page, live_server):
     page = logged_in_page
+
     expect(page).to_have_title(re.compile("Home"))
+
     row_to_edit = page.locator("tr").filter(has_text="Flower")
+
     row_to_edit.get_by_role("button", name="Edit").click()
+
     expect(page).to_have_title(re.compile("Edit tune"))
+
     page.get_by_role("link", name="Add").click()
+
     expect(page).to_have_title(re.compile("New tune"))
+
     page.get_by_role("link", name="Play").click()
+
     expect(page).to_have_title(re.compile("Play"))
-    # TODO: create test environment admin user
-    # page.get_by_role("link", name="Browse").click()
-    # expect(page).to_have_title(re.compile("Public Tunes"))
+
+    page.get_by_role("link", name="Browse").click()
+
+    expect(page).to_have_title(re.compile("Public Tunes"))
+
     page.get_by_role("link", name="Log Out").click()
+
     expect(page).to_have_title(re.compile("Sign Out"))
+
     page.get_by_role("link", name="jazztunes").click()
+
     expect(page).to_have_title(re.compile("Home"))
+
     with page.expect_popup() as page1_info:
         page.get_by_role("link", name="Manual").click()
+
     page1 = page1_info.value
+
     expect(page1).to_have_title(re.compile("Jazztunes Docs"))
 
 
 def test_signup_from_homepage(page, live_server):
     page.goto(live_server.url)
+
     page.get_by_role("link", name="Sign up", exact=True).click()
     page.get_by_role("textbox", name="Username:").fill(USERNAME)
     page.get_by_role("textbox", name="Password:").fill(PASSWORD)
     page.get_by_role("textbox", name="Password (again):").fill(PASSWORD)
     page.get_by_role("button", name="Sign up").click()
+
     expect(page).to_have_title(re.compile("Home"))
+
     result = page.text_content("#rep_id")
+
     assert USERNAME in result
 
 
 def test_login_success(page, live_server, test_user):
     page.goto(live_server.url)
+
     page.get_by_role("textbox", name="Username:").click()
     page.get_by_role("textbox", name="Username:").fill(test_user.username)
     page.get_by_role("textbox", name="Password:").click()
@@ -397,6 +418,9 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     assert timestamps == sorted(timestamps, reverse=True)
 
 
+# TODO: test doublesorts
+
+
 def test_play_page_basic(small_rep, logged_in_page):
     page = logged_in_page
     page.get_by_role("link", name="Play").click()
@@ -492,3 +516,77 @@ def test_play_page_search_reject_no_results(small_rep, logged_in_page):
         "No more matching tunes..."
     )
     expect(page.locator("#playTuneWrapper")).to_contain_text("Try another search?")
+
+
+def test_browse_page_basic(small_rep_admin, single_tune_page):
+    page = single_tune_page
+    admin_tunes = small_rep_admin["tunes"]
+
+    page.get_by_role("link", name="Browse").click()
+    titles = {tune.tune.title for tune in admin_tunes}
+    tune_table = page.text_content("#public-table")
+    for title in titles:
+        assert title in tune_table
+
+
+def test_browse_page_take_no_set(small_rep_admin, single_tune_page):
+    page = single_tune_page
+
+    page.get_by_role("link", name="Browse").click()
+    page.get_by_role("row", name="A Flower is a Lovesome Thing").get_by_role(
+        "button"
+    ).click()
+
+    expect(page.locator("#id_last_played")).to_be_visible()
+    expect(page.locator("#id_knowledge")).to_be_visible()
+
+    page.get_by_role("link", name="jazztunes").click()
+
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+
+    expect(first_row.locator("td").nth(0)).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(first_row.locator("td").nth(9)).to_contain_text("know")
+    expect(first_row.locator("td").nth(10)).to_be_empty()
+
+
+def test_browse_page_take_and_set(small_rep_admin, single_tune_page):
+    page = single_tune_page
+
+    page.get_by_role("link", name="Browse").click()
+    page.get_by_role("row", name="A Flower is a Lovesome Thing").get_by_role(
+        "button"
+    ).click()
+    page.locator("#id_last_played").fill("2025-07-02")
+    page.locator("#id_knowledge").select_option("learning")
+    page.get_by_role("button", name="Set").click()
+
+    expect(page.locator("#id_last_played")).to_be_hidden()
+    expect(page.locator("#id_knowledge")).to_be_hidden()
+
+    page.get_by_role("link", name="jazztunes").click()
+    all_rows = page.locator("#rep-table tbody tr")
+    first_row = all_rows.nth(0)
+    expect(first_row.locator("td").nth(0)).to_contain_text(
+        "A Flower is a Lovesome Thing"
+    )
+    expect(first_row.locator("td").nth(9)).to_contain_text("learning")
+    expect(first_row.locator("td").nth(10)).to_contain_text("July 2")
+
+
+@pytest.mark.skip(reason="Doesn't work yet")
+def test_browse_page_search(small_rep_admin, single_tune_page):
+    page = single_tune_page
+
+    page.get_by_role("link", name="Browse").click()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("love")
+    page.get_by_role("button", name="Search").click()
+    all_rows = page.locator("#public-table tbody tr")
+    row_count = all_rows.count()
+    breakpoint()
+
+    for i in range(row_count):
+        print(all_rows.nth(i))

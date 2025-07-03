@@ -1,8 +1,8 @@
 from decouple import config
 
 # auth
-USERNAME = config("TEST_USERNAME")
-PASSWORD = config("TEST_PASSWORD")
+USERNAME = config("TEST_USERNAME", default="bagel")
+PASSWORD = config("TEST_PASSWORD", default="secure_pwd")
 
 # tune
 SINGLE_TUNE_TITLE = "Yesterday's Tomorrows"
@@ -17,4 +17,4 @@ SINGLE_TUNE_TAGS = None
 SINGLE_TUNE_KNOWLEDGE = "learning"
 SINGLE_TUNE_LAST_PLAYED = "2025-06-17"
 SINGLE_TUNE_LAST_PLAYED_DISPLAY = "June 17"
-DATE_DISPLAY_FORMAT = "%B %d"
+DATE_DISPLAY_FORMAT = "%B %-d"

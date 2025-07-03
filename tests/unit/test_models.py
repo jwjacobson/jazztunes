@@ -57,6 +57,7 @@ def basic_reptune(basic_tune, basic_user):
 
 def test_tune_field_access(basic_tune):
     tune = basic_tune
+
     assert tune.title == "test title"
     assert tune.composer == "test composer"
     assert tune.key == "C"

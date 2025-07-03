@@ -24,11 +24,25 @@ os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
 
 
 @pytest.fixture
-def test_user(transactional_db):
+def test_user(transactional_db, is_admin=False):
     user = User.objects.create_user(
         username=USERNAME,
         password=PASSWORD,
     )
+
+    return user
+
+
+@pytest.fixture
+def admin_user(transactional_db):
+    """Create an admin user"""
+    user = User.objects.create_user(
+        username="admin_" + USERNAME, password=PASSWORD, is_staff=True
+    )
+    from django.conf import settings
+
+    settings.ADMIN_USER_ID = user.id
+
     return user
 
 
@@ -73,3 +87,10 @@ def small_rep(test_user, create_tune_set_for_user):
     """Create a user with a repertoire of ten real tunes"""
     create_tune_set_for_user(test_user)
     return test_user
+
+
+@pytest.fixture()
+def small_rep_admin(admin_user, create_tune_set_for_user):
+    """Create an admin user with a repertoire of ten real tunes"""
+    result = create_tune_set_for_user(admin_user, is_admin=True)
+    return result
