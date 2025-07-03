@@ -175,4 +175,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 if "test" in sys.argv or "pytest" in sys.modules:
-    ACCOUNT_RATE_LIMITS = {}
+    ACCOUNT_RATE_LIMITS = False
