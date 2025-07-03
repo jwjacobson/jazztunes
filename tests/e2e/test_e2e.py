@@ -594,17 +594,19 @@ def test_browse_page_take_and_set(small_rep_admin, single_tune_page):
     expect(first_row.locator("td").nth(10)).to_contain_text("July 2")
 
 
-@pytest.mark.skip(reason="Doesn't work yet")
-def test_browse_page_search(small_rep_admin, single_tune_page):
+def test_browse_page_search_basic(small_rep_admin, single_tune_page):
     page = single_tune_page
 
     page.get_by_role("link", name="Browse").click()
+    full_rep = page.locator("#public-table tbody").text_content()
     page.locator("#id_search_term").click()
     page.locator("#id_search_term").fill("love")
     page.get_by_role("button", name="Search").click()
+    expect(page.locator("#public-table tbody")).not_to_have_text(full_rep)
     all_rows = page.locator("#public-table tbody tr")
     row_count = all_rows.count()
-    breakpoint()
 
     for i in range(row_count):
-        print(all_rows.nth(i))
+        row = all_rows.nth(i)
+        title = row.locator("td").nth(0).text_content()
+        assert "love" in title.lower()
