@@ -1,8 +1,8 @@
 from decouple import config
 
 # auth
-USERNAME = config("TEST_USERNAME")
-PASSWORD = config("TEST_PASSWORD")
+USERNAME = config("TEST_USERNAME", default="bagel")
+PASSWORD = config("TEST_PASSWORD", default="secure_pwd")
 
 # tune
 SINGLE_TUNE_TITLE = "Yesterday's Tomorrows"
