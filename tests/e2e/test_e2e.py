@@ -158,6 +158,23 @@ def test_delete_single_tune(single_tune_page):
     assert SINGLE_TUNE_TITLE not in result
 
 
+def test_home_search_basic(small_rep, logged_in_page):
+    page = logged_in_page
+    full_rep = page.locator("#rep-table tbody").text_content()
+    page.locator("#id_search_term").click()
+    page.locator("#id_search_term").fill("love")
+    page.get_by_role("button", name="Search").click()
+    expect(page.locator("#rep-table tbody")).not_to_have_text(full_rep)
+
+    all_rows = page.locator("#rep-table tbody tr")
+    row_count = all_rows.count()
+
+    for i in range(row_count):
+        row = all_rows.nth(i)
+        title = row.locator("td").nth(0).text_content()
+        assert "love" in title.lower()
+
+
 # TODO: parametrize the sorting tests
 def test_sort_default_title_ascending(small_rep, logged_in_page):
     page = logged_in_page
