@@ -47,3 +47,10 @@ def test_login_success(page, live_server, test_user):
 
     expect(page).to_have_title(re.compile("Home"))
     assert test_user.username in result
+
+
+def test_logout(logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Log Out").click()
+    page.get_by_role("button", name="Yes").click()
+    expect(page).to_have_title(re.compile("Welcome to Jazztunes!"))
