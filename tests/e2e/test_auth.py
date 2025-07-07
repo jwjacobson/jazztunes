@@ -1,3 +1,5 @@
+# Authentication and allauth-related tests
+
 import re
 
 from playwright.sync_api import expect
