@@ -46,6 +46,19 @@ def test_play_page_search_suggest_key(small_rep, logged_in_page):
     expect(page.locator("#key-suggestion")).to_contain_text("in")
 
 
+def test_play_page_search_suggest_key_no_key(small_rep, logged_in_page):
+    page = logged_in_page
+    page.get_by_role("link", name="Play").click()
+
+    page.locator("#id_suggest_key").check()
+    # Target 'Coming on the Hudson', which has no key and thus doesn't display a suggestion
+    page.locator("#id_search_term").fill("hudson")
+    page.get_by_role("button", name="Search").click()
+    page.wait_for_selector("#playTuneWrapper")
+
+    expect(page.locator("#key-suggestion")).to_be_hidden()
+
+
 def test_play_page_search_accept(small_rep, logged_in_page):
     page = logged_in_page
     page.get_by_role("link", name="Play").click()
