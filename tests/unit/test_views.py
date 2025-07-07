@@ -33,6 +33,10 @@ def test_tune_new_success(user_tune_rep, client):
     assert Tune.objects.filter(title="New Tune").exists()
     assert RepertoireTune.objects.filter(knowledge="learning").exists()
 
+    tune = Tune.objects.get(title="New Tune")
+    rep_tune = RepertoireTune.objects.get(knowledge="learning")
+    assert rep_tune.tune == tune
+
 
 @pytest.mark.django_db
 def test_tune_new_get(user_tune_rep, client):
