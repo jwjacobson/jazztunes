@@ -37,6 +37,8 @@ def test_play_page_search_suggest_key(small_rep, logged_in_page):
     page.get_by_role("link", name="Play").click()
 
     page.locator("#id_suggest_key").check()
+    # Exclude 'Coming on the Hudson', which has no key and thus doesn't display a suggestion
+    page.locator("#id_search_term").fill("-hudson")
     page.get_by_role("button", name="Search").click()
     page.wait_for_selector("#playTuneWrapper")
 
