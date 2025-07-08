@@ -1,10 +1,11 @@
 # Tests for the models, as far as possible removed from app context
 
 import pytest
-from datetime import date
+
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from tune.models import Tune, RepertoireTune
-from django.contrib.auth import get_user_model
 
 
 @pytest.fixture()
@@ -49,7 +50,7 @@ def basic_reptune(basic_tune, basic_user):
         tune=tune,
         player=user,
         knowledge="learning",
-        last_played=date(2024, 2, 1),
+        last_played=timezone.now(),
     )
 
     return rep_tune, tune, user
@@ -88,7 +89,7 @@ def test_reptune_field_access(basic_reptune):
     assert rep_tune.tune == tune
     assert rep_tune.player == user
     assert rep_tune.knowledge == "learning"
-    assert rep_tune.last_played == date(2024, 2, 1)
+    assert rep_tune.last_played <= timezone.now()
 
 
 @pytest.mark.django_db

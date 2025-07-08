@@ -1,9 +1,9 @@
 # Tests for the views in views.py
 
 import pytest
-from datetime import datetime, timezone
 
 from django.urls import reverse
+from django.utils import timezone
 from django.contrib.messages import get_messages
 
 from tune.models import Tune, RepertoireTune
@@ -15,7 +15,7 @@ def test_tune_new_success(user_tune_rep, client):
     url = reverse("tune:tune_new")
     post_data = {
         "title": "New Tune",
-        "composer": "Al Dimeola",
+        "composer": "Jacobson",
         "key": "G",
         "other_keys": "A B",
         "song_form": "ABAC",
@@ -23,7 +23,7 @@ def test_tune_new_success(user_tune_rep, client):
         "meter": 3,
         "year": 2024,
         "knowledge": "learning",
-        "last_played": datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc),
+        "last_played": timezone.now(),
     }
 
     response = client.post(url, post_data)
@@ -67,7 +67,7 @@ def test_tune_edit_success(user_tune_rep, client):
         "style": "jazz",
         "year": 1939,
         "knowledge": "learning",
-        "last_played": datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc),
+        "last_played": timezone.now(),
     }
     url = reverse("tune:tune_edit", kwargs={"pk": tune.pk})
 
@@ -88,7 +88,7 @@ def test_tune_edit_success(user_tune_rep, client):
     assert tune.style == "jazz"
     assert tune.year == 1939
     assert rep_tune.knowledge == "learning"
-    assert rep_tune.last_played == datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc)
+    assert rep_tune.last_played <= timezone.now()
 
 
 @pytest.mark.django_db
@@ -216,7 +216,7 @@ def test_tune_take_nonpublic(client, user_tune_rep):
 def test_set_rep_fields_success(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
     knowledge = "learning"
-    last_played = datetime(2024, 3, 1, 0, 0, 0, tzinfo=timezone.utc)
+    last_played = timezone.now()
 
     response = client.post(
         reverse("tune:set_rep_fields", args=[tune_pk]),

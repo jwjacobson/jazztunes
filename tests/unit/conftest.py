@@ -1,8 +1,8 @@
-from datetime import datetime, timezone
 import pytest
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from tune.models import Tune, RepertoireTune
 
@@ -31,7 +31,7 @@ def user_tune_rep(client):
         tune=tune,
         player=user,
         knowledge="know",
-        last_played=datetime(2024, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+        last_played=timezone.now(),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "user": user}
@@ -63,7 +63,7 @@ def admin_tune_rep(client):
         tune=tune,
         player=admin,
         knowledge="know",
-        last_played=datetime(2024, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+        last_played=timezone.now(),
     )
 
     return {"tune": tune, "rep_tune": rep_tune, "admin": admin}
