@@ -61,7 +61,7 @@ def logged_in_page(page, test_user, live_server):
 @pytest.fixture()
 def single_tune_page(logged_in_page, test_user, live_server):
     page = logged_in_page
-    page.get_by_role("link", name="Add").click()
+    page.locator("#nav-add").click()
     page.locator('input[name="title"]').click()
     page.locator('input[name="title"]').fill(SINGLE_TUNE_TITLE)
     page.locator('input[name="key"]').click()
@@ -77,7 +77,7 @@ def single_tune_page(logged_in_page, test_user, live_server):
     page.locator("#id_last_played").fill(SINGLE_TUNE_LAST_PLAYED)
     page.locator("#id_knowledge").select_option(SINGLE_TUNE_KNOWLEDGE)
     # page.get_by_role("checkbox", name="latin").check() TODO: create some tags in the test environment
-    page.get_by_role("button", name="Add").click()
+    page.locator("#add-button").click()
 
     yield page
 
