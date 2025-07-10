@@ -16,7 +16,7 @@ def test_authenticated_titles(small_rep, small_rep_admin, logged_in_page, live_s
 
     expect(page).to_have_title(re.compile("Edit tune"))
 
-    page.get_by_role("link", name="Add").click()
+    page.locator("#nav-add").click()
 
     expect(page).to_have_title(re.compile("New tune"))
 
