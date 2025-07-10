@@ -25,7 +25,9 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import format_html
 
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm, PlaySearchForm
 from .helpers import suggest_a_key
@@ -88,6 +90,18 @@ def home(request):
         search_form = SearchForm()
         tunes = get_user_repertoire(user)
         tune_count = len(tunes)
+
+        if tune_count == 0:
+            add_url = reverse("tune:tune_new")
+            browse_url = reverse("tune:tune_browse")
+            messages.warning(
+                request,
+                format_html(
+                    'Your repertoire is empty! Get started by <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">adding a new tune</a> or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browsing the public repertoire</a>.',
+                    add_url,
+                    browse_url,
+                ),
+            )
 
     if request.headers.get("Hx-Request"):
         return render(
