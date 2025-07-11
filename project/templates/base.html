@@ -95,24 +95,28 @@
             </nav>
 
             <!-- Messages container -->
-            <div id="messages-container">
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if message.tags == 'success' %}
-                        <div class="bg-sky-100 border border-t-0 border-indigo-400 p-4 mb-4" id="alert" role="alert">
-                            {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
-                        </div>
-                        {% elif message.tags == 'error' %}
-                        <div class="bg-red-100 border border-t-0 border-indigo-400 text-red-700 p-4 mb-4" id="alert" role="alert">
-                            {{ message }}
-                        </div>
-                        {% elif message.tags == 'warning' %}
-                        <div class="bg-orange-100 border border-t-0 border-indigo-400 p-4 mb-4" id="alert" role="alert">
-                            {{ message }}
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+            <div id="messages-container" class="[&>div]:mb-0 [&>div:last-child]:mb-4">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                    <div class="bg-sky-100 border border-t-0 border-indigo-400 p-4" id="alert" role="alert">
+                        {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                    </div>
+                    {% elif message.tags == 'error' %}
+                    <div class="bg-red-100 border border-t-0 border-indigo-400 text-red-700 p-4" id="alert" role="alert">
+                        {{ message }}
+                    </div>
+                    {% elif message.tags == 'warning' %}
+                    <div class="bg-orange-100 border border-t-0 border-indigo-400 p-4" id="alert" role="alert">
+                        {{ message }}
+                    </div>
+                    {% elif message.tags == 'info' %}
+                    <div class="bg-yellow-100 border border-t-0 border-indigo-400 p-4" id="alert" role="alert">
+                        {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             </div>
 
             {% block content %}
