@@ -97,7 +97,7 @@ def home(request):
             messages.warning(
                 request,
                 format_html(
-                    'Your repertoire is empty! Get started by <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">adding a new tune</a> or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browsing the public repertoire</a>.',
+                    'Your repertoire is empty. <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">Add some tunes</a> manually or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browse the public repertoire</a> for premade tunes!',
                     add_url,
                     browse_url,
                 ),
@@ -381,6 +381,21 @@ def tune_play(request):
     Load the play page.
     """
     search_form = PlaySearchForm()
+    user = request.user
+    tunes = get_user_repertoire(user)
+    tune_count = len(tunes)
+
+    if tune_count == 0:
+        add_url = reverse("tune:tune_new")
+        browse_url = reverse("tune:tune_browse")
+        messages.warning(
+            request,
+            format_html(
+                'Your repertoire is empty. <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">Add some tunes</a> manually or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browse the public repertoire</a> for premade tunes!',
+                add_url,
+                browse_url,
+            ),
+        )
     return render(request, "tune/play.html", {"search_form": search_form})
 
 
