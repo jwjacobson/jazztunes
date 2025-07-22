@@ -37,14 +37,14 @@ html_theme_options = {
         "color-admonition-background": "#FFF7ED",  # orange-50
         "color-background-primary": "#E0E7FF",  # indigo-100
         "color-background-secondary": "#FFF7ED",  # orange-50
-        "color-foreground-primary": "#374151",  # Keep existing text color (good contrast)
-        "color-foreground-secondary": "#525252",  # Keep existing secondary text
-        "color-inline-code": "#E0E7FF",  # indigo-100 for inline code background
-        "color-link": "#1E3A8A",  # blue-900 for links
-        "color-link--hover": "#1D4ED8",  # blue-700 for link hover
-        "color-sidebar-background": "#C7D2FE",  # indigo-200 for main background
-        "color-sidebar-link": "#1E3A8A",  # blue-900 for sidebar links
-        "color-sidebar-link--hover": "#1D4ED8",  # blue-700 for sidebar hover
-        "color-sidebar-heading": "#1E3A8A",  # blue-900 for sidebar headings
+        "color-foreground-primary": "#374151",  # primary text
+        "color-foreground-secondary": "#525252",  # secondary text
+        "color-inline-code": "#E0E7FF",  # indigo-100
+        "color-link": "#1E3A8A",  # blue-900
+        "color-link--hover": "#1D4ED8",  # blue-700
+        "color-sidebar-background": "#C7D2FE",  # indigo-200
+        "color-sidebar-link": "#1E3A8A",  # blue-900
+        "color-sidebar-link--hover": "#1D4ED8",  # blue-700
+        "color-sidebar-heading": "#1E3A8A",  # blue-900
     },
 }

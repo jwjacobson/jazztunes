@@ -3,7 +3,7 @@
 Searching your repertoire
 =========================
 
-The **Home**, **Play**, and **Public** pages all contain a search box with robust functionality.
+The **Home**, **Play**, and **Browse** pages all contain a search box with robust functionality.
 
 Basic search
 ----------------
@@ -12,7 +12,7 @@ By default, every field is searched for your search term. If you enter multiple 
 
 Jazz composer names have built-in substitutions using their nicknames or first names, so searching ``miles`` will return Miles Davis tunes, ``bird`` will return Charlie Parker tunes, etc. Note that in a default search, the nickname term will also searched in other fields, so ``bird`` will also return the tune "Bye Bye Blackbird." If you want **only** tunes composed by Charlie Parker, use a field-specific search (see below).  
 
-The default search is often sufficient, since the contents of the fields tend to be mutually exclusive: the search term ``love`` probably only refers to the contents of the Title field, ``Golson`` to the composer field, etc. However, some terms and fields are trickier. If you want to search for the key of Ab using the default search, your query ``Ab`` will also pick up any song forms containing the sequence AB, which is almost all of them. For such cases you can use field-specific search.
+The default search is often sufficient, since the contents of the fields tend to be specific to that field: the search term ``love`` probably only refers to the contents of the Title field, ``Golson`` to the composer field, etc. However, some terms and fields are trickier. If you want to search for the key of Ab using the default search, your query ``Ab`` will also pick up any song forms containing the sequence AB, which is almost all of them. For such cases you can use field-specific search.
 
 Field-specific search
 ----------------------

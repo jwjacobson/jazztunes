@@ -4,7 +4,7 @@ Tune fields
 ==============
 In defining the fields I've tried to balance between making the app useful and giving freedom to the user. Here I describe my thinking behind each field. In some cases my descriptions only apply to the Public repertoire, as the user can fill in their own values on their own tunes.
 
-In general I'm open to revising the prescriptive aspects of any of these in dialogue with users, so reach out if you'd like to see any changes or additions.
+In general I'm open to revising the prescriptive aspects of any of these in dialogue with users, so `reach out <admin@jazztunes.org>`_ if you'd like to see any changes or additions.
 
 Title
 ------
@@ -12,7 +12,7 @@ A tune's unique identifier, Title is the only required field.
 
 Composer
 --------
-I index all composers by last name as a way of showing equal respect to jazz and popular tune composers. However, the app also recognizes the first names and nicknames of jazz composers (Bird, Miles, etc.) in searches and converts them.
+I index all composers by last name as a way of showing equal respect to jazz and popular tune composers. However, the app also recognizes the first names and nicknames of many jazz composers (Bird, Miles, etc.) in searches and converts them.
 
 Key 
 -----
@@ -24,7 +24,7 @@ Any keys a tune modulates to besides the main key go here.
 
 Form 
 -----
-I've opted not to include primes etc. to make the form categories as broadly applicable as possible. For example, "I Remember You" is classified as AABA, not AABA'.
+I've opted not to include primes etc. to make the form categories as broadly applicable as possible.
 
 Style
 ------
