@@ -3,7 +3,7 @@
 
 Jazztunes is a web app that helps jazz musicians manage their repertoire. To use it, go to [jazztunes.org](https://jazztunes.org/).
 
-This readme focuses on technical aspects of the app of interest to developers; for a user manual, see [here](https://jwjacobson.github.io/jazztunes/).
+This readme focuses on technical aspects of the app of interest to developers; for a user manual, see [here](https://jazztunes.readthedocs.io/en/).
 
 ### Tech stack
 Jazztunes is a full-stack web app built using [Django 5.2](https://www.djangoproject.com/) on the back end and [htmx](https://htmx.org/) on the front end with [Tailwind CSS](https://tailwindcss.com/) for styling. The database is [PostgreSQL](https://www.postgresql.org/). Tables are implemented with [DataTables](https://datatables.net/) for clickable column sorting. Tests are written in [pytest](https://docs.pytest.org/en/8.2.x/) and [Playwright](https://playwright.dev/python/docs/intro). The deployed version uses Python 3.13, but it should work on Python 3.11 or later.
