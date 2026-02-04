@@ -1,2 +1,14 @@
 {% extends "allauth/layouts/base.html" %}
-{% block content %}{% endblock %}
+
+{% block allauth_content %}
+<!-- 
+    Responsive auth card:
+    - Mobile (< lg): Full width, removes container padding effect
+    - Desktop (lg+): Max width with left alignment
+-->
+<div class="-mx-4 sm:-mx-4 lg:mx-0 lg:max-w-2xl">
+    <div class="bg-amber-50 border-y border-indigo-400 lg:border lg:border-indigo-400 p-6">
+        {% block entrance_content %}{% endblock %}
+    </div>
+</div>
+{% endblock allauth_content %}

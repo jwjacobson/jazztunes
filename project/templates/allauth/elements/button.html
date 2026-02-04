@@ -1,9 +1,15 @@
 {% load allauth %}
 {% comment %} djlint:off {% endcomment %}
-<{% if attrs.href %}a href="{{ attrs.href }}"{% else %}button{% endif %}
-{% if attrs.name %}name="{{ attrs.name }}"{% endif %}
-{% if attrs.type %}type="{{ attrs.type }}"{% endif %}
->
-{% slot %}
-{% endslot %}
-</{% if attrs.href %}a{% else %}button{% endif %}>
+{% if attrs.href %}
+<a href="{{ attrs.href }}"
+   class="inline-block px-6 py-2 bg-blue-900 text-white hover:bg-blue-700 transition-colors"
+   {% if attrs.name %}name="{{ attrs.name }}"{% endif %}>
+    {% slot %}{% endslot %}
+</a>
+{% else %}
+<button class="px-6 py-2 bg-blue-900 text-white hover:bg-blue-700 transition-colors"
+        {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
+        {% if attrs.type %}type="{{ attrs.type }}"{% endif %}>
+    {% slot %}{% endslot %}
+</button>
+{% endif %}
