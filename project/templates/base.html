@@ -50,6 +50,7 @@
                         <!-- Brand -->
                         <a class="text-blue-900 font-bold italic text-xl hover:text-blue-700" href="{% url 'tune:home' %}">jazztunes</a>
                         
+                        {% if user.is_authenticated %}
                         <!-- Mobile menu button -->
                         <button class="lg:hidden px-3 py-2 border-2 border-gray-600 hover:bg-gray-100" 
                                 onclick="document.getElementById('nav-menu').classList.toggle('hidden')">
@@ -58,10 +59,9 @@
                             </svg>
                         </button>
                         
-                        <!-- Navigation items -->
+                        <!-- Nav items, logged in -->
                         <div id="nav-menu" class="hidden lg:flex lg:items-center lg:space-x-4 w-full lg:w-auto">
                             <ul class="flex flex-col lg:flex-row lg:space-x-4 mt-4 lg:mt-0">
-                                {% if user.is_authenticated %}
                                 <li class="py-2 lg:py-0">
                                     <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:home' %}">Home</a>
                                 </li>
@@ -80,16 +80,19 @@
                                 <li class="py-2 lg:py-0">
                                     <a class="text-blue-900 hover:text-blue-700" href="{% url 'account_logout' %}">Log Out</a>
                                 </li>
-                                {% else %}
-                                <li class="py-2 lg:py-0">
-                                    <a class="text-teal-900 hover:text-blue-700" href="{% url 'account_login' %}">Log In</a>
-                                </li>
-                                <li class="py-2 lg:py-0">
-                                    <a class="text-teal-900 hover:text-blue-700" href="{% url 'account_signup' %}">Sign Up</a>
-                                </li>
-                                {% endif %}
                             </ul>
                         </div>
+                        {% else %}
+                        <!-- Nav items, logged out -->
+                        <ul class="flex flex-row space-x-4">
+                            <li>
+                                <a class="text-teal-900 hover:text-blue-700" href="{% url 'account_login' %}">Log In</a>
+                            </li>
+                            <li>
+                                <a class="text-teal-900 hover:text-blue-700" href="{% url 'account_signup' %}">Sign Up</a>
+                            </li>
+                        </ul>
+                        {% endif %}
                     </div>
                 </div>
             </nav>
@@ -128,17 +131,5 @@
         {% block extra_body %}
         {% endblock extra_body %}
         
-        <!-- Mobile menu toggle script -->
-        {% comment %} <script>
-            // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('#alert');
-                alerts.forEach(alert => {
-                    alert.style.transition = 'opacity 0.5s';
-                    alert.style.opacity = '0';
-                    setTimeout(() => alert.remove(), 500);
-                });
-            }, 5000);
-        </script> {% endcomment %}
     </body>
 </html>
