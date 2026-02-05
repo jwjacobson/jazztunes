@@ -25,37 +25,6 @@
     #rep-table tr:last-child td {
         border-bottom: none;
     }
-
-    /* 
-     * Responsive column visibility using display:none
-     * Mobile (default): Title, Actions only
-     * sm (640px+):  + Key
-     * md (768px+):  + Composer, Knowledge
-     * lg (1024px+): + Other keys, Form, Tags, Last played
-     * xl (1280px+): + Style, Meter, Year (all columns)
-     */
-    .col-sm, .col-md, .col-lg, .col-xl {
-        display: none;
-    }
-
-    @media (min-width: 640px) {
-        .col-sm { display: table-cell; }
-    }
-    @media (min-width: 768px) {
-        .col-md { display: table-cell; }
-    }
-    @media (min-width: 1024px) {
-        .col-lg { display: table-cell; }
-    }
-    @media (min-width: 1280px) {
-        .col-xl { display: table-cell; }
-    }
-
-    /* Delete row animation */
-    {% comment %} tr.htmx-swapping td {
-        opacity: 0;
-        transition: opacity 0.25s ease-out;
-} {% endcomment %}
 </style>
 
 <div class="my-4">
@@ -113,22 +82,22 @@
                     <!-- Always visible -->
                     <th class="px-4 py-2 text-left border-b border-indigo-600">Title</th>
                     <!-- md and up -->
-                    <th class="col-md px-4 py-2 text-left border-b border-indigo-600">Composer</th>
+                    <th class="hidden md:table-cell px-4 py-2 text-left border-b border-indigo-600">Composer</th>
                     <!-- sm and up -->
-                    <th class="col-sm px-4 py-2 text-left border-b border-indigo-600">Key</th>
+                    <th class="hidden sm:table-cell px-4 py-2 text-left border-b border-indigo-600">Key</th>
                     <!-- lg and up -->
-                    <th class="col-lg px-4 py-2 text-left border-b border-indigo-600">Other keys</th>
-                    <th class="col-lg px-4 py-2 text-left border-b border-indigo-600">Form</th>
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Other keys</th>
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Form</th>
                     <!-- xl and up -->
-                    <th class="col-xl px-4 py-2 text-left border-b border-indigo-600">Style</th>
-                    <th class="col-xl px-4 py-2 text-left border-b border-indigo-600">Meter</th>
-                    <th class="col-xl px-4 py-2 text-left border-b border-indigo-600">Year</th>
+                    <th class="hidden xl:table-cell px-4 py-2 text-left border-b border-indigo-600">Style</th>
+                    <th class="hidden xl:table-cell px-4 py-2 text-left border-b border-indigo-600">Meter</th>
+                    <th class="hidden xl:table-cell px-4 py-2 text-left border-b border-indigo-600">Year</th>
                     <!-- lg and up -->
-                    <th class="col-lg px-4 py-2 text-left border-b border-indigo-600">Tags</th>
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Tags</th>
                     <!-- md and up -->
-                    <th class="col-md px-4 py-2 text-left border-b border-indigo-600">Knowledge</th>
+                    <th class="hidden md:table-cell px-4 py-2 text-left border-b border-indigo-600">Knowledge</th>
                     <!-- lg and up -->
-                    <th class="col-lg px-4 py-2 text-left border-b border-indigo-600">Last played</th>
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Last played</th>
                     <!-- Always visible -->
                     <th class="px-4 py-2 text-left border-b border-indigo-600">Actions</th>
                 </tr>
@@ -139,26 +108,26 @@
                     <!-- Always visible -->
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.title }}</td>
                     <!-- md and up -->
-                    <td class="col-md px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
+                    <td class="hidden md:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
                     <!-- sm and up -->
-                    <td class="col-sm px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
+                    <td class="hidden sm:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
                     <!-- lg and up -->
-                    <td class="col-lg px-4 py-2 border-b border-indigo-200">{{ tune.tune.other_keys }}</td>
-                    <td class="col-lg px-4 py-2 border-b border-indigo-200">{{ tune.tune.song_form }}</td>
+                    <td class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.other_keys }}</td>
+                    <td class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.song_form }}</td>
                     <!-- xl and up -->
-                    <td class="col-xl px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
-                    <td class="col-xl px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
-                    <td class="col-xl px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
+                    <td class="hidden xl:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
+                    <td class="hidden xl:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
+                    <td class="hidden xl:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
                     <!-- lg and up -->
-                    <td class="col-lg px-4 py-2 border-b border-indigo-200">
+                    <td class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200">
                         {% for tag in tune.tags.all %}
                         <div class="text-sm">{{ tag.name }}</div>
                         {% endfor %}
                     </td>
                     <!-- md and up -->
-                    <td class="col-md px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
+                    <td class="hidden md:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
                     <!-- lg and up -->
-                    <td data-order="{{ tune.last_played|date:'U' }}" class="col-lg px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
+                    <td data-order="{{ tune.last_played|date:'U' }}" class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
                         {{ tune.last_played|date:"MONTH_DAY_FORMAT" }}
                     </td>
                     <!-- Always visible -->
