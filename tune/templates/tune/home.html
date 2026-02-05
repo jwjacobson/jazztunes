@@ -25,12 +25,6 @@
     #rep-table tr:last-child td {
         border-bottom: none;
     }
-
-    /* Delete row animation */
-    {% comment %} tr.htmx-swapping td {
-        opacity: 0;
-        transition: opacity 0.25s ease-out;
-} {% endcomment %}
 </style>
 
 <div class="my-4">
@@ -81,44 +75,62 @@
     </div>
 
     <!-- Table -->
-    <div class="mt-4 overflow-x-auto">
-        <table class="w-full border border-indigo-600" id="rep-table">
+    <div class="mt-4 mr-4">
+        <table class="border border-indigo-600" id="rep-table">
             <thead class="bg-indigo-100">
                 <tr>
+                    <!-- Always visible -->
                     <th class="px-4 py-2 text-left border-b border-indigo-600">Title</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Composer</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Key</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Other keys</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Form</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Style</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Meter</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Year</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Tags</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Knowledge</th>
-                    <th class="px-4 py-2 text-left border-b border-indigo-600">Last played</th>
+                    <!-- md and up -->
+                    <th class="hidden md:table-cell px-4 py-2 text-left border-b border-indigo-600">Composer</th>
+                    <!-- sm and up -->
+                    <th class="hidden sm:table-cell px-4 py-2 text-left border-b border-indigo-600">Key</th>
+                    <!-- lg and up -->
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Other keys</th>
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Form</th>
+                    <!-- xl and up -->
+                    <th class="hidden xl:table-cell px-4 py-2 text-left border-b border-indigo-600">Style</th>
+                    <th class="hidden xl:table-cell px-4 py-2 text-left border-b border-indigo-600">Meter</th>
+                    <th class="hidden xl:table-cell px-4 py-2 text-left border-b border-indigo-600">Year</th>
+                    <!-- lg and up -->
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Tags</th>
+                    <!-- md and up -->
+                    <th class="hidden md:table-cell px-4 py-2 text-left border-b border-indigo-600">Knowledge</th>
+                    <!-- lg and up -->
+                    <th class="hidden lg:table-cell px-4 py-2 text-left border-b border-indigo-600">Last played</th>
+                    <!-- Always visible -->
                     <th class="px-4 py-2 text-left border-b border-indigo-600">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for tune in tunes %}
                 <tr id="tune-row-{{ tune.tune.pk }}">
+                    <!-- Always visible -->
                     <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.title }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.other_keys }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.song_form }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
-                    <td class="px-4 py-2 border-b border-indigo-200">
+                    <!-- md and up -->
+                    <td class="hidden md:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.composer }}</td>
+                    <!-- sm and up -->
+                    <td class="hidden sm:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.key }}</td>
+                    <!-- lg and up -->
+                    <td class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.other_keys }}</td>
+                    <td class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.song_form }}</td>
+                    <!-- xl and up -->
+                    <td class="hidden xl:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.style }}</td>
+                    <td class="hidden xl:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.meter|default_if_none:"" }}</td>
+                    <td class="hidden xl:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.tune.year|default_if_none:"" }}</td>
+                    <!-- lg and up -->
+                    <td class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200">
                         {% for tag in tune.tags.all %}
                         <div class="text-sm">{{ tag.name }}</div>
                         {% endfor %}
                     </td>
-                    <td class="px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
-                    <td data-order="{{ tune.last_played|date:'U' }}" class="px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
+                    <!-- md and up -->
+                    <td class="hidden md:table-cell px-4 py-2 border-b border-indigo-200">{{ tune.knowledge }}</td>
+                    <!-- lg and up -->
+                    <td data-order="{{ tune.last_played|date:'U' }}" class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200" id="last-played-{{ tune.id }}">
                         {{ tune.last_played|date:"MONTH_DAY_FORMAT" }}
                     </td>
+                    <!-- Always visible -->
                     <td class="px-4 py-2 border-b border-indigo-200">
                         <div class="flex gap-1">
                             <button type="button"
@@ -153,25 +165,13 @@
     </div>
 
 <script>
-    // Uncomment this script for column visibility toggling; good but ugly
-    // $(document).ready(function() {
-    //     $('#rep-table').DataTable({
-    //         "searching": false,
-    //         "info": false,
-    //         "lengthChange": false,
-    //         "paging": false,
-    //         dom: 'Bfrtip', // This needs to be included to show buttons
-    //         buttons: [
-    //             'colvis' // This button will allow users to toggle column visibility
-    //         ]
-    //     });
-    // });
     $(document).ready( function () {
         $('#rep-table').DataTable({
             "searching": false,
             "info": false,
             "lengthChange": false,
             "paging": false,
+            "autoWidth": false,
             "language": {emptyTable: ' '},
             "columnDefs": [
             { "orderable": false, "targets": [11] }  
