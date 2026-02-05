@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Tell Tailwind v4 where to scan for classes */
+@source "../../*/templates/**/*.html";
+@source "../js/**/*.js";
+
 @layer components {
     form input[type="text"],
     form input[type="email"], 
