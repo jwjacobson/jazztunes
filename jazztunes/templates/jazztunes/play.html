@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block head_title %}Play{% endblock %}
+
+{% block content %}
+<div class="flex my-4">
+  <div class="w-full">
+      <p>
+          Here you can get a suggestion of a tune to play based on a search of your repertoire.
+      </p>
+  </div>
+</div>
+
+<!-- Container for Search and Results cards -->
+<div class="flex items-stretch gap-4">
+
+<!-- Box for Search Card -->
+<div class="w-1/4">
+<!-- Search Card -->
+<div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm h-full flex flex-col">
+    <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
+    <form hx-post="{% url 'jazztunes:get_random_tune' %}"
+          hx-target="#tunes"
+          hx-swap="outerHTML"
+          hx-trigger="submit"
+          hx-indicator=".htmx-indicator"
+          class="flex-1 flex flex-col">
+        {% csrf_token %}
+        <div class="mb-3 p-0.5">
+            <label for="search_term" class="sr-only">Search</label>
+            {{ search_form.search_term }}
+        </div>
+        <div class="mb-3 flex-1">
+            <label for="timespan" class="block mb-1 text-sm font-medium">Haven't played in:</label>
+            {{ search_form.timespan }}
+        </div>
+        <div class="mb-3">
+            <label for="suggest_key" class="block mb-1 text-sm font-medium">
+                <span class="mx-2 mt-1">Suggest a key?</span> 
+                {{ search_form.suggest_key }}
+            </label>
+        </div>
+        <div class="mt-auto">
+            <input class="blue-button bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
+                   type="submit" 
+                   value="Search">
+                   
+        </div>
+    </form>
+</div>
+</div>
+
+<!-- Box for Results Card -->
+<div id="tunes" class="w-1/4"></div>
+
+</div>
+
+{% endblock %}
