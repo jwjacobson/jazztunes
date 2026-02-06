@@ -1,0 +1,26 @@
+<div class="fixed inset-0 backdrop-blur-xs backdrop-brightness-50 flex items-center justify-center z-50" 
+     hx-trigger="clearModal from:body" 
+     hx-swap="outerHTML" 
+     hx-target="this"
+     _="on clearModal remove me">
+    <div class="bg-indigo-100 border border-indigo-700 p-6 max-w-sm mx-4">
+        <p class="text-lg mb-6">
+            Delete <b>{{ tune.title }}</b>?
+        </p>
+        <div class="flex gap-3 justify-end">
+            <button onclick="document.getElementById('modal-container').innerHTML = ''"
+                    class="px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-gray-800 border border:gray-600">
+                Cancel
+            </button>
+            <button hx-post="{% url 'jazztunes:tune_delete' pk=tune.pk %}"
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-swap="outerHTML swap:.25s"
+                    hx-target="#{{ row_id }}"
+                    hx-on:htmx:after-request="if(event.detail.successful) { document.getElementById('modal-container').innerHTML = '' }"
+                    class="px-4 py-2 bg-pink-700 text-white hover:bg-pink-600 cursor-pointer"
+                    id="confirm-delete-button">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
