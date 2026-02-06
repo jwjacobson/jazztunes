@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from tune.models import Tune, RepertoireTune
+from jazztunes.models import Tune, RepertoireTune
 
 
 @pytest.fixture

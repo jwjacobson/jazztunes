@@ -236,7 +236,7 @@ wheels = [
 ]
 
 [[package]]
-name = "jazz-repertoire"
+name = "jazztunes"
 version = "1.0.0"
 source = { virtual = "." }
 dependencies = [

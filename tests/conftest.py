@@ -1,7 +1,7 @@
 import pytest
 from datetime import timedelta
 from django.utils import timezone
-from tune.models import Tune, RepertoireTune
+from jazztunes.models import Tune, RepertoireTune
 
 TEN_TUNES = [
     {

@@ -48,7 +48,7 @@
                 <div class="px-4">
                     <div class="flex flex-wrap items-center justify-between py-3">
                         <!-- Brand -->
-                        <a class="text-blue-900 font-bold italic text-xl hover:text-blue-700" href="{% url 'tune:home' %}">jazztunes</a>
+                        <a class="text-blue-900 font-bold italic text-xl hover:text-blue-700" href="{% url 'jazztunes:home' %}">jazztunes</a>
                         
                         {% if user.is_authenticated %}
                         <!-- Mobile menu button -->
@@ -63,16 +63,16 @@
                         <div id="nav-menu" class="hidden lg:flex lg:items-center lg:space-x-4 w-full lg:w-auto">
                             <ul class="flex flex-col lg:flex-row lg:space-x-4 mt-4 lg:mt-0">
                                 <li class="py-2 lg:py-0">
-                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:home' %}">Home</a>
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'jazztunes:home' %}">Home</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
-                                    <a id="nav-add" class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_new' %}">Add</a>
+                                    <a id="nav-add" class="text-blue-900 hover:text-blue-700" href="{% url 'jazztunes:tune_new' %}">Add</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
-                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_play' %}">Play</a>
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'jazztunes:tune_play' %}">Play</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
-                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'tune:tune_browse' %}">Browse</a>
+                                    <a class="text-blue-900 hover:text-blue-700" href="{% url 'jazztunes:tune_browse' %}">Browse</a>
                                 </li>
                                 <li class="py-2 lg:py-0">
                                     <a class="text-blue-900 hover:text-blue-700" href="https://jazztunes.readthedocs.io/en/" target="_blank">Manual</a>

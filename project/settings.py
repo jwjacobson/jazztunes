@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "allauth",
     "allauth.account",
-    "tune.apps.TuneConfig",
+    "jazztunes.apps.JazztunesConfig",
 ]
 
 SITE_ID = 1
@@ -89,7 +89,7 @@ else:
 
 LOGIN_URL = "account_login"
 LOGOUT_URL = "account_logout"
-LOGIN_REDIRECT_URL = "tune:home"
+LOGIN_REDIRECT_URL = "jazztunes:home"
 
 MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
