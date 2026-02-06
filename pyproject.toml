@@ -1,5 +1,5 @@
 [project]
-name = "jazz-repertoire"
+name = "jazztunes"
 version = "1.0.0"
 description = "A jazz repertoire management app"
 readme = "README.md"

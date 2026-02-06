@@ -1,7 +1,7 @@
 import pytest
 
-from tune.forms import PlaySearchForm
-from tune.helpers import suggest_a_key
+from jazztunes.forms import PlaySearchForm
+from jazztunes.helpers import suggest_a_key
 
 
 @pytest.mark.django_db

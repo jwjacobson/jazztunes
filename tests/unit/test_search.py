@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.http import HttpRequest
 
-from tune.search import query_tunes, return_search_results, search_field
+from jazztunes.search import query_tunes, return_search_results, search_field
 
 
 @pytest.fixture
@@ -27,7 +27,7 @@ def search_form_fixture():
     """
     Create a search form.
     """
-    from tune.forms import SearchForm
+    from jazztunes.forms import SearchForm
 
     form = SearchForm()
     return form
