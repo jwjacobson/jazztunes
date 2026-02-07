@@ -169,17 +169,24 @@ class RepertoireTune(models.Model):
 
     tune = models.ForeignKey(Tune, on_delete=models.CASCADE)
     player = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    last_played = models.DateTimeField(blank=True, null=True)
     knowledge = models.CharField(
         choices=KNOWLEDGES, max_length=15, default="know", blank=True
     )
     started_learning = models.DateTimeField(blank=True, null=True)
-    play_count = models.IntegerField(default=0)
     tags = models.ManyToManyField(
         Tag,
         related_name="repertoire_tunes",
         blank=True,
     )
+
+    @property
+    def last_played(self):
+        latest = self.plays.order_by('-played_at').first()
+        return latest.played_at if latest else None
+
+    @property
+    def play_count(self):
+        return self.plays.count()
 
     class Meta:
         unique_together = ("tune", "player")
