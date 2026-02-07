@@ -188,4 +188,14 @@ class RepertoireTune(models.Model):
         return f"{self.tune} | {self.player}"
 
 
-# class Plays(models.Model):
+class Play(models.Model):
+    repertoire_tune = models.ForeignKey(
+        RepertoireTune, on_delete=models.CASCADE, related_name='plays'
+    )
+    played_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-played_at']
+
+    def __str__(self):
+        return f"{self.repertoire_tune} | {self.played_at}"
