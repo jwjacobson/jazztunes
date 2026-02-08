@@ -179,15 +179,6 @@ class RepertoireTune(models.Model):
         blank=True,
     )
 
-    @property
-    def last_played(self):
-        latest = self.plays.order_by('-played_at').first()
-        return latest.played_at if latest else None
-
-    @property
-    def play_count(self):
-        return self.plays.count()
-
     class Meta:
         unique_together = ("tune", "player")
 
