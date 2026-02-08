@@ -257,8 +257,9 @@ def get_random_tune(request):
     request.session["rep_tunes"] = remaining_ids
 
     if not selected_tune:
-        messages.error(request, "No tunes match your search.")
-        return render(request, "jazztunes/play.html", {"search_form": search_form})
+        return render(
+            request, "jazztunes/partials/_play_card.html", {"selected_tune": None}
+        )
 
     context = {"selected_tune": selected_tune}
 

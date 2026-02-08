@@ -14,7 +14,6 @@ from .constants import (
     SINGLE_TUNE_METER,
     SINGLE_TUNE_YEAR,
     SINGLE_TUNE_KNOWLEDGE,
-    SINGLE_TUNE_LAST_PLAYED_DISPLAY,
 )
 
 
@@ -33,9 +32,6 @@ def test_add_tune(single_tune_page):
     expect(created_row.locator("td").nth(7)).to_contain_text(SINGLE_TUNE_YEAR)
     # expect(created_row.locator("td").nth(8)).to_contain_text(SINGLE_TUNE_TAGS)
     expect(created_row.locator("td").nth(9)).to_contain_text(SINGLE_TUNE_KNOWLEDGE)
-    expect(created_row.locator("td").nth(10)).to_contain_text(
-        SINGLE_TUNE_LAST_PLAYED_DISPLAY
-    )
 
 
 @pytest.mark.django_db

@@ -277,8 +277,7 @@ def test_get_random_tune_no_tunes(tune_set, client):
     response = client.post(reverse("jazztunes:get_random_tune"), {"search_term": ["xx"]})
 
     assert response.status_code == 200
-    msgs = [msg.message for msg in get_messages(response.wsgi_request)]
-    assert "No tunes match your search." in msgs
+    assert response.context["selected_tune"] is None
 
 
 @pytest.mark.django_db
