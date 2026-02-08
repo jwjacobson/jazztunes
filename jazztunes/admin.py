@@ -29,7 +29,7 @@ class TuneAdmin(admin.ModelAdmin):
 
 @admin.register(RepertoireTune)
 class RepertoireTuneAdmin(admin.ModelAdmin):
-    list_display = ["tune", "player", "last_played", "knowledge"]
+    list_display = ["tune", "player", "knowledge"]
     search_fields = ("tune__title", "player__username")
     autocomplete_fields = ("tune", "player")
 

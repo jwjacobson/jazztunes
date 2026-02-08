@@ -54,20 +54,31 @@
     {% endfor %}
     
     {% for field in rep_form %}
-      <div class="w-full md:w-1/4 px-2 mb-4">
-        <p class="block text-sm font-semibold text-gray-900 mb-1">{{ field.label }}</p>
-        {{ field }}
-        {% if field.errors %}
-          <div class="text-red-600 text-sm mt-1">
-            {{ field.errors }}
-          </div>
-        {% endif %}
-        {% if field.help_text %}
-          <p class="text-gray-500 text-sm mt-1">{{ field.help_text|safe }}</p>
-        {% endif %}
-      </div>
-      {% if forloop.counter|divisibleby:2 %}
-        <div class="w-full md:w-1/2"></div>
+      {% if field.name == "tags" %}
+    </div>
+    <div class="flex flex-wrap -mx-2">
+        <div class="w-full md:w-1/2 px-2 mb-4">
+          <p class="block text-sm font-semibold text-gray-900 mb-1">{{ field.label }}</p>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-red-600 text-sm mt-1">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="w-full md:w-1/4 px-2 mb-4">
+          <p class="block text-sm font-semibold text-gray-900 mb-1">{{ field.label }}</p>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-red-600 text-sm mt-1">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+          {% if field.help_text %}
+            <p class="text-gray-500 text-sm mt-1">{{ field.help_text|safe }}</p>
+          {% endif %}
+        </div>
       {% endif %}
     {% endfor %}
     
