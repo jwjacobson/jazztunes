@@ -84,6 +84,9 @@ def home(request):
 
             if not tune_count:
                 messages.error(request, "No tunes match your search.")
+        else:
+            tunes = get_user_repertoire(user)
+            tune_count = len(tunes)
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(user)
@@ -353,6 +356,9 @@ def tune_browse(request):
 
             if not tune_count:
                 messages.error(request, "No tunes match your search.")
+        else:
+            tunes = get_user_repertoire(admin_user)
+            tune_count = len(tunes)
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(admin_user)
