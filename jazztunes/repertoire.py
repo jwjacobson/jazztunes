@@ -8,7 +8,8 @@ from .models import Play, RepertoireTune
 
 def _base_queryset():
     """
-    Returns all RepertoireTunes in the database, annotated with last_played and play_count.
+    The single source of truth for how we query RepertoireTunes.
+    Always includes play stats and related data.
     """
     return (
         RepertoireTune.objects
@@ -19,6 +20,18 @@ def _base_queryset():
             play_count=Count("plays"),
         )
     )
+
+
+def get_repertoire_queryset(user):
+    """
+    Return an unevaluated queryset for the user's repertoire.
+    Use this instead of get_user_repertoire when you need to filter further (e.g. search).
+    """
+    return _base_queryset().filter(player=user)
+
+
+def invalidate_user_repertoire(user_id):
+    cache.delete(f"repertoire_{user_id}")
 
 
 def get_user_repertoire(user):
@@ -38,10 +51,6 @@ def get_user_repertoire(user):
     return tunes
 
 
-def invalidate_user_repertoire(user_id):
-    cache.delete(f"repertoire_{user_id}")
-
-
 def play_tune(rep_tune):
     """
     Record that a tune was played. Creates a Play object and invalidates cache.
@@ -50,7 +59,6 @@ def play_tune(rep_tune):
     play = Play.objects.create(repertoire_tune=rep_tune)
     invalidate_user_repertoire(rep_tune.player_id)
     return play
-
 
 def add_tune(user, tune, knowledge="know", tags=None):
     """
