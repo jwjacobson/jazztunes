@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.messages import get_messages
 
-from jazztunes.models import Tune, RepertoireTune
+from jazztunes.models import Tune, RepertoireTune, Play
 from jazztunes.forms import SearchForm, PlaySearchForm
 
 
@@ -23,7 +23,6 @@ def test_tune_new_success(user_tune_rep, client):
         "meter": 3,
         "year": 2024,
         "knowledge": "learning",
-        "last_played": timezone.now(),
     }
 
     response = client.post(url, post_data)
@@ -56,7 +55,6 @@ def test_tune_new_get(user_tune_rep, client):
 def test_tune_edit_success(user_tune_rep, client):
     tune = user_tune_rep["tune"]
     user = user_tune_rep["user"]
-    rep_tune = user_tune_rep["rep_tune"]
     updated_data = {
         "title": "Updated Title",
         "composer": "Updated Composer",
@@ -67,7 +65,6 @@ def test_tune_edit_success(user_tune_rep, client):
         "style": "jazz",
         "year": 1939,
         "knowledge": "learning",
-        "last_played": timezone.now(),
     }
     url = reverse("jazztunes:tune_edit", kwargs={"pk": tune.pk})
 
@@ -88,7 +85,6 @@ def test_tune_edit_success(user_tune_rep, client):
     assert tune.style == "jazz"
     assert tune.year == 1939
     assert rep_tune.knowledge == "learning"
-    assert rep_tune.last_played <= timezone.now()
 
 
 @pytest.mark.django_db
@@ -216,18 +212,16 @@ def test_tune_take_nonpublic(client, user_tune_rep):
 def test_set_rep_fields_success(client, user_tune_rep):
     tune_pk = user_tune_rep["rep_tune"].pk
     knowledge = "learning"
-    last_played = timezone.now()
 
     response = client.post(
         reverse("jazztunes:set_rep_fields", args=[tune_pk]),
-        {"knowledge": knowledge, "last_played": last_played},
+        {"knowledge": knowledge},
     )
 
     assert response.status_code == 200
 
     user_tune_rep["rep_tune"].refresh_from_db()
     assert user_tune_rep["rep_tune"].knowledge == knowledge
-    assert user_tune_rep["rep_tune"].last_played == last_played
 
 
 @pytest.mark.django_db
@@ -244,23 +238,6 @@ def test_set_rep_fields_invalid_knowledge(client, user_tune_rep):
 
     user_tune_rep["rep_tune"].refresh_from_db()
     assert user_tune_rep["rep_tune"].knowledge == original_knowledge
-
-
-@pytest.mark.django_db
-def test_set_rep_fields_invalid_last_played(client, user_tune_rep):
-    tune_pk = user_tune_rep["rep_tune"].pk
-    original_last_played = user_tune_rep["rep_tune"].last_played
-    invalid_last_played = "tomorrow"
-
-    response = client.post(
-        reverse("jazztunes:set_rep_fields", args=[tune_pk]),
-        {"last_played": invalid_last_played},
-    )
-
-    assert response.status_code == 200
-
-    user_tune_rep["rep_tune"].refresh_from_db()
-    assert user_tune_rep["rep_tune"].last_played == original_last_played
 
 
 @pytest.mark.django_db
@@ -351,36 +328,28 @@ def test_change_tune_no_tunes(user_tune_rep, client):
 
 @pytest.mark.django_db
 def test_play_home(user_tune_rep, client):
-    tune = user_tune_rep["rep_tune"]
-    initial_last_played = tune.last_played
-    initial_play_count = tune.play_count
+    rep_tune = user_tune_rep["rep_tune"]
+    initial_play_count = Play.objects.filter(repertoire_tune=rep_tune).count()
 
-    response = client.get(reverse("jazztunes:play_home", kwargs={"pk": tune.pk}))
-    tune.refresh_from_db()
+    response = client.get(reverse("jazztunes:play_home", kwargs={"pk": rep_tune.pk}))
 
     assert response.status_code == 200
-    assert tune.last_played > initial_last_played
-    assert tune.play_count == initial_play_count + 1
+    assert Play.objects.filter(repertoire_tune=rep_tune).count() == initial_play_count + 1
     assert "last_played" in response.context
     assert "selected_tune" in response.context
-    assert response.context["selected_tune"].last_played == tune.last_played
 
 
 @pytest.mark.django_db
 def test_play_play(user_tune_rep, client):
-    tune = user_tune_rep["rep_tune"]
-    initial_last_played = tune.last_played
-    initial_play_count = tune.play_count
+    rep_tune = user_tune_rep["rep_tune"]
+    initial_play_count = Play.objects.filter(repertoire_tune=rep_tune).count()
 
-    response = client.get(reverse("jazztunes:play_play", kwargs={"pk": tune.pk}))
-    tune.refresh_from_db()
+    response = client.get(reverse("jazztunes:play_play", kwargs={"pk": rep_tune.pk}))
 
     assert response.status_code == 200
-    assert tune.last_played > initial_last_played
-    assert tune.play_count == initial_play_count + 1
+    assert Play.objects.filter(repertoire_tune=rep_tune).count() == initial_play_count + 1
     assert "last_played" in response.context
     assert "selected_tune" in response.context
-    assert response.context["selected_tune"].last_played == tune.last_played
 
 
 @pytest.mark.django_db

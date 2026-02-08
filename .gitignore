@@ -169,7 +169,6 @@ tune/scratch*.py
 vars.sh
 latest.dump
 .idea/
-jazztunes/
 node_modules
 
 notes.txt

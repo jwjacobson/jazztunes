@@ -1,12 +1,9 @@
-from django.contrib import messages
-from django.shortcuts import render
 from django.db.models import Q
-
 
 from .models import Tune
 
 
-def search_field(tune_set, field, term):
+def search_field(field, term):
     """
     Search a specific field for a term.
     """
@@ -26,41 +23,38 @@ def search_field(tune_set, field, term):
         return Q(tags__name__icontains=term)
 
     elif field.lower() == "composer" and term in Tune.NICKNAMES:
-        return nickname_search(tune_set, term)
+        return nickname_search(term)
 
     else:
         return Q(**{f"tune__{field}__icontains": term})
 
 
-def nickname_search(tune_set, search_term):
+def nickname_search(search_term):
     """
     Search for a composer by their nickname.
     """
-    nickname_query = Q(tune__composer__icontains=Tune.NICKNAMES[search_term])
-    return nickname_query
+    return Q(tune__composer__icontains=Tune.NICKNAMES[search_term])
 
 
 def query_tunes(tune_set, search_terms, timespan=None):
     """
-    Run a search of the user's repertoire and return the results.
+    Filter a RepertoireTune queryset by search terms and an optional timespan.
+    Returns a filtered queryset.
     """
     combined_query = Q()
 
     for term in search_terms:
         negate = False
 
-        # If the term starts with -, the query will be negated
         if term.startswith("-"):
             negate = True
             term = term[1:]
 
-        # If the term contains a colon, attempt a field-specific search
         if ":" in term:
             field, search_value = term.split(":", 1)
             if field.lower() in Tune.field_names:
-                term_query = search_field(tune_set, field, search_value)
+                term_query = search_field(field, search_value)
 
-        # Default, search across all fields
         else:
             term_query = (
                 Q(tune__title__icontains=term)
@@ -75,11 +69,9 @@ def query_tunes(tune_set, search_terms, timespan=None):
                 | Q(tags__name__icontains=term)
             )
 
-            # If the term is a nickname, add in the nickname search
             if term in Tune.NICKNAMES:
-                term_query |= nickname_search(tune_set, term)
+                term_query |= nickname_search(term)
 
-        # Negate the query
         if negate:
             term_query = ~term_query
 
@@ -91,34 +83,3 @@ def query_tunes(tune_set, search_terms, timespan=None):
         tune_set = tune_set.exclude(last_played__gte=timespan)
 
     return tune_set.distinct()
-
-
-def return_search_results(
-    request, search_terms, tunes, search_form, timespan=None, suggest_key=False
-):
-    """
-    Run query_tunes and return the results to the view that called it.
-    """
-    if len(search_terms) > Tune.MAX_SEARCH_TERMS:
-        messages.error(
-            request,
-            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}).",
-        )
-        return render(
-            request,
-            "jazztunes/home.html",
-            {"tunes": tunes, "search_form": search_form},
-        )
-
-    tunes = query_tunes(tunes, search_terms, timespan=timespan)
-
-    tune_count = len(tunes)
-    if not tune_count:
-        messages.error(request, "No tunes match your search.")
-        return render(
-            request,
-            "jazztunes/browse.html",
-            {"tunes": tunes, "search_form": search_form, "tune_count": tune_count},
-        )
-
-    return {"tunes": tunes, "tune_count": tune_count}

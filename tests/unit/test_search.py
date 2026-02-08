@@ -1,36 +1,12 @@
-# Tests for the helper functions in views.py
+# Tests for the search functions in search.py
 
 import pytest
 from datetime import timedelta
 
 from django.utils import timezone
-from django.contrib.messages.storage.fallback import FallbackStorage
-from django.http import HttpRequest
 
-from jazztunes.search import query_tunes, return_search_results, search_field
-
-
-@pytest.fixture
-def request_fixture():
-    """
-    Create an HTTP request.
-    """
-    request = HttpRequest()
-    setattr(request, "session", "session")
-    messages = FallbackStorage(request)
-    setattr(request, "_messages", messages)
-    return request
-
-
-@pytest.fixture
-def search_form_fixture():
-    """
-    Create a search form.
-    """
-    from jazztunes.forms import SearchForm
-
-    form = SearchForm()
-    return form
+from jazztunes.search import query_tunes, search_field
+from jazztunes.repertoire import get_repertoire_queryset
 
 
 # Single term tests
@@ -397,8 +373,9 @@ def test_query_tunes_no_timespan(tune_set):
 def test_query_tunes_timespan_day(tune_set):
     search_terms = [""]
     timespan = timezone.now() - timedelta(days=1)
+    tunes = get_repertoire_queryset(tune_set["user"])
 
-    result = query_tunes(tune_set["tunes"], search_terms, timespan)
+    result = query_tunes(tunes, search_terms, timespan)
 
     assert result.count() == 10
 
@@ -407,8 +384,9 @@ def test_query_tunes_timespan_day(tune_set):
 def test_query_tunes_timespan_week(tune_set):
     search_terms = [""]
     timespan = timezone.now() - timedelta(days=7)
+    tunes = get_repertoire_queryset(tune_set["user"])
 
-    result = query_tunes(tune_set["tunes"], search_terms, timespan)
+    result = query_tunes(tunes, search_terms, timespan)
 
     assert result.count() == 4
 
@@ -417,28 +395,18 @@ def test_query_tunes_timespan_week(tune_set):
 def test_query_tunes_timespan_month(tune_set):
     search_terms = [""]
     timespan = timezone.now() - timedelta(days=30)
+    tunes = get_repertoire_queryset(tune_set["user"])
 
-    result = query_tunes(tune_set["tunes"], search_terms, timespan)
+    result = query_tunes(tunes, search_terms, timespan)
 
     assert result.count() == 0
 
 
-def test_return_search_results_too_many(request_fixture, tune_set, search_form_fixture):
-    search_terms = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"]
-
-    _ = return_search_results(
-        request_fixture, search_terms, tune_set["tunes"], search_form_fixture
-    )
-
-    assert any(
-        "Your query is too long" in msg.message for msg in request_fixture._messages
-    )
-
-
+# search_field tests
 def test_search_field_title(tune_set):
     field = "title"
     term = "you"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_titles = {"All the Things You Are", "I Remember You"}
 
     result = tune_set["tunes"].filter(query)
@@ -451,7 +419,7 @@ def test_search_field_title(tune_set):
 def test_search_field_composer(tune_set):
     field = "composer"
     term = "parker"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_composer = "Parker"
     expected_titles = {"Confirmation", "Dewey Square"}
 
@@ -466,7 +434,7 @@ def test_search_field_composer(tune_set):
 def test_search_field_composer_nickname(tune_set):
     field = "composer"
     term = "bird"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_composer = "Parker"
     expected_titles = {"Confirmation", "Dewey Square"}
 
@@ -481,7 +449,7 @@ def test_search_field_composer_nickname(tune_set):
 def test_search_field_key(tune_set):
     field = "key"
     term = "F"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_key = "F"
     expected_titles = {"Confirmation", "Long Ago and Far Away", "I Remember You"}
 
@@ -496,7 +464,7 @@ def test_search_field_key(tune_set):
 def test_search_field_keys(tune_set):
     field = "keys"
     term = "eb"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_key = "Eb"
     expected_titles = {
         "Dewey Square",
@@ -515,7 +483,7 @@ def test_search_field_keys(tune_set):
 def test_search_field_form(tune_set):
     field = "form"
     term = "abac"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_form = "ABAC"
     expected_titles = {
         "Dearly Beloved",
@@ -534,7 +502,7 @@ def test_search_field_form(tune_set):
 def test_search_field_style(tune_set):
     field = "style"
     term = "jazz"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_style = "jazz"
     expected_titles = {
         "Confirmation",
@@ -555,7 +523,7 @@ def test_search_field_style(tune_set):
 def test_search_field_meter(tune_set):
     field = "meter"
     term = "3"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_meter = 3
     expected_titles = {"Someday My Prince Will Come"}
 
@@ -570,7 +538,7 @@ def test_search_field_meter(tune_set):
 def test_search_field_year(tune_set):
     field = "year"
     term = "1941"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_year = 1941
     expected_titles = {"I Remember You", "A Flower is a Lovesome Thing"}
 
@@ -585,7 +553,7 @@ def test_search_field_year(tune_set):
 def test_search_field_year_partial(tune_set):
     field = "year"
     term = "195"
-    query = search_field(tune_set["tunes"], field, term)
+    query = search_field(field, term)
     expected_years = {1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959}
     expected_titles = {"Kary's Trance", "Coming on the Hudson"}
 

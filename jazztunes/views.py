@@ -15,10 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from random import choice
-
 from django.conf import settings
-from django.core.cache import cache
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -26,33 +23,37 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.html import format_html
 
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm, PlaySearchForm
 from .helpers import suggest_a_key
 from .models import Tune, RepertoireTune
-from .search import return_search_results
+from .repertoire import (
+    get_user_repertoire,
+    get_repertoire_queryset,
+    invalidate_user_repertoire,
+    play_tune,
+    add_tune,
+    take_tune,
+    delete_tune,
+    pick_random_tune,
+    pick_next_tune,
+)
+from .search import query_tunes
 
 
-def get_user_repertoire(user):
-    """Retrieves the user's cached repertoire, or stores it in the cache if not yet cached."""
-    cache_key = f"repertoire_{user.id}"
-    tunes = cache.get(cache_key)
-
-    if tunes is None:
-        tunes = list(
-            RepertoireTune.objects.select_related("tune")
-            .prefetch_related("tags")
-            .filter(player=user)
-        )
-        cache.set(cache_key, tunes, 60 * 10)  # 10 minutes
-
-    return tunes
-
-
-def invalidate_user_repertoire(user_id):
-    cache.delete(f"repertoire_{user_id}")
+def _empty_repertoire_warning(request):
+    """Flash a warning with links to add tunes or browse public tunes."""
+    add_url = reverse("jazztunes:tune_new")
+    browse_url = reverse("jazztunes:tune_browse")
+    messages.warning(
+        request,
+        format_html(
+            'Your repertoire is empty. <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">Add some tunes</a> manually or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browse the public repertoire</a> for premade tunes!',
+            add_url,
+            browse_url,
+        ),
+    )
 
 
 @login_required
@@ -70,38 +71,29 @@ def home(request):
         possessive = f"{user.username}'s"
 
     if request.method == "POST":
-        tunes = (
-            RepertoireTune.objects.select_related("tune")
-            .prefetch_related("tags")
-            .filter(player=user)
-        )
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
             search_term_string = " ".join(search_terms)
             timespan = search_form.cleaned_data["timespan"]
-            results = return_search_results(
-                request, search_terms, tunes, search_form, timespan
+
+            tunes = query_tunes(
+                get_repertoire_queryset(user), search_terms, timespan=timespan
             )
-            tunes = results.get("tunes")
-            tune_count = results.get("tune_count", 0)
-            invalidate_user_repertoire(request.user.id)
+            tune_count = len(tunes)
+
+            if not tune_count:
+                messages.error(request, "No tunes match your search.")
+        else:
+            tunes = get_user_repertoire(user)
+            tune_count = len(tunes)
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(user)
         tune_count = len(tunes)
 
         if tune_count == 0:
-            add_url = reverse("jazztunes:tune_new")
-            browse_url = reverse("jazztunes:tune_browse")
-            messages.warning(
-                request,
-                format_html(
-                    'Your repertoire is empty. <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">Add some tunes</a> manually or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browse the public repertoire</a> for premade tunes!',
-                    add_url,
-                    browse_url,
-                ),
-            )
+            _empty_repertoire_warning(request)
 
     if request.headers.get("Hx-Request"):
         return render(
@@ -150,25 +142,14 @@ def tune_new(request):
         new_tune.save()
         tune_form.save_m2m()
 
-        if rep_form.is_valid():
-            last_played_cleaned = rep_form.cleaned_data.get("last_played")
-            if not last_played_cleaned:
-                last_played_cleaned = None
+        add_tune(
+            request.user,
+            new_tune,
+            knowledge=rep_form.cleaned_data["knowledge"],
+            tags=rep_form.cleaned_data["tags"],
+        )
 
-            rep_tune = RepertoireTune.objects.create(
-                tune=new_tune,
-                player=request.user,
-                knowledge=rep_form.data["knowledge"],
-                last_played=last_played_cleaned,
-            )
-
-            rep_tune.tags.set(rep_form.cleaned_data["tags"])
-            invalidate_user_repertoire(request.user.id)
-
-            messages.success(
-                request,
-                f"{new_tune.title} has been added to your repertoire.",
-            )
+    messages.success(request, f"{new_tune.title} has been added to your repertoire.")
     return redirect("jazztunes:home")
 
 
@@ -187,12 +168,9 @@ def tune_edit(request, pk):
         with transaction.atomic():
             updated_tune = tune_form.save()
             _ = rep_form.save()
-            messages.success(
-                request,
-                f"{updated_tune.title} has been updated.",
-            )
-
             invalidate_user_repertoire(request.user.id)
+
+        messages.success(request, f"{updated_tune.title} has been updated.")
         return redirect("jazztunes:home")
 
     return render(
@@ -216,8 +194,7 @@ def tune_delete(request, pk):
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
     with transaction.atomic():
-        rep_tune.delete()
-        invalidate_user_repertoire(request.user.id)
+        delete_tune(rep_tune)
 
     tune_count = request.session["tune_count"] - 1
     request.session["tune_count"] = tune_count
@@ -253,38 +230,38 @@ def recount(request):
 
 @login_required
 def get_random_tune(request):
-    user = request.user
-    tunes = (
-        RepertoireTune.objects.select_related("tune")
-        .prefetch_related("tags")
-        .filter(player=user)
-    )
+    """
+    Search the user's repertoire and select a random tune from the results.
+    """
     search_form = PlaySearchForm(request.POST or None)
-    # A flatter way to validate the form, rather than indenting everything under it
     if not search_form.is_valid():
-        # This should never trigger
         messages.error(request, "Invalid search")
         return render(request, "jazztunes/play.html")
 
     search_terms = search_form.cleaned_data["search_term"].split(" ")
     timespan = search_form.cleaned_data.get("timespan")
     suggest_key = search_form.cleaned_data.get("suggest_key")
-    result_dict = return_search_results(
-        request, search_terms, tunes, search_form, timespan, suggest_key
+
+    if len(search_terms) > Tune.MAX_SEARCH_TERMS:
+        messages.error(
+            request,
+            f"Your query is too long ({len(search_terms)} terms, maximum of {Tune.MAX_SEARCH_TERMS}).",
+        )
+        return render(request, "jazztunes/play.html", {"search_form": search_form})
+
+    tunes = query_tunes(
+        get_repertoire_queryset(request.user), search_terms, timespan=timespan
     )
 
-    if "error" in result_dict:
-        messages.error(request, result_dict["error"])
-        return render(request, result_dict["template"])
+    selected_tune, remaining_ids = pick_random_tune(list(tunes))
+    request.session["rep_tunes"] = remaining_ids
 
-    tunes = result_dict.get("tunes")
+    if not selected_tune:
+        return render(
+            request, "jazztunes/partials/_play_card.html", {"selected_tune": None}
+        )
 
-    if tunes:
-        selected_tune = choice(tunes)
-        remaining_rep_tunes_ids = [tune.id for tune in tunes if tune != selected_tune]
-        request.session["rep_tunes"] = remaining_rep_tunes_ids
-    else:
-        selected_tune = None
+    context = {"selected_tune": selected_tune}
 
     if suggest_key:
         suggested_key = suggest_a_key(
@@ -292,23 +269,13 @@ def get_random_tune(request):
         )
         request.session["suggested_key"] = suggested_key
         request.session["suggest_key_enabled"] = True
-
-        request.session.save()
-
-        return render(
-            request,
-            "jazztunes/partials/_play_card.html",
-            {"selected_tune": selected_tune, "suggested_key": suggested_key},
-        )
+        context["suggested_key"] = suggested_key
     else:
         request.session["suggested_key"] = None
         request.session["suggest_key_enabled"] = False
 
     request.session.save()
-
-    return render(
-        request, "jazztunes/partials/_play_card.html", {"selected_tune": selected_tune}
-    )
+    return render(request, "jazztunes/partials/_play_card.html", context)
 
 
 @login_required
@@ -316,63 +283,46 @@ def change_tune(request):
     """
     Select a different tune from the play search results if the previous one is rejected.
     """
-    if not request.session.get("rep_tunes"):
+    remaining_ids = request.session.get("rep_tunes", [])
+    selected_tune, remaining_ids = pick_next_tune(remaining_ids)
+    request.session["rep_tunes"] = remaining_ids
+
+    if not selected_tune:
         return render(request, "jazztunes/partials/_play_card.html", {"selected_tune": None})
 
-    chosen_tune_id = choice(request.session["rep_tunes"])
-    request.session["rep_tunes"].remove(chosen_tune_id)
-    request.session.save()
-
-    selected_tune = RepertoireTune.objects.get(id=chosen_tune_id)
-
-    suggested_key = request.session.get("suggested_key")
+    context = {"selected_tune": selected_tune}
 
     if request.session.get("suggest_key_enabled"):
         suggested_key = suggest_a_key(
             selected_tune, PlaySearchForm.NORMAL_KEYS, PlaySearchForm.ENHARMONICS
         )
         request.session["suggested_key"] = suggested_key
-        request.session.save()
-        return render(
-            request,
-            "jazztunes/partials/_play_card.html",
-            {"selected_tune": selected_tune, "suggested_key": suggested_key},
-        )
+        context["suggested_key"] = suggested_key
 
-    return render(
-        request, "jazztunes/partials/_play_card.html", {"selected_tune": selected_tune}
-    )
+    request.session.save()
+    return render(request, "jazztunes/partials/_play_card.html", context)
 
 
 @login_required
 def play(request, pk):
     """
-    Update a tune's last_played field to now.
+    Record that a tune was played.
     """
     url_name = request.resolver_match.url_name
+
+    rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
+    play_obj = play_tune(rep_tune)
+
+    context = {"last_played": play_obj.played_at, "selected_tune": rep_tune}
+
+    if url_name == "play_play":
+        return render(request, "jazztunes/partials/_another_button.html", context)
+
     templates = {
         "play_home": "jazztunes/partials/_play_home.html",
         "play_play": "jazztunes/partials/_play_play.html",
     }
-
-    rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
-    rep_tune.last_played = timezone.now()
-    rep_tune.play_count += 1
-    rep_tune.save()
-    invalidate_user_repertoire(request.user.id)
-
-    if url_name == "play_play":
-        return render(
-            request,
-            "jazztunes/partials/_another_button.html",
-            {"last_played": rep_tune.last_played, "selected_tune": rep_tune},
-        )
-
-    return render(
-        request,
-        templates.get(url_name, "/"),
-        {"last_played": rep_tune.last_played, "selected_tune": rep_tune},
-    )
+    return render(request, templates.get(url_name, "/"), context)
 
 
 @login_required
@@ -381,21 +331,11 @@ def tune_play(request):
     Load the play page.
     """
     search_form = PlaySearchForm()
-    user = request.user
-    tunes = get_user_repertoire(user)
-    tune_count = len(tunes)
+    tunes = get_user_repertoire(request.user)
 
-    if tune_count == 0:
-        add_url = reverse("jazztunes:tune_new")
-        browse_url = reverse("jazztunes:tune_browse")
-        messages.warning(
-            request,
-            format_html(
-                'Your repertoire is empty. <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">Add some tunes</a> manually or <a href="{}" class="font-medium text-blue-600 hover:text-blue-800 underline">browse the public repertoire</a> for premade tunes!',
-                add_url,
-                browse_url,
-            ),
-        )
+    if not tunes:
+        _empty_repertoire_warning(request)
+
     return render(request, "jazztunes/play.html", {"search_form": search_form})
 
 
@@ -404,23 +344,22 @@ def tune_browse(request):
     """
     Show the public page of preloaded tunes.
     """
-
     user = request.user
     user_tune_titles = {tune.tune.title for tune in get_user_repertoire(user)}
-
     admin_user = User.objects.get(id=settings.ADMIN_USER_ID)
 
     if request.method == "POST":
-        tunes = RepertoireTune.objects.select_related("tune").filter(player=admin_user)
-        tune_count = len(tunes)
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_terms = search_form.cleaned_data["search_term"].split(" ")
-            results = return_search_results(request, search_terms, tunes, search_form)
-            tunes = results.get("tunes")
-            tune_count = results.get("tune_count", 0)
-            invalidate_user_repertoire(request.user.id)
+            tunes = query_tunes(get_repertoire_queryset(admin_user), search_terms)
+            tune_count = len(tunes)
 
+            if not tune_count:
+                messages.error(request, "No tunes match your search.")
+        else:
+            tunes = get_user_repertoire(admin_user)
+            tune_count = len(tunes)
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(admin_user)
@@ -454,7 +393,6 @@ def tune_take(request, pk):
     """
     Take a public tune into a user's repertoire.
     """
-    user = request.user
     admin_tune = get_object_or_404(RepertoireTune, pk=pk)
     rep_form = TakeForm(request.POST)
 
@@ -462,15 +400,8 @@ def tune_take(request, pk):
         messages.error(request, "You can only take public tunes into your repertoire.")
         return render(request, "jazztunes/browse.html")
 
-    tune = admin_tune.tune
-
-    tune.pk = None
-    tune.created_by = user
-
     with transaction.atomic():
-        tune.save()
-        new_rep_tune = RepertoireTune.objects.create(tune=tune, player=request.user)
-        invalidate_user_repertoire(request.user.id)
+        tune, new_rep_tune = take_tune(request.user, admin_tune)
 
     return render(
         request,
@@ -482,21 +413,16 @@ def tune_take(request, pk):
 @login_required
 def set_rep_fields(request, pk):
     """
-    Set the knowledge, last_played, and tags of a public tune when a user takes it into their repertoire.
+    Set the knowledge and tags of a tune when a user takes it into their repertoire.
     """
     rep_tune = RepertoireTune.objects.get(pk=pk)
     rep_form = RepertoireTuneForm(request.POST)
 
     if rep_form.is_valid():
         rep_tune.knowledge = rep_form.cleaned_data["knowledge"]
-        rep_tune.last_played = rep_form.cleaned_data["last_played"]
         rep_tune.tags.set(rep_form.cleaned_data["tags"])
         with transaction.atomic():
             rep_tune.save()
             invalidate_user_repertoire(request.user.id)
-
-    else:
-        print("invalid")
-        print(rep_form.errors)
 
     return render(request, "jazztunes/partials/_taken.html", {"rep_form": rep_form})

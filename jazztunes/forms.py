@@ -94,10 +94,6 @@ class TuneForm(BaseForm, ModelForm):
         return data
 
 
-class DateInput(forms.DateInput):
-    input_type = "date"
-
-
 class RepertoireTuneForm(BaseForm, ModelForm):
     exclude_styling = ["tags"]
 
@@ -108,8 +104,8 @@ class RepertoireTuneForm(BaseForm, ModelForm):
 
     class Meta:
         model = RepertoireTune
-        exclude = ["tune", "player", "started_learning", "play_count"]
-        widgets = {"last_played": DateInput(), "tags": forms.CheckboxSelectMultiple()}
+        exclude = ["tune", "player", "started_learning"]
+        widgets = {"tags": forms.CheckboxSelectMultiple()}
 
     def save(self, commit=True):
         instance = super(RepertoireTuneForm, self).save(commit=False)
