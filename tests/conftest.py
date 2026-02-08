@@ -1,7 +1,7 @@
 import pytest
 from datetime import timedelta
 from django.utils import timezone
-from jazztunes.models import Tune, RepertoireTune
+from jazztunes.models import Tune, RepertoireTune, Play
 
 TEN_TUNES = [
     {
@@ -128,21 +128,18 @@ def create_tune_set_for_user(create_base_tunes):
         knowledges = ("know", "learning", "don't know")
 
         for i, tune in enumerate(tunes):
-            if is_admin:
-                RepertoireTune.objects.create(
-                    tune=tune,
-                    player=user,
-                )
+            rep_tune = RepertoireTune.objects.create(
+                tune=tune,
+                player=user,
+                knowledge="know" if is_admin else knowledges[i % 3],
+            )
 
-            else:
-                last_played_date = now - timedelta(days=i + 1)
-                knowledge_value = knowledges[i % 3]
-
-                RepertoireTune.objects.create(
-                    tune=tune,
-                    player=user,
-                    last_played=last_played_date,
-                    knowledge=knowledge_value,
+            if not is_admin:
+                Play.objects.create(repertoire_tune=rep_tune)
+                # Backdate the auto_now_add timestamp
+                played_at = now - timedelta(days=i + 1)
+                Play.objects.filter(pk=rep_tune.plays.first().pk).update(
+                    played_at=played_at
                 )
 
         rep_tunes = RepertoireTune.objects.filter(player=user)
