@@ -190,7 +190,7 @@ class Play(models.Model):
     repertoire_tune = models.ForeignKey(
         RepertoireTune, on_delete=models.CASCADE, related_name='plays'
     )
-    played_at = models.DateTimeField(auto_now_add=True)
+    played_at = models.DateTimeField(default=timezone.now())
 
     class Meta:
         ordering = ['-played_at']
