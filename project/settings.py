@@ -30,8 +30,6 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ADMIN_USER_ID = config("ADMIN_USER_ID", cast=int)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
-# ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
-# ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
