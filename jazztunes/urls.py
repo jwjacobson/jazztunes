@@ -18,6 +18,7 @@
 
 from django.urls import path
 from jazztunes import views
+from jazztunes import views_analytics
 
 app_name = "jazztunes"
 
@@ -40,4 +41,7 @@ urlpatterns = [
     path("play/play/<int:pk>", views.play, name="play_play"),
     path("set/<int:pk>", views.set_rep_fields, name="set_rep_fields"),
     path("count", views.recount, name="recount"),
+    # Analytics
+    path("analytics/", views.analytics_home, name="analytics"),
+    path("analytics/refresh/", views.analytics_refresh, name="analytics_refresh"),
 ]

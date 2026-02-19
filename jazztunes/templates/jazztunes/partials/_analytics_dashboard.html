@@ -1,0 +1,80 @@
+<!-- Most Played -->
+<div class="bg-indigo-100 border border-indigo-400 p-4">
+    <h5 class="text-lg font-semibold mb-3 text-blue-900">Most Played</h5>
+    {% if most_played %}
+    <div class="space-y-1">
+        {% for result in most_played %}
+        <div class="flex items-center gap-2">
+            <div class="w-36 truncate text-sm" title="{{ result.tune.title }}">
+                {{ result.tune.title }}
+            </div>
+            <div class="flex-1">
+                {% if most_played_max > 0 and result.play_count > 0 %}
+                <div class="bg-blue-900 border border-orange-50 h-5"
+                     style="width: {% widthratio result.play_count most_played_max 100 %}%">
+                </div>
+                {% endif %}
+            </div>
+            <div class="w-8 text-right text-sm text-gray-700">
+                {{ result.play_count }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500 text-sm">No data yet.</p>
+    {% endif %}
+</div>
+
+<!-- Style Breakdown -->
+<div class="bg-indigo-100 border border-indigo-400 p-4">
+    <h5 class="text-lg font-semibold mb-3 text-blue-900">Jazz vs. Standards</h5>
+    {% if style_breakdown %}
+    <div class="flex items-end justify-center gap-12 h-48 pt-4">
+        {% for result in style_breakdown %}
+        <div class="flex flex-col items-center justify-end h-full">
+            <div class="text-sm font-medium text-gray-700">{{ result.play_count }}</div>
+            <div class="w-12 bg-blue-900 border border-orange-50"
+                 style="height: {% widthratio result.play_count total_style_plays 100 %}%">
+            </div>
+            <div class="text-sm font-medium capitalize mt-1">{{ result.tune__style }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if total_style_plays > 0 %}
+    <div class="text-center text-sm text-gray-500 mt-2">
+        {{ total_style_plays }} total plays
+    </div>
+    {% endif %}
+    {% else %}
+    <p class="text-gray-500 text-sm">No data yet.</p>
+    {% endif %}
+</div>
+
+<!-- Neglected Tunes -->
+<div class="bg-indigo-100 border border-indigo-400 p-4">
+    <h5 class="text-lg font-semibold mb-3 text-blue-900">Neglected Tunes</h5>
+    {% if least_played %}
+    <div class="space-y-1">
+        {% for result in least_played %}
+        <div class="flex items-center gap-2">
+            <div class="w-36 truncate text-sm" title="{{ result.tune.title }}">
+                {{ result.tune.title }}
+            </div>
+            <div class="flex-1">
+                {% if least_played_max > 0 and result.play_count > 0 %}
+                <div class="bg-orange-50 border border-blue-900 h-5"
+                     style="width: {% widthratio result.play_count least_played_max 100 %}%">
+                </div>
+                {% endif %}
+            </div>
+            <div class="w-8 text-right text-sm text-gray-700">
+                {{ result.play_count }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-gray-500 text-sm">No data yet.</p>
+    {% endif %}
+</div>

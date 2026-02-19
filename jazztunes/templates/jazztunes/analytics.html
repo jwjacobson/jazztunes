@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block head_title %}Analytics{% endblock %}
+
+{% block content %}
+<div class="my-4">
+    <p>
+       Visualize your playing habits.
+    </p>
+</div>
+
+<!-- Controls -->
+<div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm">
+    <h5 class="text-lg font-semibold mb-3">Options</h5>
+    <div class="flex flex-wrap gap-4 items-end">
+        <div>
+            <label for="days-select" class="block mb-1 text-sm text-black font-medium">Time period</label>
+            <select id="days-select"
+                    class="border border-black bg-orange-50 px-3 py-2"
+                    onchange="refreshDashboard()">
+                {% for value, label in timespan_choices %}
+                <option value="{{ value|default_if_none:'' }}"
+                        {% if value == current_days %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="limit-select" class="block mb-1 text-sm text-black font-medium">Show top</label>
+            <select id="limit-select"
+                    class="border border-black bg-orange-50 px-3 py-2"
+                    onchange="refreshDashboard()">
+                <option value="5" {% if current_limit == 5 %}selected{% endif %}>5</option>
+                <option value="10" {% if current_limit == 10 %}selected{% endif %}>10</option>
+                <option value="25" {% if current_limit == 25 %}selected{% endif %}>25</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard -->
+<div id="analytics-dashboard" class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4">
+    {% include "jazztunes/partials/_analytics_dashboard.html" %}
+</div>
+
+<script>
+    function refreshDashboard() {
+        const days = document.getElementById('days-select').value;
+        const limit = document.getElementById('limit-select').value;
+        let params = '?limit=' + limit;
+        if (days) params += '&days=' + days;
+        htmx.ajax('GET', '{% url "jazztunes:analytics_refresh" %}' + params, {
+            target: '#analytics-dashboard',
+            swap: 'innerHTML'
+        });
+    }
+</script>
+
+{% endblock %}
