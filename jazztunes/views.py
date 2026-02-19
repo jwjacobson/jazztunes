@@ -25,6 +25,13 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.utils.html import format_html
 
+from .analytics import (
+    get_most_played_tunes,
+    get_least_played_tunes,
+    get_plays_by_style,
+    TIMESPAN_CHOICES,
+    DEFAULT_LIMIT
+)
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm, PlaySearchForm
 from .helpers import suggest_a_key
 from .models import Tune, RepertoireTune
@@ -426,3 +433,54 @@ def set_rep_fields(request, pk):
             invalidate_user_repertoire(request.user.id)
 
     return render(request, "jazztunes/partials/_taken.html", {"rep_form": rep_form})
+
+
+
+# Analytics
+
+def _parse_analytics_params(request):
+    """Extract limit and days from GET params with safe defaults."""
+    limit = int(request.GET.get("limit", DEFAULT_LIMIT))
+    days_param = request.GET.get("days")
+    days = int(days_param) if days_param else None
+    return limit, days
+
+
+def _build_dashboard_context(user, limit, days):
+    """Build the context dict shared by the full page and the HTMX partial."""
+    most_played = get_most_played_tunes(user, limit=limit, days=days)
+    least_played = get_least_played_tunes(user, limit=limit, days=days)
+    style_breakdown = list(get_plays_by_style(user, days=days))
+    total_style_plays = sum(result["play_count"] for result in style_breakdown)
+
+    return {
+        "most_played": most_played,
+        "most_played_max": most_played[0].play_count if most_played else 0,
+        "least_played": least_played,
+        "least_played_max": max(
+            (result.play_count for result in least_played), default=0
+        ),
+        "style_breakdown": style_breakdown,
+        "total_style_plays": total_style_plays,
+    }
+
+
+@login_required
+def analytics_home(request):
+    """Main analytics dashboard."""
+    limit, days = _parse_analytics_params(request)
+    context = _build_dashboard_context(request.user, limit, days)
+    context.update({
+        "timespan_choices": TIMESPAN_CHOICES,
+        "current_days": days,
+        "current_limit": limit,
+    })
+    return render(request, "jazztunes/analytics.html", context)
+
+
+@login_required
+def analytics_refresh(request):
+    """HTMX partial: refreshes all three panels at once."""
+    limit, days = _parse_analytics_params(request)
+    context = _build_dashboard_context(request.user, limit, days)
+    return render(request, "jazztunes/partials/_analytics_dashboard.html", context)
