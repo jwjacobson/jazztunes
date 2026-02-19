@@ -7,6 +7,16 @@ from django.utils import timezone
 from jazztunes.models import RepertoireTune
 
 
+TIMESPAN_CHOICES = [
+    (None, "All time"),
+    (7, "Past week"),
+    (30, "Past month"),
+    (90, "Past 3 months"),
+]
+
+DEFAULT_LIMIT = 10
+
+
 def _play_count_filter(days=None):
     """
     Build a Q filter for counting plays, optionally restricted to a time window.

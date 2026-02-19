@@ -1,3 +1,28 @@
+"""
+Tests for the analytics service module.
+
+These tests define the expected behavior of analytics query functions:
+- get_most_played_tunes(user, limit, days)
+- get_least_played_tunes(user, limit, days)
+- get_top_composers(user, limit, days)
+- get_plays_by_style(user, days)
+
+get_most_played_tunes, get_least_played_tunes, and get_top_composers accept:
+    user: User instance
+    limit: int (default 10) — max results to return
+    days: int or None (default None) — if set, only count plays within this many days
+
+get_plays_by_style accepts:
+    user: User instance
+    days: int or None (default None) — if set, only count plays within this many days
+
+Return types:
+    get_most_played_tunes -> QuerySet[RepertoireTune] annotated with play_count, desc
+    get_least_played_tunes -> QuerySet[RepertoireTune] annotated with play_count, asc
+    get_top_composers -> ValuesQuerySet[{composer: str, play_count: int}], desc
+    get_plays_by_style -> ValuesQuerySet[{tune__style: str, play_count: int}], desc
+"""
+
 import pytest
 from datetime import timedelta
 
@@ -9,6 +34,7 @@ from jazztunes.analytics import (
     get_most_played_tunes,
     get_least_played_tunes,
     get_top_composers,
+    get_plays_by_style,
 )
 
 User = get_user_model()
@@ -20,11 +46,11 @@ def analytics_data():
     A user with 5 tunes and a controlled play distribution.
 
     Tune layout:
-        "Donna Lee"         composer="Parker"    plays: 10 (all recent, ~7 days ago)
-        "Blue in Green"     composer="Evans"     plays: 5  (all recent)
-        "Footprints"        composer="Shorter"   plays: 3  (all old, ~90 days ago)
-        "Pannonica"         composer="Monk"      plays: 1  (recent)
-        "Blues for Alice"   composer="Parker"    plays: 0
+        "Donna Lee"      composer="Parker"   style="jazz"      plays: 10 (all recent)
+        "Blue in Green"  composer="Evans"     style="jazz"      plays: 5  (all recent)
+        "Footprints"     composer="Shorter"   style="jazz"      plays: 3  (all old, ~90 days)
+        "Pannonica"      composer="Monk"      style="standard"  plays: 1  (recent)
+        "Blues for Alice" composer="Parker"    style="jazz"      plays: 0
     """
     user = User.objects.create_user(username="testuser", password="testpass")
     now = timezone.now()
@@ -32,16 +58,18 @@ def analytics_data():
     old = now - timedelta(days=90)
 
     tune_data = [
-        ("Donna Lee", "Parker"),
-        ("Blue in Green", "Evans"),
-        ("Footprints", "Shorter"),
-        ("Pannonica", "Monk"),
-        ("Blues for Alice", "Parker"),
+        ("Donna Lee", "Parker", "jazz"),
+        ("Blue in Green", "Evans", "jazz"),
+        ("Footprints", "Shorter", "jazz"),
+        ("Pannonica", "Monk", "standard"),
+        ("Blues for Alice", "Parker", "jazz"),
     ]
 
     rep_tunes = {}
-    for title, composer in tune_data:
-        tune = Tune.objects.create(title=title, composer=composer, created_by=user)
+    for title, composer, style in tune_data:
+        tune = Tune.objects.create(
+            title=title, composer=composer, style=style, created_by=user
+        )
         rep_tune = RepertoireTune.objects.create(tune=tune, player=user)
         key = title.split()[0].lower()
         rep_tunes[key] = rep_tune
@@ -77,7 +105,9 @@ def analytics_data():
     return {"user": user, "rep_tunes": rep_tunes, "now": now}
 
 
-# get_most_played
+# --- get_most_played_tunes ---
+
+
 @pytest.mark.django_db
 def test_most_played_returns_all_ordered_by_play_count(analytics_data):
     results = get_most_played_tunes(analytics_data["user"])
@@ -119,7 +149,9 @@ def test_most_played_excludes_other_users(analytics_data):
     assert len(results) == 0
 
 
-# get_least_played
+# --- get_least_played_tunes ---
+
+
 @pytest.mark.django_db
 def test_least_played_returns_all_ordered_asc(analytics_data):
     results = get_least_played_tunes(analytics_data["user"])
@@ -152,53 +184,44 @@ def test_least_played_days_filters_recent(analytics_data):
     assert "Footprints" in zero_titles
 
 
-# get_top_composers
-@pytest.mark.django_db
-def test_top_composers_ordered_by_total_plays(analytics_data):
-    results = list(get_top_composers(analytics_data["user"]))
-    # Parker: 10 (Donna Lee) + 0 (Blues for Alice) = 10
-    # Evans: 5
-    # Shorter: 3
-    # Monk: 1
-    assert results[0]["composer"] == "Parker"
-    assert results[0]["play_count"] == 10
-    assert results[1]["composer"] == "Evans"
-    assert results[1]["play_count"] == 5
+# --- get_plays_by_style ---
 
 
 @pytest.mark.django_db
-def test_top_composers_limit(analytics_data):
-    results = list(get_top_composers(analytics_data["user"], limit=2))
-    assert len(results) == 2
+def test_plays_by_style_counts_plays_per_style(analytics_data):
+    """Jazz: 10 (Donna Lee) + 5 (Blue in Green) + 3 (Footprints) = 18. Standard: 1 (Pannonica)."""
+    results = list(get_plays_by_style(analytics_data["user"]))
+    style_counts = {result["tune__style"]: result["play_count"] for result in results}
+    assert style_counts["jazz"] == 18
+    assert style_counts["standard"] == 1
 
 
 @pytest.mark.django_db
-def test_top_composers_days_filters_recent(analytics_data):
-    """With days=30, Shorter's old plays shouldn't count."""
-    results = list(get_top_composers(analytics_data["user"], days=30))
-    composer_counts = {result["composer"]: result["play_count"] for result in results}
-    assert composer_counts["Parker"] == 10
-    assert composer_counts.get("Shorter", 0) == 0
+def test_plays_by_style_days_filters_recent(analytics_data):
+    """With days=30, Footprints' 3 old jazz plays shouldn't count."""
+    results = list(get_plays_by_style(analytics_data["user"], days=30))
+    style_counts = {result["tune__style"]: result["play_count"] for result in results}
+    assert style_counts["jazz"] == 15
+    assert style_counts["standard"] == 1
 
 
 @pytest.mark.django_db
-def test_top_composers_empty_composer_labeled_none(analytics_data):
-    """Tunes with blank composer should appear as 'None'."""
+def test_plays_by_style_excludes_blank_style(analytics_data):
+    """Tunes with no style set should not appear in results."""
     user = analytics_data["user"]
     now = analytics_data["now"]
 
-    tune = Tune.objects.create(title="Mystery Tune", composer="", created_by=user)
+    tune = Tune.objects.create(title="Mystery Tune", style="", created_by=user)
     rep_tune = RepertoireTune.objects.create(tune=tune, player=user)
     Play.objects.create(repertoire_tune=rep_tune, played_at=now - timedelta(hours=1))
 
-    results = list(get_top_composers(user))
-    composers = {result["composer"] for result in results}
-    assert "None" in composers
-    assert "" not in composers
+    results = list(get_plays_by_style(user))
+    styles = {result["tune__style"] for result in results}
+    assert "" not in styles
 
 
 @pytest.mark.django_db
-def test_top_composers_excludes_other_users(analytics_data):
-    other = User.objects.create_user(username="other2", password="pass")
-    results = list(get_top_composers(other))
+def test_plays_by_style_excludes_other_users(analytics_data):
+    other = User.objects.create_user(username="other3", password="pass")
+    results = list(get_plays_by_style(other))
     assert len(results) == 0
