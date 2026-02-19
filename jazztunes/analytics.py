@@ -35,21 +35,12 @@ def get_least_played_tunes(user, limit=10, days=None):
     )
 
 
-def get_top_composers(user, limit=10, days=None):
-    """
-    Group plays by composer. Empty composer strings are labeled "None".
-    """
+def get_plays_by_style(user, days=None):
     play_filter = _play_count_filter(days)
 
     return (
         RepertoireTune.objects.filter(player=user)
-        .annotate(
-            composer=Case(
-                When(tune__composer="", then=Value("None")),
-                default="tune__composer",
-            )
-        )
-        .values("composer")
+        .exclude(tune__style="")
+        .values("tune__style")
         .annotate(play_count=Count("plays", filter=play_filter))
-        .order_by("-play_count")[:limit]
     )
