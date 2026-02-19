@@ -33,7 +33,6 @@ from jazztunes.models import Play, RepertoireTune, Tune
 from jazztunes.analytics import (
     get_most_played_tunes,
     get_least_played_tunes,
-    get_top_composers,
     get_plays_by_style,
 )
 
