@@ -18,7 +18,6 @@
 
 from django.urls import path
 from jazztunes import views
-from jazztunes import views_analytics
 
 app_name = "jazztunes"
 
