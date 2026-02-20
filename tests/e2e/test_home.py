@@ -7,6 +7,7 @@ import pytest
 from .constants import (
     SINGLE_TUNE_TITLE,
     DATE_DISPLAY_FORMAT,
+    HomeColumns
 )
 
 
@@ -18,7 +19,7 @@ def test_play_single_tune(single_tune_page):
     tune_row.get_by_role("button", name="Play").click()
 
     today_string = timezone.now().date().strftime(DATE_DISPLAY_FORMAT)
-    expect(tune_row.locator("td").nth(10)).to_contain_text(today_string)
+    expect(tune_row.locator("td").nth(HomeColumns.LAST_PLAYED)).to_contain_text(today_string)
 
 
 @pytest.mark.django_db
