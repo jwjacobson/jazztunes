@@ -320,7 +320,11 @@ def play(request, pk):
     rep_tune = get_object_or_404(RepertoireTune, id=pk, player=request.user)
     play_obj = play_tune(rep_tune)
 
-    context = {"last_played": play_obj.played_at, "selected_tune": rep_tune}
+    context = {
+        "last_played": play_obj.played_at,
+        "selected_tune": rep_tune,
+        "play_count": rep_tune.plays.count(),
+        }
 
     if url_name == "play_play":
         return render(request, "jazztunes/partials/_another_button.html", context)

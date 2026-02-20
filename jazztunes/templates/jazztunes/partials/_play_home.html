@@ -1,1 +1,4 @@
-{{ last_played|date:"MONTH_DAY_FORMAT" }}
+<td data-order="{{ last_played|date:'U' }}" class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200 text-right" id="last-played-{{ selected_tune.id }}">
+    {{ last_played|date:"MONTH_DAY_FORMAT" }}
+</td>
+<td id="play-count-{{ selected_tune.id }}" class="hidden lg:table-cell px-4 py-2 border-b border-indigo-200 text-right" hx-swap-oob="true">{{ play_count }}</td>
