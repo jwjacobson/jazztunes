@@ -8,7 +8,7 @@
 
 html_title = "Jazztunes Docs"
 project = "jazztunes"
-copyright = "2024–2025, Jeff Jacobson"
+copyright = "2024–2026, Jeff Jacobson"
 author = "Jeff Jacobson"
 
 # -- General configuration ---------------------------------------------------

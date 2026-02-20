@@ -42,6 +42,10 @@ Tags
 -----
 These are extra descriptive qualifiers of a tune. None are assigned by default. Currently only tags I've defined are available; contact me if there's any you'd like to see!
 
+Plays
+------
+The number of times you've played a tune.
+
 Last Played 
 ------------
 The date you last played a tune. The time is also recorded but is currently not displayed.

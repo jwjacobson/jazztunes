@@ -9,4 +9,4 @@ To create a tune, click the **Add** button on the navbar, then fill in the form 
 Taking tunes
 -------------
 The public repertoire contains approximately 200 common tunes. Access it by clicking the **Browse** button on the navbar.
-To add a tune, click the **Take** button. The tune will immediately enter your repertoire, and you will be given the additional option of setting when you last played the tune, your knowledge of it, and any tags. Press the **Set** button to set them. 
+To add a tune, click the **Take** button. The tune will immediately enter your repertoire, and you will be given the additional option of setting your knowledge of it and any tags. Press the **Set** button to set them.

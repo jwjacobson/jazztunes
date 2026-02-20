@@ -9,3 +9,4 @@ To start using jazztunes, first create an account at `jazztunes.org <https://jaz
    managing
    playing
    searching
+   analytics

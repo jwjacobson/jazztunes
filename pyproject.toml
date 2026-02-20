@@ -13,13 +13,13 @@ dependencies = [
     "python-decouple>=3.8",
     "sendgrid>=6.11.0",
     "sentry-sdk>=2.27.0",
-    "sphinx>=8.2.3",
     "whitenoise>=6.9.0",
 ]
 
 [dependency-groups]
 dev = [
     "django-debug-toolbar>=5.2.0",
+    "furo>=2025.12.19",
     "playwright>=1.52.0",
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",
@@ -27,5 +27,6 @@ dev = [
     "pytest-django>=4.11.1",
     "pytest-playwright>=0.7.0",
     "pytest-repeat>=0.9.4",
+    "sphinx>=9.1.0",
     "tox>=4.26.0",
 ]
