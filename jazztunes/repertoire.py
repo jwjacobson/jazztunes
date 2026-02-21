@@ -60,6 +60,11 @@ def play_tune(rep_tune):
     invalidate_user_repertoire(rep_tune.player_id)
     return play
 
+def reset_plays(rep_tune):
+    Play.objects.filter(repertoire_tune=rep_tune).delete()
+    invalidate_user_repertoire(rep_tune.player_id)
+
+
 def add_tune(user, tune, knowledge="know", tags=None):
     """
     Add a tune to a user's repertoire. Returns the new RepertoireTune.
