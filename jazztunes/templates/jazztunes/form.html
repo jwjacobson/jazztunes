@@ -88,6 +88,16 @@
              id="add-button" 
              class="blue-button bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
              value="{% if tune %}Save{% else %}Add{% endif %}" />
+      {% if tune %}
+      <button 
+            hx-get="{% url 'jazztunes:tune_reset_plays_confirm' pk=tune.pk %}"
+            hx-target="#modal-container"
+            hx-swap="innerHTML"
+            class="px-4 py-2 text-blue-900 bg-orange-200 hover:bg-orange-300 border border-blue-900 cursor-pointer">
+              Reset plays
+      </button>
+      <div id="modal-container"></div>
+      {% endif %}
     </div>
   </div>
 </form>
