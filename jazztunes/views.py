@@ -40,6 +40,7 @@ from .repertoire import (
     get_repertoire_queryset,
     invalidate_user_repertoire,
     play_tune,
+    reset_plays,
     add_tune,
     take_tune,
     delete_tune,
@@ -225,6 +226,19 @@ def tune_delete_confirm(request, pk):
         request, "jazztunes/partials/_delete_confirm.html", {"tune": tune, "row_id": row_id}
     )
 
+@login_required
+def tune_reset_plays(request, pk):
+    """
+    Reset a tune's plays to 0.
+    """
+    tune = get_object_or_404(Tune, pk=pk)
+    rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
+
+    with transaction.atomic():
+        reset_plays(rep_tune)
+    
+    messages.info(request, f"Plays reset for {tune.title}.")
+    return redirect("jazztunes:home")
 
 @login_required
 def recount(request):
