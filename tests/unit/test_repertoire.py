@@ -7,6 +7,7 @@ from jazztunes.repertoire import (
     get_user_repertoire,
     get_repertoire_queryset,
     play_tune,
+    reset_plays,
     add_tune,
     take_tune,
     delete_tune,
@@ -49,6 +50,18 @@ def test_play_tune(user_tune_rep):
     assert Play.objects.filter(repertoire_tune=rep_tune).count() == initial_count + 1
     assert play.repertoire_tune == rep_tune
     assert play.played_at is not None
+
+@pytest.mark.django_db
+def test_reset_plays(user_tune_rep):
+    rep_tune = user_tune_rep["rep_tune"]
+    initial_count = Play.objects.filter(repertoire_tune=rep_tune).count()
+
+    assert initial_count > 0
+
+    reset_plays(rep_tune)
+    resulting_count = Play.objects.filter(repertoire_tune=rep_tune).count()
+
+    assert resulting_count == 0
 
 
 @pytest.mark.django_db
