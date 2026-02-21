@@ -102,6 +102,22 @@ def test_tune_delete_success(user_tune_rep, client):
     assert response.status_code == 200
     assert session["tune_count"] == 0
 
+@pytest.mark.django_db
+def test_tune_reset_plays_success(user_tune_rep, client):
+    user = user_tune_rep["user"]
+    rep_tune = user_tune_rep["rep_tune"]
+    url = reverse("jazztunes:tune_reset_plays", kwargs={"pk": rep_tune.pk})
+
+    initial_play_count = Play.objects.filter(repertoire_tune=rep_tune).count()
+    assert initial_play_count > 0
+
+    response = client.post(url)
+
+    assert response.status_code == 302
+    play_count = Play.objects.filter(repertoire_tune=rep_tune).count()
+
+    assert play_count == 0
+
 
 def test_home_unauthenticated(client):
     response = client.get(reverse("jazztunes:home"))
