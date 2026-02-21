@@ -226,6 +226,8 @@ def tune_delete_confirm(request, pk):
         request, "jazztunes/partials/_delete_confirm.html", {"tune": tune, "row_id": row_id}
     )
 
+
+
 @login_required
 def tune_reset_plays(request, pk):
     """
@@ -239,6 +241,19 @@ def tune_reset_plays(request, pk):
     
     messages.info(request, f"Plays reset for {tune.title}.")
     return redirect("jazztunes:home")
+
+@login_required
+def tune_reset_plays_confirm(request, pk):
+    """
+    Return the reset plays confirmation modal HTML.
+    """
+    tune = get_object_or_404(Tune, pk=pk)
+    rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
+
+    return render(
+        request, "jazztunes/partials/_reset_confirm.html", {"rep_tune": rep_tune}
+    )
+
 
 @login_required
 def recount(request):

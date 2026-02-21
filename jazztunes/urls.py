@@ -33,6 +33,11 @@ urlpatterns = [
     path("delete/<int:pk>", views.tune_delete, name="tune_delete"),
     path("play", views.tune_play, name="tune_play"),
     path("reset_plays/<int:pk>", views.tune_reset_plays, name="tune_reset_plays"),
+    path(
+        "tune/<int:pk>/reset/confirm/",
+        views.tune_reset_plays_confirm,
+        name="tune_reset_plays_confirm",
+    ),
     path("change", views.change_tune, name="change_tune"),
     path("random", views.get_random_tune, name="get_random_tune"),
     path("browse", views.tune_browse, name="tune_browse"),
