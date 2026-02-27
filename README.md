@@ -1,8 +1,9 @@
+[![CI](https://github.com/jwjacobson/jazztunes/actions/workflows/django.yml/badge.svg)](https://github.com/jwjacobson/jazztunes/actions)
 [![Documentation Status](https://readthedocs.org/projects/jazztunes/badge/?version=latest)](https://jazztunes.readthedocs.io/en/latest/)
 [![Python](https://img.shields.io/badge/python-3.14-blue)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/django-6.0-green)](https://www.djangoproject.com/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 # jazztunes - a jazz repertoire management app
 
 Jazztunes is a web app that helps jazz musicians manage and gain insights into their repertoires. To use it, go to [jazztunes.org](https://jazztunes.org/).
