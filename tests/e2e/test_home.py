@@ -31,8 +31,8 @@ def test_delete_single_tune(single_tune_page):
     expect(page.locator("text=Delete Yesterday's Tomorrows?")).to_be_visible()
     page.locator("#confirm-delete-button").click()
 
-    result = page.text_content("#rep_id")
-    assert SINGLE_TUNE_TITLE not in result
+    result = page.text_content("#rep-table")
+    expect(row_to_delete).to_be_hidden()
 
 
 def test_home_search_basic(small_rep, logged_in_page):
@@ -289,13 +289,13 @@ def test_sort_last_played_ascending(small_rep, logged_in_page):
     page = logged_in_page
     page.get_by_role("button", name="Last Played").click()
 
-    date_cells = page.locator("#rep-table tbody tr td[id^='last-played-']")
-    timestamps = [
-        int(date_cells.nth(i).get_attribute("data-order"))
-        for i in range(date_cells.count())
+    rows = page.locator("#rep-table tbody tr")
+    dates = [
+        rows.nth(i).locator("td").nth(HomeColumns.LAST_PLAYED).inner_text()
+        for i in range(rows.count())
     ]
 
-    assert timestamps == sorted(timestamps)
+    assert dates == sorted(dates)
 
 
 def test_sort_last_played_descending(small_rep, logged_in_page):
@@ -303,13 +303,12 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     page.get_by_role("button", name="Last Played").click()
     page.get_by_role("button", name="Last Played").click()
 
-    date_cells = page.locator("#rep-table tbody tr td[id^='last-played-']")
-    timestamps = [
-        int(date_cells.nth(i).get_attribute("data-order"))
-        for i in range(date_cells.count())
+    rows = page.locator("#rep-table tbody tr")
+    dates = [
+        rows.nth(i).locator("td").nth(HomeColumns.LAST_PLAYED).inner_text()
+        for i in range(rows.count())
     ]
 
-    assert timestamps == sorted(timestamps, reverse=True)
-
+    assert dates == sorted(dates, reverse=True)
 
 # TODO: test doublesorts

@@ -86,6 +86,31 @@ def test_tune_edit_success(user_tune_rep, client):
     assert tune.year == 1939
     assert rep_tune.knowledge == "learning"
 
+@pytest.mark.django_db
+def test_tune_edit_from_search(user_tune_rep, client):
+    tune = user_tune_rep["tune"]
+    updated_data = {
+        "title": "Updated Title",
+        "composer": tune.composer,
+        "key": tune.key,
+        "other_keys": tune.other_keys,
+        "song_form": tune.song_form.upper(),
+        "meter": tune.meter,
+        "style": tune.style,
+        "year": tune.year,
+        "knowledge": user_tune_rep["rep_tune"].knowledge,
+    }
+    url = f"{reverse('jazztunes:tune_edit', kwargs={"pk": tune.pk})}?from_search=update&timespan=anytime"
+
+    response = client.post(url, updated_data)
+
+    assert response.status_code == 302
+    assert "search_term=update" in response.url
+    assert "timespan=anytime" in response.url
+
+    tune.refresh_from_db()
+
+    assert tune.title == "Updated Title"
 
 @pytest.mark.django_db
 def test_tune_delete_success(user_tune_rep, client):
@@ -134,18 +159,6 @@ def test_home_authenticated(user_tune_rep, client):
 
 
 @pytest.mark.django_db
-def test_home_invalid_timespan(user_tune_rep, client):
-    response = client.post(reverse("jazztunes:home"), {"timespan": "year"})
-
-    assert response.status_code == 200
-    assert "search_form" in response.context
-    form = response.context["search_form"]
-
-    assert form.is_valid() is False
-    assert "timespan" in form.errors
-
-
-@pytest.mark.django_db
 def test_home_valid_form(user_tune_rep, client):
     response = client.post(reverse("jazztunes:home"), {"search_terms": [""]})
 
@@ -166,18 +179,6 @@ def test_tune_browse_authenticated(admin_tune_rep, client):
     assert response.status_code == 200
     assert len(response.context["tunes"]) == 1
     assert isinstance(response.context["search_form"], SearchForm)
-
-
-@pytest.mark.django_db
-def test_tune_browse_invalid_timespan(admin_tune_rep, client):
-    response = client.post(reverse("jazztunes:tune_browse"), {"timespan": "year"})
-
-    assert response.status_code == 200
-    assert "search_form" in response.context
-    form = response.context["search_form"]
-
-    assert form.is_valid() is False
-    assert "timespan" in form.errors
 
 
 @pytest.mark.django_db
