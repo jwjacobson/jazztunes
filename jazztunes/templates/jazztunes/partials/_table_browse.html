@@ -74,16 +74,19 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
+            if ($.fn.DataTable.isDataTable('#rep-table')) {
+        $('#public-table').DataTable().destroy();
+        }
         $('#public-table').DataTable({
             "searching": false,
             "info": false,
             "lengthChange": false,
             "paging": false,
             "autoWidth": false,
-            "language": { "emptyTable": "" },
+            "language": {emptyTable: ' '},
             "columnDefs": [
-                { "orderable": false, "targets": [8] }
+                { "orderable": false, "targets": [-1] }
             ]
         });
     });
