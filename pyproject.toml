@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "dj-database-url>=2.3.0",
-    "django>=5.2",
+    "django>=6.0",
     "django-allauth>=65.7.0",
     "gunicorn>=23.0.0",
     "psycopg2>=2.9.10",
@@ -27,6 +27,7 @@ dev = [
     "pytest-django>=4.11.1",
     "pytest-playwright>=0.7.0",
     "pytest-repeat>=0.9.4",
+    "ruff>=0.15.4",
     "sphinx>=9.1.0",
     "tox>=4.26.0",
 ]
