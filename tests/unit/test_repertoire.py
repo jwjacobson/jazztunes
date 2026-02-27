@@ -51,6 +51,7 @@ def test_play_tune(user_tune_rep):
     assert play.repertoire_tune == rep_tune
     assert play.played_at is not None
 
+
 @pytest.mark.django_db
 def test_reset_plays(user_tune_rep):
     rep_tune = user_tune_rep["rep_tune"]

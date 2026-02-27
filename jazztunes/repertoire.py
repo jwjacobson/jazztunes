@@ -12,8 +12,7 @@ def _base_queryset():
     Always includes play stats and related data.
     """
     return (
-        RepertoireTune.objects
-        .select_related("tune")
+        RepertoireTune.objects.select_related("tune")
         .prefetch_related("tags")
         .annotate(
             last_played=Max("plays__played_at"),
@@ -42,10 +41,7 @@ def get_user_repertoire(user):
     tunes = cache.get(cache_key)
 
     if tunes is None:
-        tunes = list(
-            _base_queryset()
-            .filter(player=user)
-        )
+        tunes = list(_base_queryset().filter(player=user))
         cache.set(cache_key, tunes, 60 * 10)
 
     return tunes
@@ -59,6 +55,7 @@ def play_tune(rep_tune):
     play = Play.objects.create(repertoire_tune=rep_tune)
     invalidate_user_repertoire(rep_tune.player_id)
     return play
+
 
 def reset_plays(rep_tune):
     Play.objects.filter(repertoire_tune=rep_tune).delete()
@@ -128,8 +125,5 @@ def pick_next_tune(remaining_ids):
     chosen_id = choice(remaining_ids)
     remaining_ids = [id for id in remaining_ids if id != chosen_id]
 
-    selected = (
-        _base_queryset()
-        .get(id=chosen_id)
-    )
+    selected = _base_queryset().get(id=chosen_id)
     return selected, remaining_ids

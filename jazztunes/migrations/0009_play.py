@@ -5,21 +5,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('jazztunes', '0008_alter_repertoiretune_tags_alter_repertoiretune_tune'),
+        ("jazztunes", "0008_alter_repertoiretune_tags_alter_repertoiretune_tune"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Play',
+            name="Play",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('played_at', models.DateTimeField(auto_now_add=True)),
-                ('repertoire_tune', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='plays', to='jazztunes.repertoiretune')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("played_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "repertoire_tune",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="plays",
+                        to="jazztunes.repertoiretune",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-played_at'],
+                "ordering": ["-played_at"],
             },
         ),
     ]

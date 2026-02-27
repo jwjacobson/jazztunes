@@ -76,27 +76,35 @@ def analytics_data():
     plays = []
     # Donna Lee: 10 recent plays
     for index in range(10):
-        plays.append(Play(
-            repertoire_tune=rep_tunes["donna"],
-            played_at=recent - timedelta(hours=index),
-        ))
+        plays.append(
+            Play(
+                repertoire_tune=rep_tunes["donna"],
+                played_at=recent - timedelta(hours=index),
+            )
+        )
     # Blue in Green: 5 recent plays
     for index in range(5):
-        plays.append(Play(
-            repertoire_tune=rep_tunes["blue"],
-            played_at=recent - timedelta(hours=index),
-        ))
+        plays.append(
+            Play(
+                repertoire_tune=rep_tunes["blue"],
+                played_at=recent - timedelta(hours=index),
+            )
+        )
     # Footprints: 3 old plays (>60 days ago)
     for index in range(3):
-        plays.append(Play(
-            repertoire_tune=rep_tunes["footprints"],
-            played_at=old - timedelta(hours=index),
-        ))
+        plays.append(
+            Play(
+                repertoire_tune=rep_tunes["footprints"],
+                played_at=old - timedelta(hours=index),
+            )
+        )
     # Pannonica: 1 recent play
-    plays.append(Play(
-        repertoire_tune=rep_tunes["pannonica"],
-        played_at=recent,
-    ))
+    plays.append(
+        Play(
+            repertoire_tune=rep_tunes["pannonica"],
+            played_at=recent,
+        )
+    )
     # Blues for Alice: 0 plays
 
     Play.objects.bulk_create(plays)

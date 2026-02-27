@@ -4,11 +4,7 @@ from django.utils import timezone
 from playwright.sync_api import expect
 import pytest
 
-from .constants import (
-    SINGLE_TUNE_TITLE,
-    DATE_DISPLAY_FORMAT,
-    HomeColumns
-)
+from .constants import SINGLE_TUNE_TITLE, DATE_DISPLAY_FORMAT, HomeColumns
 
 
 @pytest.mark.django_db
@@ -19,7 +15,9 @@ def test_play_single_tune(single_tune_page):
     tune_row.get_by_role("button", name="Play").click()
 
     today_string = timezone.now().date().strftime(DATE_DISPLAY_FORMAT)
-    expect(tune_row.locator("td").nth(HomeColumns.LAST_PLAYED)).to_contain_text(today_string)
+    expect(tune_row.locator("td").nth(HomeColumns.LAST_PLAYED)).to_contain_text(
+        today_string
+    )
 
 
 @pytest.mark.django_db
@@ -310,5 +308,6 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     ]
 
     assert dates == sorted(dates, reverse=True)
+
 
 # TODO: test doublesorts

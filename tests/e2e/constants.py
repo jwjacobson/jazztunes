@@ -19,6 +19,7 @@ SINGLE_TUNE_TAGS = None
 SINGLE_TUNE_KNOWLEDGE = "learning"
 DATE_DISPLAY_FORMAT = "%B %-d"
 
+
 class HomeColumns(IntEnum):
     TITLE = 0
     COMPOSER = 1

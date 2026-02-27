@@ -20,32 +20,31 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         output_path = options["output"]
 
-        rep_tunes = (
-            RepertoireTune.objects.filter(player_id=settings.ADMIN_USER_ID)
-            .select_related("tune")
-        )
+        rep_tunes = RepertoireTune.objects.filter(
+            player_id=settings.ADMIN_USER_ID
+        ).select_related("tune")
 
         if not rep_tunes.exists():
-            self.stderr.write(
-                self.style.ERROR("Admin user has no tunes to export.")
-            )
+            self.stderr.write(self.style.ERROR("Admin user has no tunes to export."))
             return
 
         data = []
         for rt in rep_tunes:
             tune = rt.tune
-            data.append({
-                "title": tune.title,
-                "composer": tune.composer,
-                "key": tune.key,
-                "other_keys": tune.other_keys,
-                "song_form": tune.song_form,
-                "style": tune.style,
-                "meter": tune.meter,
-                "year": tune.year,
-                "is_contrafact": tune.is_contrafact,
-                "knowledge": rt.knowledge,
-            })
+            data.append(
+                {
+                    "title": tune.title,
+                    "composer": tune.composer,
+                    "key": tune.key,
+                    "other_keys": tune.other_keys,
+                    "song_form": tune.song_form,
+                    "style": tune.style,
+                    "meter": tune.meter,
+                    "year": tune.year,
+                    "is_contrafact": tune.is_contrafact,
+                    "knowledge": rt.knowledge,
+                }
+            )
 
         with open(output_path, "w") as f:
             json.dump(data, f, indent=2)

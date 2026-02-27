@@ -5,15 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('jazztunes', '0011_remove_repertoiretune_last_played_and_more'),
+        ("jazztunes", "0011_remove_repertoiretune_last_played_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='play',
-            name='played_at',
-            field=models.DateTimeField(default=datetime.datetime(2026, 2, 13, 14, 3, 13, 625889, tzinfo=datetime.timezone.utc)),
+            model_name="play",
+            name="played_at",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    2026, 2, 13, 14, 3, 13, 625889, tzinfo=datetime.timezone.utc
+                )
+            ),
         ),
     ]
