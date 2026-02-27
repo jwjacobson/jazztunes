@@ -86,7 +86,7 @@ def test_sort_title_descending_click_cell(small_rep, logged_in_page):
 def test_sort_title_descending_click_text(small_rep, logged_in_page):
     page = logged_in_page
     # Sort by clicking the header text
-    page.get_by_role("button", name="Title").click()
+    page.get_by_role("cell", name="Title").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -101,7 +101,7 @@ def test_sort_title_descending_click_text(small_rep, logged_in_page):
 
 def test_sort_composer_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Composer").click()
+    page.get_by_role("cell", name="Composer").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -112,8 +112,8 @@ def test_sort_composer_ascending(small_rep, logged_in_page):
 
 def test_sort_composer_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Composer").click()
-    page.get_by_role("button", name="Composer").click()
+    page.get_by_role("cell", name="Composer").click()
+    page.get_by_role("cell", name="Composer").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -124,7 +124,7 @@ def test_sort_composer_descending(small_rep, logged_in_page):
 
 def test_sort_key_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Key", exact=True).click()
+    page.get_by_role("cell", name="Key: Activate to sort").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -136,8 +136,8 @@ def test_sort_key_ascending(small_rep, logged_in_page):
 
 def test_sort_key_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Key", exact=True).click()
-    page.get_by_role("button", name="Key", exact=True).click()
+    page.get_by_role("cell", name="Key: Activate to sort").click()
+    page.get_by_role("cell", name="Key: Activate to invert").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -148,7 +148,7 @@ def test_sort_key_descending(small_rep, logged_in_page):
 
 def test_sort_other_keys_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Other keys").click()
+    page.get_by_role("cell", name="Other keys: Activate to sort").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -160,8 +160,8 @@ def test_sort_other_keys_ascending(small_rep, logged_in_page):
 
 def test_sort_other_keys_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Other keys", exact=True).click()
-    page.get_by_role("button", name="Other keys", exact=True).click()
+    page.get_by_role("cell", name="Other keys: Activate to sort").click()
+    page.get_by_role("cell", name="Other keys: Activate to invert").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -172,7 +172,7 @@ def test_sort_other_keys_descending(small_rep, logged_in_page):
 
 def test_sort_form_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Form").click()
+    page.get_by_role("cell", name="Form").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -183,8 +183,8 @@ def test_sort_form_ascending(small_rep, logged_in_page):
 
 def test_sort_form_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Form").click()
-    page.get_by_role("button", name="Form").click()
+    page.get_by_role("cell", name="Form").click()
+    page.get_by_role("cell", name="Form").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -195,7 +195,7 @@ def test_sort_form_descending(small_rep, logged_in_page):
 
 def test_sort_style_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Style").click()
+    page.get_by_role("cell", name="Style").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -206,8 +206,8 @@ def test_sort_style_ascending(small_rep, logged_in_page):
 
 def test_sort_style_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Style").click()
-    page.get_by_role("button", name="Style").click()
+    page.get_by_role("cell", name="Style").click()
+    page.get_by_role("cell", name="Style").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -218,7 +218,7 @@ def test_sort_style_descending(small_rep, logged_in_page):
 
 def test_sort_meter_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Meter").click()
+    page.get_by_role("cell", name="Meter").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -229,8 +229,8 @@ def test_sort_meter_ascending(small_rep, logged_in_page):
 
 def test_sort_meter_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Meter").click()
-    page.get_by_role("button", name="Meter").click()
+    page.get_by_role("cell", name="Meter").click()
+    page.get_by_role("cell", name="Meter").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -241,7 +241,7 @@ def test_sort_meter_descending(small_rep, logged_in_page):
 
 def test_sort_year_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Year").click()
+    page.get_by_role("cell", name="Year").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -252,8 +252,8 @@ def test_sort_year_ascending(small_rep, logged_in_page):
 
 def test_sort_year_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Year").click()
-    page.get_by_role("button", name="Year").click()
+    page.get_by_role("cell", name="Year").click()
+    page.get_by_role("cell", name="Year").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -264,7 +264,7 @@ def test_sort_year_descending(small_rep, logged_in_page):
 
 def test_sort_knowledge_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Knowledge").click()
+    page.get_by_role("cell", name="Knowledge").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -275,8 +275,8 @@ def test_sort_knowledge_ascending(small_rep, logged_in_page):
 
 def test_sort_knowledge_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Knowledge").click()
-    page.get_by_role("button", name="Knowledge").click()
+    page.get_by_role("cell", name="Knowledge").click()
+    page.get_by_role("cell", name="Knowledge").click()
     all_rows = page.locator("#rep-table tbody tr")
     first_row = all_rows.nth(0)
     last_row = all_rows.nth(-1)
@@ -287,7 +287,7 @@ def test_sort_knowledge_descending(small_rep, logged_in_page):
 
 def test_sort_last_played_ascending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Last Played").click()
+    page.get_by_role("cell", name="Last Played").click()
 
     rows = page.locator("#rep-table tbody tr")
     dates = [
@@ -300,8 +300,8 @@ def test_sort_last_played_ascending(small_rep, logged_in_page):
 
 def test_sort_last_played_descending(small_rep, logged_in_page):
     page = logged_in_page
-    page.get_by_role("button", name="Last Played").click()
-    page.get_by_role("button", name="Last Played").click()
+    page.get_by_role("cell", name="Last Played").click()
+    page.get_by_role("cell", name="Last Played").click()
 
     rows = page.locator("#rep-table tbody tr")
     dates = [
