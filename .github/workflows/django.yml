@@ -1,4 +1,4 @@
-name: jazztunes CI and Deployment
+name: CI/CD
 
 on:
   push:
