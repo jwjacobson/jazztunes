@@ -1,5 +1,5 @@
 {
-  "name": "jazz_repertoire",
+  "name": "jazztunes",
   "version": "1.0.0",
   "description": "[![Documentation Status](https://readthedocs.org/projects/jazztunes/badge/?version=latest)](https://jazztunes.readthedocs.io/en/latest/) # jazztunes - a jazz repertoire management app",
   "main": "index.js",
@@ -8,9 +8,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "postcss ./static/src/input.css -o ./static/css/main.css",
-    "watch-css": "postcss ./static/src/input.css -o ./static/css/main.css --watch"
+    "watch-css": "postcss ./static/src/input.css -o ./static/css/main.css --watch",
+    "copy-vendor": "bash copy_vendor.sh",
+    "build": "npm run copy-vendor && npm run build-css"
   },
   "repository": {
     "type": "git",
@@ -30,5 +31,11 @@
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
     "tailwindcss": "^4.1.8"
+  },
+  "dependencies": {
+    "datatables.net": "^2.3.7",
+    "datatables.net-dt": "^2.3.7",
+    "htmx.org": "^2.0.8",
+    "jquery": "^4.0.0"
   }
 }

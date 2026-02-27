@@ -2,29 +2,27 @@
 
 from django.db import migrations
 
+
 def migrate_last_played(apps, schema_editor):
-    RepertoireTune = apps.get_model('jazztunes', 'RepertoireTune')
-    Play = apps.get_model('jazztunes', 'Play')
+    RepertoireTune = apps.get_model("jazztunes", "RepertoireTune")
+    Play = apps.get_model("jazztunes", "Play")
 
     plays_to_create = []
     for rt in RepertoireTune.objects.filter(last_played__isnull=False):
-        plays_to_create.append(
-            Play(repertoire_tune=rt, played_at=rt.last_played)
-        )
+        plays_to_create.append(Play(repertoire_tune=rt, played_at=rt.last_played))
     Play.objects.bulk_create(plays_to_create)
 
 
 def reverse_migrate(apps, schema_editor):
-    Play = apps.get_model('jazztunes', 'Play')
+    Play = apps.get_model("jazztunes", "Play")
     Play.objects.all().delete()
 
-class Migration(migrations.Migration):
 
+class Migration(migrations.Migration):
     dependencies = [
-        ('jazztunes', '0009_play'),
+        ("jazztunes", "0009_play"),
     ]
 
     operations = [
         migrations.RunPython(migrate_last_played, reverse_migrate),
     ]
-

@@ -4,18 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('jazztunes', '0010_migrate_last_played_to_plays'),
+        ("jazztunes", "0010_migrate_last_played_to_plays"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='repertoiretune',
-            name='last_played',
+            model_name="repertoiretune",
+            name="last_played",
         ),
         migrations.RemoveField(
-            model_name='repertoiretune',
-            name='play_count',
+            model_name="repertoiretune",
+            name="play_count",
         ),
     ]

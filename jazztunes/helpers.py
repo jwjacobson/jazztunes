@@ -21,7 +21,7 @@ from random import shuffle
 def suggest_a_key(tune, keys, enharmonics, minor=False):
     if tune is None or tune.tune is None:
         return None
-    
+
     tune_key = tune.tune.key
 
     if not tune_key:

@@ -5,15 +5,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('jazztunes', '0012_alter_play_played_at'),
+        ("jazztunes", "0012_alter_play_played_at"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='play',
-            name='played_at',
+            model_name="play",
+            name="played_at",
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
     ]

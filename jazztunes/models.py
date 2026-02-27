@@ -19,6 +19,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
+
 class Tune(models.Model):
     """
     The Tune is the heart of this app; each tune is one song that can be added to a user's repertoire and should contain all relevant musical information.
@@ -188,12 +189,12 @@ class RepertoireTune(models.Model):
 
 class Play(models.Model):
     repertoire_tune = models.ForeignKey(
-        RepertoireTune, on_delete=models.CASCADE, related_name='plays'
+        RepertoireTune, on_delete=models.CASCADE, related_name="plays"
     )
     played_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['-played_at']
+        ordering = ["-played_at"]
 
     def __str__(self):
         return f"{self.repertoire_tune} | {self.played_at}"

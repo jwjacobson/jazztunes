@@ -16,26 +16,34 @@ TAG_NAMES = ["ballad", "up", "medium", "rhythm", "latin", "modal", "bop", "free"
 PLAY_TIERS = [
     (10, (30, 60)),  # heavy rotation
     (20, (10, 29)),  # regular plays
-    (40, (2, 9)),    # occasional
-    (20, (1, 1)),    # played once
-    (10, (0, 0)),    # never played
+    (40, (2, 9)),  # occasional
+    (20, (1, 1)),  # played once
+    (10, (0, 0)),  # never played
 ]
 
 
 class Command(BaseCommand):
-    help = "Create a test user with repertoire and play history for analytics development"
+    help = (
+        "Create a test user with repertoire and play history for analytics development"
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--username", type=str, default="miles",
+            "--username",
+            type=str,
+            default="miles",
             help="Username for the test user (default: miles)",
         )
         parser.add_argument(
-            "--days", type=int, default=365,
+            "--days",
+            type=int,
+            default=365,
             help="Days of play history to generate (default: 365)",
         )
         parser.add_argument(
-            "--num-tunes", type=int, default=100,
+            "--num-tunes",
+            type=int,
+            default=100,
             help="Number of tunes to include (default: 100)",
         )
 
@@ -45,8 +53,9 @@ class Command(BaseCommand):
         num_tunes = options["num_tunes"]
 
         admin_rep_tunes = list(
-            RepertoireTune.objects.filter(player_id=settings.ADMIN_USER_ID)
-            .select_related("tune")
+            RepertoireTune.objects.filter(
+                player_id=settings.ADMIN_USER_ID
+            ).select_related("tune")
         )
 
         if not admin_rep_tunes:
@@ -132,7 +141,7 @@ class Command(BaseCommand):
 
         for percent, (low, high) in PLAY_TIERS:
             count = max(1, len(shuffled) * percent // 100)
-            tier_tunes = shuffled[index:index + count]
+            tier_tunes = shuffled[index : index + count]
             index += count
 
             for rt in tier_tunes:

@@ -30,7 +30,7 @@ from .analytics import (
     get_least_played_tunes,
     get_plays_by_style,
     TIMESPAN_CHOICES,
-    DEFAULT_LIMIT
+    DEFAULT_LIMIT,
 )
 from .forms import TuneForm, RepertoireTuneForm, SearchForm, TakeForm, PlaySearchForm
 from .helpers import suggest_a_key
@@ -95,7 +95,7 @@ def home(request):
 
         if not tune_count:
             messages.error(request, "No tunes match your search.")
-    
+
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(user)
@@ -114,8 +114,8 @@ def home(request):
                 "possessive": possessive,
                 "search_term_string": search_term_string,
                 "timespan": timespan,
-                "timespan_raw": timespan_raw
-            }
+                "timespan_raw": timespan_raw,
+            },
         )
 
     request.session["tune_count"] = tune_count
@@ -143,7 +143,9 @@ def tune_new(request):
         tune_form = TuneForm()
         rep_form = RepertoireTuneForm()
         return render(
-            request, "jazztunes/form.html", {"tune_form": tune_form, "rep_form": rep_form}
+            request,
+            "jazztunes/form.html",
+            {"tune_form": tune_form, "rep_form": rep_form},
         )
 
     tune_form = TuneForm(request.POST)
@@ -151,7 +153,9 @@ def tune_new(request):
 
     if not tune_form.is_valid() or not rep_form.is_valid():
         return render(
-            request, "jazztunes/form.html", {"tune_form": tune_form, "rep_form": rep_form}
+            request,
+            "jazztunes/form.html",
+            {"tune_form": tune_form, "rep_form": rep_form},
         )
 
     with transaction.atomic():
@@ -187,16 +191,16 @@ def tune_edit(request, pk):
             updated_tune = tune_form.save()
             _ = rep_form.save()
             invalidate_user_repertoire(request.user.id)
-        
+
         from_search = request.GET.get("from_search", "").strip()
         timespan = request.GET.get("timespan", "").strip()
 
         messages.success(request, f"{updated_tune.title} has been updated.")
-        
+
         if from_search:
             url = f"{reverse('jazztunes:home')}?search_term={from_search}"
             if timespan:
-                url +=f"&timespan={timespan}"
+                url += f"&timespan={timespan}"
             return redirect(url)
 
         return redirect("jazztunes:home")
@@ -243,9 +247,10 @@ def tune_delete_confirm(request, pk):
     get_object_or_404(RepertoireTune, tune=tune, player=request.user)
 
     return render(
-        request, "jazztunes/partials/_delete_confirm.html", {"tune": tune, "row_id": row_id}
+        request,
+        "jazztunes/partials/_delete_confirm.html",
+        {"tune": tune, "row_id": row_id},
     )
-
 
 
 @login_required
@@ -258,9 +263,10 @@ def tune_reset_plays(request, pk):
 
     with transaction.atomic():
         reset_plays(rep_tune)
-    
+
     messages.info(request, f"Plays reset for {tune.title}.")
     return redirect("jazztunes:home")
+
 
 @login_required
 def tune_reset_plays_confirm(request, pk):
@@ -344,7 +350,9 @@ def change_tune(request):
     request.session["rep_tunes"] = remaining_ids
 
     if not selected_tune:
-        return render(request, "jazztunes/partials/_play_card.html", {"selected_tune": None})
+        return render(
+            request, "jazztunes/partials/_play_card.html", {"selected_tune": None}
+        )
 
     context = {"selected_tune": selected_tune}
 
@@ -373,7 +381,7 @@ def play(request, pk):
         "last_played": play_obj.played_at,
         "selected_tune": rep_tune,
         "play_count": rep_tune.plays.count(),
-        }
+    }
 
     if url_name == "play_play":
         return render(request, "jazztunes/partials/_another_button.html", context)
@@ -410,14 +418,12 @@ def tune_browse(request):
     search_term_string = " "
     tune_count = 0
 
-
     search_form = SearchForm(request.GET or None)
-    
-    
+
     if search_form.is_valid() and search_form.cleaned_data.get("search_term"):
         search_terms = search_form.cleaned_data["search_term"].split(" ")
         search_term_string = " ".join(search_terms)
-        
+
         tunes = query_tunes(get_repertoire_queryset(admin_user), search_terms)
         tune_count = len(tunes)
 
@@ -494,8 +500,8 @@ def set_rep_fields(request, pk):
     return render(request, "jazztunes/partials/_taken.html", {"rep_form": rep_form})
 
 
-
 # Analytics
+
 
 def _parse_analytics_params(request):
     """Extract limit and days from GET params with safe defaults."""
@@ -529,11 +535,13 @@ def analytics_home(request):
     """Main analytics dashboard."""
     limit, days = _parse_analytics_params(request)
     context = _build_dashboard_context(request.user, limit, days)
-    context.update({
-        "timespan_choices": TIMESPAN_CHOICES,
-        "current_days": days,
-        "current_limit": limit,
-    })
+    context.update(
+        {
+            "timespan_choices": TIMESPAN_CHOICES,
+            "current_days": days,
+            "current_limit": limit,
+        }
+    )
     return render(request, "jazztunes/analytics.html", context)
 
 

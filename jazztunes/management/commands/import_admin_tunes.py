@@ -43,16 +43,12 @@ class Command(BaseCommand):
             with open(input_path) as f:
                 data = json.load(f)
         except FileNotFoundError:
-            self.stderr.write(
-                self.style.ERROR(f"File not found: {input_path}")
-            )
+            self.stderr.write(self.style.ERROR(f"File not found: {input_path}"))
             return
 
         if options["clear"]:
             with transaction.atomic():
-                count, _ = RepertoireTune.objects.filter(
-                    player=admin_user
-                ).delete()
+                count, _ = RepertoireTune.objects.filter(player=admin_user).delete()
             self.stdout.write(f"  Cleared {count} existing admin records")
 
         created = 0

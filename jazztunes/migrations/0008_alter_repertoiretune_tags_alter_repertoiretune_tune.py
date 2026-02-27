@@ -5,20 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('jazztunes', '0007_alter_repertoiretune_tags'),
+        ("jazztunes", "0007_alter_repertoiretune_tags"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='repertoiretune',
-            name='tags',
-            field=models.ManyToManyField(blank=True, related_name='repertoire_tunes', to='jazztunes.tag'),
+            model_name="repertoiretune",
+            name="tags",
+            field=models.ManyToManyField(
+                blank=True, related_name="repertoire_tunes", to="jazztunes.tag"
+            ),
         ),
         migrations.AlterField(
-            model_name='repertoiretune',
-            name='tune',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='jazztunes.tune'),
+            model_name="repertoiretune",
+            name="tune",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="jazztunes.tune"
+            ),
         ),
     ]

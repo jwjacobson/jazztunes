@@ -104,6 +104,7 @@
     </div>
 
     <script>
+        console.log("DataTables init running", document.querySelector('#rep-table'));
         $(document).ready(function () {
             if ($.fn.DataTable.isDataTable('#rep-table')) {
         $('#rep-table').DataTable().destroy();

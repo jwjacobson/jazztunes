@@ -86,6 +86,7 @@ def test_tune_edit_success(user_tune_rep, client):
     assert tune.year == 1939
     assert rep_tune.knowledge == "learning"
 
+
 @pytest.mark.django_db
 def test_tune_edit_from_search(user_tune_rep, client):
     tune = user_tune_rep["tune"]
@@ -100,7 +101,7 @@ def test_tune_edit_from_search(user_tune_rep, client):
         "year": tune.year,
         "knowledge": user_tune_rep["rep_tune"].knowledge,
     }
-    url = f"{reverse('jazztunes:tune_edit', kwargs={"pk": tune.pk})}?from_search=update&timespan=anytime"
+    url = f"{reverse('jazztunes:tune_edit', kwargs={'pk': tune.pk})}?from_search=update&timespan=anytime"
 
     response = client.post(url, updated_data)
 
@@ -111,6 +112,7 @@ def test_tune_edit_from_search(user_tune_rep, client):
     tune.refresh_from_db()
 
     assert tune.title == "Updated Title"
+
 
 @pytest.mark.django_db
 def test_tune_delete_success(user_tune_rep, client):
@@ -126,6 +128,7 @@ def test_tune_delete_success(user_tune_rep, client):
 
     assert response.status_code == 200
     assert session["tune_count"] == 0
+
 
 @pytest.mark.django_db
 def test_tune_reset_plays_success(user_tune_rep, client):
@@ -207,7 +210,9 @@ def test_recount(user_tune_rep, client):
 
 @pytest.mark.django_db
 def test_tune_take_success(client, user_tune_rep, admin_tune_rep):
-    response = client.post(reverse("jazztunes:tune_take", args=[admin_tune_rep["tune"].pk]))
+    response = client.post(
+        reverse("jazztunes:tune_take", args=[admin_tune_rep["tune"].pk])
+    )
 
     assert response.status_code == 200
     assert RepertoireTune.objects.filter(
@@ -217,7 +222,9 @@ def test_tune_take_success(client, user_tune_rep, admin_tune_rep):
 
 @pytest.mark.django_db
 def test_tune_take_nonpublic(client, user_tune_rep):
-    response = client.post(reverse("jazztunes:tune_take", args=[user_tune_rep["tune"].pk]))
+    response = client.post(
+        reverse("jazztunes:tune_take", args=[user_tune_rep["tune"].pk])
+    )
 
     assert response.status_code == 200
 
@@ -248,7 +255,8 @@ def test_set_rep_fields_invalid_knowledge(client, user_tune_rep):
     invalid_knowledge = "whatever"
 
     response = client.post(
-        reverse("jazztunes:set_rep_fields", args=[tune_pk]), {"knowledge": invalid_knowledge}
+        reverse("jazztunes:set_rep_fields", args=[tune_pk]),
+        {"knowledge": invalid_knowledge},
     )
 
     assert response.status_code == 200
@@ -280,7 +288,8 @@ def test_get_random_tune_multiple(tune_set, client):
 def test_get_random_tune_suggest_key(user_tune_rep, client):
     tune = user_tune_rep["tune"]
     response = client.post(
-        reverse("jazztunes:get_random_tune"), {"search_terms": [""], "suggest_key": True}
+        reverse("jazztunes:get_random_tune"),
+        {"search_terms": [""], "suggest_key": True},
     )
 
     assert response.status_code == 200
@@ -291,7 +300,9 @@ def test_get_random_tune_suggest_key(user_tune_rep, client):
 @pytest.mark.django_db
 def test_get_random_tune_no_tunes(tune_set, client):
     _ = tune_set["tunes"]
-    response = client.post(reverse("jazztunes:get_random_tune"), {"search_term": ["xx"]})
+    response = client.post(
+        reverse("jazztunes:get_random_tune"), {"search_term": ["xx"]}
+    )
 
     assert response.status_code == 200
     assert response.context["selected_tune"] is None
@@ -351,7 +362,9 @@ def test_play_home(user_tune_rep, client):
     response = client.get(reverse("jazztunes:play_home", kwargs={"pk": rep_tune.pk}))
 
     assert response.status_code == 200
-    assert Play.objects.filter(repertoire_tune=rep_tune).count() == initial_play_count + 1
+    assert (
+        Play.objects.filter(repertoire_tune=rep_tune).count() == initial_play_count + 1
+    )
     assert "last_played" in response.context
     assert "selected_tune" in response.context
 
@@ -364,7 +377,9 @@ def test_play_play(user_tune_rep, client):
     response = client.get(reverse("jazztunes:play_play", kwargs={"pk": rep_tune.pk}))
 
     assert response.status_code == 200
-    assert Play.objects.filter(repertoire_tune=rep_tune).count() == initial_play_count + 1
+    assert (
+        Play.objects.filter(repertoire_tune=rep_tune).count() == initial_play_count + 1
+    )
     assert "last_played" in response.context
     assert "selected_tune" in response.context
 
