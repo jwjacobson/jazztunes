@@ -71,6 +71,8 @@ def home(request):
     """
     user = request.user
     search_term_string = " "
+    timespan = ""
+    timespan_raw = timespan
     tune_count = 0
 
     if user.username.endswith("s"):
@@ -78,23 +80,22 @@ def home(request):
     else:
         possessive = f"{user.username}'s"
 
-    if request.method == "POST":
-        search_form = SearchForm(request.POST)
-        if search_form.is_valid():
-            search_terms = search_form.cleaned_data["search_term"].split(" ")
-            search_term_string = " ".join(search_terms)
-            timespan = search_form.cleaned_data["timespan"]
+    search_form = SearchForm(request.GET or None)
 
-            tunes = query_tunes(
-                get_repertoire_queryset(user), search_terms, timespan=timespan
-            )
-            tune_count = len(tunes)
+    if search_form.is_valid() and search_form.cleaned_data.get("search_term"):
+        search_terms = search_form.cleaned_data["search_term"].split(" ")
+        search_term_string = " ".join(search_terms)
+        timespan = search_form.cleaned_data["timespan"]
+        timespan_raw = request.GET.get("timespan", "")
 
-            if not tune_count:
-                messages.error(request, "No tunes match your search.")
-        else:
-            tunes = get_user_repertoire(user)
-            tune_count = len(tunes)
+        tunes = query_tunes(
+            get_repertoire_queryset(user), search_terms, timespan=timespan
+        )
+        tune_count = len(tunes)
+
+        if not tune_count:
+            messages.error(request, "No tunes match your search.")
+    
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(user)
@@ -107,7 +108,14 @@ def home(request):
         return render(
             request,
             "jazztunes/partials/_table_home.html",
-            {"tunes": tunes, "tune_count": tune_count, "possessive": possessive},
+            {
+                "tunes": tunes,
+                "tune_count": tune_count,
+                "possessive": possessive,
+                "search_term_string": search_term_string,
+                "timespan": timespan,
+                "timespan_raw": timespan_raw
+            }
         )
 
     request.session["tune_count"] = tune_count
@@ -116,10 +124,12 @@ def home(request):
         "jazztunes/home.html",
         {
             "tunes": tunes,
-            "search_form": search_form,
             "tune_count": tune_count,
-            "search_term_string": search_term_string,
             "possessive": possessive,
+            "search_term_string": search_term_string,
+            "timespan": timespan,
+            "timespan_raw": timespan_raw,
+            "search_form": search_form,
         },
     )
 
@@ -177,8 +187,18 @@ def tune_edit(request, pk):
             updated_tune = tune_form.save()
             _ = rep_form.save()
             invalidate_user_repertoire(request.user.id)
+        
+        from_search = request.GET.get("from_search", "").strip()
+        timespan = request.GET.get("timespan", "").strip()
 
         messages.success(request, f"{updated_tune.title} has been updated.")
+        
+        if from_search:
+            url = f"{reverse('jazztunes:home')}?search_term={from_search}"
+            if timespan:
+                url +=f"&timespan={timespan}"
+            return redirect(url)
+
         return redirect("jazztunes:home")
 
     return render(
@@ -387,19 +407,23 @@ def tune_browse(request):
     user = request.user
     user_tune_titles = {tune.tune.title for tune in get_user_repertoire(user)}
     admin_user = User.objects.get(id=settings.ADMIN_USER_ID)
+    search_term_string = " "
+    tune_count = 0
 
-    if request.method == "POST":
-        search_form = SearchForm(request.POST)
-        if search_form.is_valid():
-            search_terms = search_form.cleaned_data["search_term"].split(" ")
-            tunes = query_tunes(get_repertoire_queryset(admin_user), search_terms)
-            tune_count = len(tunes)
 
-            if not tune_count:
-                messages.error(request, "No tunes match your search.")
-        else:
-            tunes = get_user_repertoire(admin_user)
-            tune_count = len(tunes)
+    search_form = SearchForm(request.GET or None)
+    
+    
+    if search_form.is_valid() and search_form.cleaned_data.get("search_term"):
+        search_terms = search_form.cleaned_data["search_term"].split(" ")
+        search_term_string = " ".join(search_terms)
+        
+        tunes = query_tunes(get_repertoire_queryset(admin_user), search_terms)
+        tune_count = len(tunes)
+
+        if tune_count == 0:
+            _empty_repertoire_warning(request)
+
     else:
         search_form = SearchForm()
         tunes = get_user_repertoire(admin_user)
@@ -413,6 +437,7 @@ def tune_browse(request):
                 "tunes": tunes,
                 "tune_count": tune_count,
                 "user_tune_titles": user_tune_titles,
+                "search_term_string": search_term_string,
             },
         )
 
@@ -421,9 +446,10 @@ def tune_browse(request):
         "jazztunes/browse.html",
         {
             "tunes": tunes,
-            "search_form": search_form,
             "user_tune_titles": user_tune_titles,
             "tune_count": tune_count,
+            "search_term_string": search_term_string,
+            "search_form": search_form,
         },
     )
 

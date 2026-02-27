@@ -609,8 +609,8 @@
   .bg-orange-200 {
     background-color: var(--color-orange-200);
   }
-  .bg-orange-700 {
-    background-color: var(--color-orange-700);
+  .bg-orange-300 {
+    background-color: var(--color-orange-300);
   }
   .bg-pink-700 {
     background-color: var(--color-pink-700);
@@ -851,17 +851,17 @@
       }
     }
   }
+  .hover\:bg-orange-200 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-orange-200);
+      }
+    }
+  }
   .hover\:bg-orange-300 {
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-orange-300);
-      }
-    }
-  }
-  .hover\:bg-pink-300 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-pink-300);
       }
     }
   }
