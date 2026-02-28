@@ -97,7 +97,29 @@ uv run python manage.py runserver
 
 Ctrl-click on ```http://127.0.0.1:8000``` — This will open jazztunes in your default browser. You can also just navigate to that address in a browser.
 
-You can close the program by pressing `Ctrl-C` in the terminal running the server.
+You can close the app by pressing `Ctrl-C` in the terminal running the server.
+
+### Setting up demo user + tunes
+Prerequisite: complete local installation, including superuser
+
+Jazztunes includes a fixture of tunes from the live app's admin user, along with management commands to import them and generate a realistic test user.
+
+First, import the admin tunes from the included fixture:
+```bash
+uv run python manage.py import_admin_tunes
+```
+
+Then create a test user with a generated repertoire and play history:
+```bash
+uv run python manage.py create_test_user
+```
+
+This creates a user `miles` (password: `password`) with 100 tunes and a year's worth of play history, distributed realistically across heavy rotation, occasional plays, and never-played tunes. You can customize the username, tune count, and date range:
+```bash
+uv run python manage.py create_test_user --username trane --num-tunes 50 --days 180
+```
+
+The test user is useful for developing and manually testing the analytics features, which require meaningful play history to be interesting, or to just get a feel for the app without having to set up a repertoire first.
 
 ### Running the tests
 Jazztunes includes unit tests written in [pytest](https://docs.pytest.org/en/stable/) and end-to-end tests which use [Playwright](https://playwright.dev/python/docs/intro). If you are contributing to Jazztunes, please (1) run the tests, to make sure your contributions don't break anything; and (2) write tests covering your contribution, if applicable. Or perhaps you'd just like to contribute some tests! Tests can be found in the `tests` directory at the root of the project.
