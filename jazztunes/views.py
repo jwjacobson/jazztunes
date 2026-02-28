@@ -93,8 +93,6 @@ def home(request):
         )
         tune_count = len(tunes)
 
-        if not tune_count:
-            messages.error(request, "No tunes match your search.")
 
     else:
         search_form = SearchForm()
