@@ -63,12 +63,13 @@ erDiagram
     RepertoireTune }o--o{ Tag : "tags"
     RepertoireTune ||--o{ Play : "plays"
 ```
-In jazztunes, a user creates **Tunes**, which contain 'objective' musical information like composer, key, and form. When a Tune is added to a user's repertoire, an associated **RepertoireTune** is created, which holds user-specific tune information: their knowledge of it, their **Plays** (which track when and how many times a Tune is played), and any **Tags** (musical info that may vary from player to player, like tempo and feel) Users can sort their repertoire by last played for an instant historical overview, and the app provides analytics based on their Plays. 
+In jazztunes, a user creates **Tunes**, which contain 'objective' musical information like composer, key, and form. When a Tune is added to a user's repertoire, an associated **RepertoireTune** is created, which holds user-specific tune information: their knowledge of it, their **Plays** (which track when and how many times a Tune is played), and any **Tags** (musical info that may vary from player to player, like tempo and feel). Users can sort their repertoire by last played for an instant historical overview, and the app provides analytics based on their Plays. 
 
 ### Local installation
 Follow these instructions if you want to run jazztunes locally or develop it. Otherwise, the easiest way to use it is at [jazztunes.org](https://jazztunes.org/).
 
-Prerequisite: [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
+*Prerequisite*: [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
+
 Clone this repository (example uses ssh) and navigate to the `jazztunes` directory:
 ```bash
 git clone git@github.com:jwjacobson/jazztunes.git; cd jazztunes
@@ -100,7 +101,7 @@ Ctrl-click on ```http://127.0.0.1:8000``` — This will open jazztunes in your d
 You can close the app by pressing `Ctrl-C` in the terminal running the server.
 
 ### Setting up demo user + tunes
-Prerequisite: complete local installation, including superuser
+*Prerequisite*: complete local installation, including superuser
 
 Jazztunes includes a fixture of tunes from the live app's admin user, along with management commands to import them and generate a realistic test user.
 
