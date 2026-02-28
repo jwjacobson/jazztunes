@@ -310,4 +310,16 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
     assert dates == sorted(dates, reverse=True)
 
 
+def test_sort_after_search(small_rep, logged_in_page):
+    page = logged_in_page
+    page.locator("#id_search_term").fill("love")
+    page.get_by_role("button", name="Search").click()
+    expect(page.locator("#rep-table tbody tr")).to_have_count(2)
+
+    page.get_by_role("button", name="Composer").click()
+    rows = page.locator("#rep-table tbody tr")
+    first_composer = rows.nth(0).locator("td").nth(HomeColumns.COMPOSER).inner_text()
+    last_composer = rows.nth(-1).locator("td").nth(HomeColumns.COMPOSER).inner_text()
+    assert first_composer <= last_composer
+
 # TODO: test doublesorts
