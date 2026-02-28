@@ -59,5 +59,26 @@
 
 
 <script>
+    function initDataTable() {
+        if ($.fn.DataTable.isDataTable('#public-table')) {
+            $('#public-table').DataTable().destroy();
+        }
+        $('#public-table').DataTable({
+            "searching": false,
+            "info": false,
+            "lengthChange": false,
+            "paging": false,
+            "autoWidth": false,
+            "language": {emptyTable: ' '},
+            "columnDefs": [
+                { "orderable": false, "targets": [-1] }
+            ]
+        });
+    }
+
+    $(document).ready(initDataTable);
+    document.body.addEventListener('htmx:afterSettle', function(evt) {
+    initDataTable();
+});
 </script>
 {% endblock %}

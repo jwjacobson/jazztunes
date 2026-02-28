@@ -62,6 +62,27 @@
 {% include "jazztunes/partials/_table_home.html" %}
 
 <script>
+    function initDataTable() {
+        if ($.fn.DataTable.isDataTable('#rep-table')) {
+            $('#rep-table').DataTable().destroy();
+        }
+        $('#rep-table').DataTable({
+            "searching": false,
+            "info": false,
+            "lengthChange": false,
+            "paging": false,
+            "autoWidth": false,
+            "language": {emptyTable: ' '},
+            "columnDefs": [
+                { "orderable": false, "targets": [-1] }
+            ]
+        });
+    }
+
+    $(document).ready(initDataTable);
+    document.body.addEventListener('htmx:afterSettle', function(evt) {
+    initDataTable();
+});
 </script>
     
 {% endblock %}
