@@ -12,7 +12,8 @@
                     class="px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-gray-800 border border-gray-600">
                 Cancel
             </button>
-    <form method="post" action="{% url 'jazztunes:tune_reset_plays' pk=rep_tune.tune.pk %}">
+    {% comment %} <form method="post" action="{% url 'jazztunes:tune_reset_plays' pk=rep_tune.tune.pk %}"> {% endcomment %}
+    <form method="post" action="{% url 'jazztunes:tune_reset_plays' pk=rep_tune.tune.pk %}?from_search={{ from_search }}&timespan={{ timespan }}">
     {% csrf_token %}
     <button type="submit" class="px-4 py-2 text-blue-900 bg-orange-200 border border-blue-900 hover:bg-orange-300 cursor-pointer">
         Reset plays

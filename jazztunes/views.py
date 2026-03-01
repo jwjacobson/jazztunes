@@ -184,6 +184,9 @@ def tune_edit(request, pk):
     tune_form = TuneForm(request.POST or None, instance=tune)
     rep_form = RepertoireTuneForm(request.POST or None, instance=rep_tune)
 
+    from_search = request.GET.get("from_search", "").strip()
+    timespan = request.GET.get("timespan", "").strip()
+
     if tune_form.is_valid() and rep_form.is_valid():
         with transaction.atomic():
             updated_tune = tune_form.save()
@@ -211,6 +214,8 @@ def tune_edit(request, pk):
             "rep_tune": rep_tune,
             "tune_form": tune_form,
             "rep_form": rep_form,
+            "from_search": from_search,
+            "timespan": timespan,
         },
     )
 
@@ -258,26 +263,38 @@ def tune_reset_plays(request, pk):
     """
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
+    from_search = request.GET.get("from_search", "").strip()
+    timespan = request.GET.get("timespan", "").strip()
 
     with transaction.atomic():
         reset_plays(rep_tune)
 
+
     messages.info(request, f"Plays reset for {tune.title}.")
+    
+    if from_search:
+        url = f"{reverse('jazztunes:home')}?search_term={from_search}"
+        if timespan:
+            url += f"&timespan={timespan}"
+        return redirect(url)
+
     return redirect("jazztunes:home")
 
 
 @login_required
 def tune_reset_plays_confirm(request, pk):
-    """
-    Return the reset plays confirmation modal HTML.
-    """
     tune = get_object_or_404(Tune, pk=pk)
     rep_tune = get_object_or_404(RepertoireTune, tune=tune, player=request.user)
-
+    from_search = request.GET.get("from_search", "").strip()
+    timespan = request.GET.get("timespan", "").strip()
+    
     return render(
-        request, "jazztunes/partials/_reset_confirm.html", {"rep_tune": rep_tune}
+        request, "jazztunes/partials/_reset_confirm.html", {
+            "rep_tune": rep_tune,
+            "from_search": from_search,
+            "timespan": timespan,
+        }
     )
-
 
 @login_required
 def recount(request):
