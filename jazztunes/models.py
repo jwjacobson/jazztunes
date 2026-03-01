@@ -109,6 +109,7 @@ class Tune(models.Model):
         "style",
         "meter",
         "year",
+        "knowledge",
         "tags",
     }
 
