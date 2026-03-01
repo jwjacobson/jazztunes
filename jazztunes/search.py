@@ -8,7 +8,7 @@ def search_field(field, term):
     Search a specific field for a term.
     """
     if field.lower() == "key":
-        return Q(tune__key__exact=term)
+        return Q(tune__key__exact=term.title())
 
     elif field.lower() == "keys":
         return Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
