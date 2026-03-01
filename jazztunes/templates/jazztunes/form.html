@@ -90,7 +90,7 @@
              value="{% if tune %}Save{% else %}Add{% endif %}" />
       {% if tune %}
       <button 
-            hx-get="{% url 'jazztunes:tune_reset_plays_confirm' pk=tune.pk %}"
+            hx-get="{% url 'jazztunes:tune_reset_plays_confirm' pk=tune.pk %}?from_search={{ from_search }}&timespan={{ timespan }}"
             hx-target="#modal-container"
             hx-swap="innerHTML"
             class="px-4 py-2 text-blue-900 bg-orange-200 hover:bg-orange-300 border border-blue-900 cursor-pointer">

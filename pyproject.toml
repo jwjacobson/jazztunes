@@ -20,6 +20,7 @@ dependencies = [
 dev = [
     "django-debug-toolbar>=5.2.0",
     "furo>=2025.12.19",
+    "ipdb>=0.13.13",
     "playwright>=1.52.0",
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",

@@ -8,7 +8,7 @@ def search_field(field, term):
     Search a specific field for a term.
     """
     if field.lower() == "key":
-        return Q(tune__key__exact=term)
+        return Q(tune__key__exact=term.title())
 
     elif field.lower() == "keys":
         return Q(tune__key__icontains=term) | Q(tune__other_keys__icontains=term)
@@ -24,6 +24,9 @@ def search_field(field, term):
 
     elif field.lower() == "composer" and term in Tune.NICKNAMES:
         return nickname_search(term)
+    
+    elif field.lower() == "knowledge":
+        return Q(knowledge__icontains=term)
 
     else:
         return Q(**{f"tune__{field}__icontains": term})
@@ -54,6 +57,8 @@ def query_tunes(tune_set, search_terms, timespan=None):
             field, search_value = term.split(":", 1)
             if field.lower() in Tune.field_names:
                 term_query = search_field(field, search_value)
+            else:
+                continue
 
         else:
             term_query = (
