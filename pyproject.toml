@@ -30,5 +30,4 @@ dev = [
     "pytest-repeat>=0.9.4",
     "ruff>=0.15.4",
     "sphinx>=9.1.0",
-    "tox>=4.26.0",
 ]
