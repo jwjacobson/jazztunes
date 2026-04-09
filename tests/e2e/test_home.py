@@ -1,4 +1,5 @@
 # Tests of home.html
+from datetime import datetime
 
 from django.utils import timezone
 from playwright.sync_api import expect
@@ -289,12 +290,14 @@ def test_sort_last_played_ascending(small_rep, logged_in_page):
 
     rows = page.locator("#rep-table tbody tr")
     dates = [
-        rows.nth(i).locator("td").nth(HomeColumns.LAST_PLAYED).inner_text()
+        datetime.strptime(
+            rows.nth(i).locator("td").nth(HomeColumns.LAST_PLAYED).inner_text(),
+            "%B %d"
+        )
         for i in range(rows.count())
     ]
 
     assert dates == sorted(dates)
-
 
 def test_sort_last_played_descending(small_rep, logged_in_page):
     page = logged_in_page
