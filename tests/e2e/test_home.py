@@ -306,12 +306,14 @@ def test_sort_last_played_descending(small_rep, logged_in_page):
 
     rows = page.locator("#rep-table tbody tr")
     dates = [
-        rows.nth(i).locator("td").nth(HomeColumns.LAST_PLAYED).inner_text()
+        datetime.strptime(
+            rows.nth(i).locator("td").nth(HomeColumns.LAST_PLAYED).inner_text(),
+            "%B %d"
+        )
         for i in range(rows.count())
     ]
 
     assert dates == sorted(dates, reverse=True)
-
 
 def test_sort_after_search(small_rep, logged_in_page):
     page = logged_in_page
