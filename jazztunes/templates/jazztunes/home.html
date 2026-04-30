@@ -33,38 +33,84 @@
     </p>
 </div>
 
-<!-- Search Card -->
-<div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm">
-    <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
-    <form hx-get="{% url 'jazztunes:home' %}"
-          hx-target="#table_count"
-          hx-push-url=true
-          hx-swap="outerHTML"
-          hx-trigger="submit">
-        <div class="mb-3 p-0.5">
-            <label for="search_term" class="sr-only">Search</label>
-            {{ search_form.search_term }}
+<div class="flex flex-wrap items-start gap-4">
+    <!-- Search Card -->
+    <div class="bg-indigo-100 border border-indigo-400 p-4 max-w-sm flex-shrink-0">
+        <h5 class="text-lg font-semibold mb-3">Tune Search</h5>
+        <form hx-get="{% url 'jazztunes:home' %}"
+              hx-target="#table_count"
+              hx-push-url=true
+              hx-swap="outerHTML"
+              hx-trigger="submit">
+            <div class="mb-3 p-0.5">
+                <label for="search_term" class="sr-only">Search</label>
+                {{ search_form.search_term }}
+            </div>
+            <div class="mb-3">
+                <label for="timespan" class="block mb-1 text-sm text-black font-medium">Haven't played in:</label>
+                {{ search_form.timespan }}
+            </div>
+
+            <div>
+                <input class="blue-button bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer"
+                       type="submit"
+                       value="Search">
+            </div>
+        </form>
+    </div>
+
+    <!-- Column visibility toggles -->
+    <div x-data="columnToggles()"
+         x-init="init()"
+         class="flex-1 min-w-0 p-4">
+        <h5 class="text-lg font-semibold mb-3">Column toggle</h5>
+        <div class="flex flex-wrap gap-2">
+            <template x-for="(col, idx) in columns" :key="idx">
+                <button type="button"
+                        @click="toggle(idx)"
+                        :class="col.visible
+                            ? 'bg-orange-100 text-blue-900 hover:bg-orange-50'
+                            : 'bg-indigo-200 text-blue-900 hover:bg-indigo-100'"
+                        class="px-3 py-2 text-base border border-indigo-400 cursor-pointer whitespace-nowrap"
+                        x-text="col.name"></button>
+            </template>
         </div>
-        <div class="mb-3">
-            <label for="timespan" class="block mb-1 text-sm text-black font-medium">Haven't played in:</label>
-            {{ search_form.timespan }}
-        </div>
-        
-        <div>
-            <input class="blue-button bg-blue-900 text-white px-4 py-2 hover:bg-blue-700 cursor-pointer" 
-                   type="submit" 
-                   value="Search">
-        </div>
-    </form>
+    </div>
 </div>
 
 <!-- Table -->
 {% include "jazztunes/partials/_table_home.html" %}
 
 <script>
+    const COLUMN_VISIBILITY_KEY = 'jazztunes_column_visibility';
+    const TOGGLEABLE_COLUMN_NAMES = [
+        'Title', 'Composer', 'Key', 'Other keys', 'Form', 'Style',
+        'Meter', 'Year', 'Tags', 'Knowledge', 'Plays', 'Last played'
+    ];
+
+    function readSavedVisibility() {
+        try {
+            const raw = localStorage.getItem(COLUMN_VISIBILITY_KEY);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
     function initDataTable() {
         if ($.fn.DataTable.isDataTable('#rep-table')) {
             $('#rep-table').DataTable().destroy();
+        }
+        const saved = readSavedVisibility();
+        const columnDefs = [{ "orderable": false, "targets": [-1] }];
+        if (saved) {
+            TOGGLEABLE_COLUMN_NAMES.forEach((_, i) => {
+                if (typeof saved[i] === 'boolean') {
+                    columnDefs.push({ "visible": saved[i], "targets": i });
+                }
+            });
         }
         $('#rep-table').DataTable({
             "searching": false,
@@ -73,16 +119,41 @@
             "paging": false,
             "autoWidth": false,
             "language": {emptyTable: ' '},
-            "columnDefs": [
-                { "orderable": false, "targets": [-1] }
-            ]
+            "columnDefs": columnDefs
         });
+    }
+
+    function columnToggles() {
+        return {
+            columns: TOGGLEABLE_COLUMN_NAMES.map(name => ({ name, visible: true })),
+            init() {
+                const saved = readSavedVisibility();
+                if (saved) {
+                    this.columns.forEach((col, i) => {
+                        if (typeof saved[i] === 'boolean') col.visible = saved[i];
+                    });
+                }
+            },
+            toggle(idx) {
+                this.columns[idx].visible = !this.columns[idx].visible;
+                this.persist();
+                if ($.fn.DataTable.isDataTable('#rep-table')) {
+                    $('#rep-table').DataTable().column(idx).visible(this.columns[idx].visible);
+                }
+            },
+            persist() {
+                localStorage.setItem(
+                    COLUMN_VISIBILITY_KEY,
+                    JSON.stringify(this.columns.map(c => c.visible))
+                );
+            }
+        };
     }
 
     $(document).ready(initDataTable);
     document.body.addEventListener('htmx:afterSettle', function(evt) {
-    initDataTable();
-});
+        initDataTable();
+    });
 </script>
     
 {% endblock %}
